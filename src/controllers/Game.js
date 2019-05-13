@@ -1,25 +1,127 @@
 const { ranks, suites, create2DArray } = require('../utils');
+const Game = require('../models/game');
 
-class Game {
-  static create(name, createdBy) {
-    const game = {
-      game: {
-        gameName: name,
-        status: 'NOT_STARTED',
-        players: [createdBy],
-        handToBeat: [],
-        players: [
-          {
-            username: createdBy,
-            hand: []
-          }
-        ]
-      }
-    }
+class GameController {
+  constructor() {
 
-    return game
   }
 
+  static async allGameNames(ctx) {
+    try {
+
+      let games = await Game.find({  });
+      games = games.map(game => game.name);
+
+      ctx.status = 200;
+      ctx.body = games;
+
+    } catch (err) {
+      ctx.status = 400;
+      ctx.body = 'Failed to find games';
+      ctx.body.err = err;
+    }
+  }
+
+  // If game name is taken -> cannot create
+  // else -> create default game and return it
+  static async create(ctx) {
+    try {
+      const { name, createdBy } = ctx.request.body;
+
+      let existingGame = await Game.findOne({ name });
+      if (existingGame) {
+        console.log('[Game:create] game with name already exists');
+        ctx.status = 400;
+        ctx.body = 'A game with that name already exists.';
+        return
+      }
+
+      let game = new Game({
+        name: name,
+        status: 'NOT_STARTED',
+        whoseTurnIdx: 0,
+        handToBeat: [],
+        players: [{
+          username: createdBy,
+          hand: []
+        }]
+      });
+
+      await game.save();
+    
+      ctx.status = 200;
+      ctx.body = game;
+
+    } catch (err) {
+      ctx.status = 400;
+      ctx.body = 'Failed to create a game';
+      ctx.body.err = err;
+    }
+  }
+
+  // if game status is NOT_STARTED -> player can join
+  // if game has < MAX_PLAYERS -> player can join
+  // if player already joined -> return the game
+  // if player is able to join -> add player, return the game
+  // if player unable to join -> return error
+
+  // result: the player is added to the game if allowed
+  // returns: the game
+  static async joinGame({ username, gamename }) {
+    console.log(`[controllers:Game:joinGame] (username:${username}, gamename:${gamename})`);
+
+    try {
+      const existingGame = await Game.findOne({name: gamename});
+      const alreadyJoinedIdx = existingGame.players.find(player => player.username === username);
+      const { status } = existingGame;
+      const numPlayers = existingGame.players.length;
+
+      if (alreadyJoinedIdx) {
+        console.log('[controllers:Game:joinGame] Player already in the game')
+        return {
+          status: true,
+          data: existingGame
+        }
+      } else if (status !== 'NOT_STARTED') {
+        console.log('[controllers:Game:joinGame] Game has already started or finished.')
+        return {
+          status: false,
+          error: 'Unable to join. Game has already started or finished.'
+        }
+      } else if (numPlayers > 8) {
+        console.log('[controllers:Game:joinGame] unable to join. max players reached');
+        return {
+          status: false,
+          error: 'Unable to join. Max players reached.'
+        }
+      }
+      else {
+        await Game.updateOne({ name: gamename }, {
+          $push: {
+            'players': {
+              username: username,
+              hand: []
+            }
+          }
+        })
+      }
+  
+      const updatedGame = await Game.findOne({ name: gamename });
+      console.log('[controllers:Game:joinGame] Able to join. Returning game');
+      return {
+        status: true,
+        data: updatedGame
+      }
+
+    } catch (err) {
+      console.log(`Failed to join a game: ${err}`);
+    }
+  }
+
+  // assign player hands to appropriate players
+  // if no asshole -> game creator is dealer
+  // dealer should be index 0 in players array
+  // start dealing at index 1 -- shift array by 1
   static startGame() {
     let deck = this.createDeck();
     let shuffledDeck = this.shuffle(deck);
@@ -27,7 +129,7 @@ class Game {
     playersHands = playerHands.map(hand => this.sortCards(hand));
   }
 
-  createDeck = () => {
+  createDeck() {
     let deck = [];
     for (let rank of ranks)
       for (let suite of suites)
@@ -35,7 +137,7 @@ class Game {
     return deck;
   }
 
-  shuffle = arr => {
+  shuffle(arr) {
     const a = [...arr];
     for (let i = a.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
@@ -44,7 +146,7 @@ class Game {
     return a;
   };
 
-  deal = (numPlayers, shuffled) => {
+  deal(numPlayers, shuffled) {
     let players = create2DArray(numPlayers);
     let i = 0;
     while (shuffled.length > 0) {
@@ -54,7 +156,7 @@ class Game {
     return players;
   }
 
-  intValue = card => {
+  intValue(card) {
     switch (card) {
       case '3': return 3;
       case '4': return 4;
@@ -73,10 +175,11 @@ class Game {
     }
   }
 
-  sortCards = (cards) => 
-    cards.sort((a, b) => (this.intValue(a.rank) > this.intValue(b.rank)) ? 1 : -1)
+  sortCards(cards) {
+    return cards.sort((a, b) => (this.intValue(a.rank) > this.intValue(b.rank)) ? 1 : -1)
+  }
 
-  find3Clubs = allPlayerHands => {
+  find3Clubs(allPlayerHands) {
     let i = 0
     for (let player of allPlayerHands) {
       for (let card of player) {
@@ -90,12 +193,12 @@ class Game {
     return 0;
   }
   
-  static nextPlayerIdx = (gameStatus, prevPlayerIdx, skipCount, numPlayers, allPlayerHands) => {
-    if (gameStatus === 'NOT_STARTED')
-      return this.find3Clubs(allPlayerHands);
+  nextPlayerIdx(gameStatus, prevPlayerIdx, skipCount, numPlayers) {
     if (skipCount) 
       return (prevPlayerIdx + skipCount + 1) % numPlayers;
     else 
       return (prevPlayerIdx + 1) % numPlayers;
   }
 };
+
+module.exports = GameController;
