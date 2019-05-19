@@ -3,63 +3,38 @@ const mongoose = require('mongoose');
 const GameSchema = new mongoose.Schema({
   name: {
     type: String,
-    required: true,
-    trim: true,
-    minlength: 1,
-    unique: true,
+    required: true
+  }, 
+  gameState: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'GameState'
   },
-  status: {
-    type: String,
-    required: true,
-    trim: true,
-    minlength: 1
+  players: {
+    type: [mongoose.Schema.Types.ObjectId],
+    ref: 'Player'
   },
-  whoseTurnIdx: {
-    type: Number,
-    required: true,
-    trim: true,
-    minlength: 1
+  nextPlayer: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Player'
   },
-  handToBeat: [{
-    rank: {
-      type: String,
-      required: true,
-      trim: true,
-      minlength: 1
-    },
-    suite: {
-      type: String,
-      required: true,
-      trim: true,
-      minlength: 1
-    }
-  }],
-  players: [{
-    username: {
-      type: String,
-      required: true,
-      trim: true,
-      minlength: 1
-    },
-    hand: [
-      {
-        rank: {
-          type: String,
-          required: true,
-          trim: true,
-          minlength: 1
-        },
-        suite: {
-          type: String,
-          required: true,
-          trim: true,
-          minlength: 1
-        }
-      }
-    ]
-  }]
+  deck: {
+    type: [mongoose.Schema.Types.ObjectId],
+    ref: 'Card'
+  },
+  playedPile: {
+    type: [mongoose.Schema.Types.ObjectId],
+    ref: 'Card'
+  },
+  discardPile: {
+    type: [mongoose.Schema.Types.ObjectId],
+    ref: 'Card'
+  },
+  ranks: {
+    type: [mongoose.Schema.Types.ObjectId],
+    ref: 'PoliticalRank'
+  }
 });
 
-const Game = mongoose.model('Game', GameSchema);
+const GameModel = mongoose.model('Game', GameSchema);
 
-module.exports = Game;
+module.exports = GameModel;

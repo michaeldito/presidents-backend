@@ -41,13 +41,14 @@ const options = {
 
 mongoose.connect(process.env.MONGODB_URI, options).then(
   () =>  { console.log("[Database] √") },
-  err => { console.log("[Database] x ", err) });
+  err => { console.log("[Database] X ", err) }
+);
 
 const server = http.createServer(app.callback());
 
 const io = require('socket.io')(server);
 
-server.listen(process.env.APP_PORT, () => console.log(`[Server] listening on PORT ${process.env.APP_PORT}`));
+server.listen(process.env.PORT, () => console.log(`[Server] listening on PORT ${process.env.PORT}`));
 
 io.on('connection', async socket => {
   console.log('[Socket] √')
@@ -65,7 +66,7 @@ io.on('connection', async socket => {
     if (ableToJoin.status)
       io.emit('UPDATE_GAME', {data: ableToJoin.data});
     else
-      io.emit('UNABLE_TO_JOIN', ableToJoin.error);
+      io.emit('ERROR', ableToJoin.error);
   })
 
   socket.on('START_GAME', async function(data){
@@ -82,11 +83,11 @@ io.on('connection', async socket => {
       Use the Game.playHand method to play a hand for a user
         - Verify the hand is better than the last
           - If so remove it from the players hand
-          - Make it the last hand
+          - Make it the last played hand
       If it is a valid hand, emit.toAll(update)
       If it is not a valid hand, emit.toCaller(invalid)
     */
-    const response = { data: {...data, hello: 'world'}};
+    
     io.emit('UPDATE_GAME', response);
   })
 

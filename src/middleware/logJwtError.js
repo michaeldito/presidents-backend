@@ -1,4 +1,4 @@
-module.exports = (ctx, err) => {
+module.exports = async (ctx, err) => {
   if(err.status === 401) {
     console.log('[index.js] Sending 401 to the client.');
     ctx.status = 401;
