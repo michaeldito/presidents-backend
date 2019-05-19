@@ -1,11 +1,11 @@
-const CardModel = require('./card');
-const CardRankModel = require('./cardRank');
-const GameModel = require('./game');
-const GameStateModel = require('./gameState');
-const PlayerModel = require('./player');
-const PoliticalRankModel = require('./politicalRank');
-const SuitModel = require('./suit');
-const UserModel = require('./user');
+const CardModel = require('./CardModel');
+const CardRankModel = require('./CardRankModel');
+const GameModel = require('./GameModel');
+const GameStateModel = require('./GameStateModel');
+const PlayerModel = require('./PlayerModel');
+const PoliticalRankModel = require('./PoliticalRankModel');
+const SuitModel = require('./SuitModel');
+const UserModel = require('./UserModel');
 
 module.exports = {
   CardModel, CardRankModel, 

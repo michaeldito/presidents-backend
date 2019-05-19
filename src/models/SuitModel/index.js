@@ -18,6 +18,10 @@ const SuitSchema = new mongoose.Schema({
   }
 });
 
-const Suit = mongoose.model('Suit', SuitSchema);
+SuitSchema.statics.getAll = function() {
+  return this.find({});
+}
 
-module.exports = Suit;
+const SuitModel = mongoose.model('Suit', SuitSchema);
+
+module.exports = SuitModel;

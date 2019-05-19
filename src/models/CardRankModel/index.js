@@ -15,6 +15,10 @@ const CardRankSchema = new mongoose.Schema({
   }
 });
 
+CardRankSchema.statics.getAll = function() {
+  return this.find({});
+}
+
 const CardRankModel = mongoose.model('CardRank', CardRankSchema);
 
 module.exports = CardRankModel;
