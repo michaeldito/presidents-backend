@@ -1,6 +1,10 @@
 const mongoose = require('mongoose');
 
 const CardSchema = new mongoose.Schema({
+  shortHand: {
+    type: String,
+    required: true
+  },
   cardRank: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'CardRank'

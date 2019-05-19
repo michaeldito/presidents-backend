@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "mocha",
     "start": "nodemon src/server/index.js"
   },
   "author": "",
@@ -21,7 +21,10 @@
     "koa-logger": "^3.2.0",
     "koa-router": "^7.3.0",
     "lodash": "^4.17.11",
-    "mongoose": "^5.5.7",
+    "mongoose": "^5.5.9",
     "socket.io": "^2.2.0"
+  },
+  "devDependencies": {
+    "mocha": "^6.1.4"
   }
 }

@@ -27,8 +27,9 @@ mongoose.connect(process.env.MONGODB_URI_TEST, options).then(
   err => { console.log("[Database] X ", err) }
 );
 
-// init suits
 
+
+// init suits
 const suits = [
   {
     name: 'Clubs',
@@ -56,19 +57,7 @@ const suits = [
   },
 ];
 
-let suitInstances = suits.map(suit => new SuitModel(suit));
-suitInstances.forEach(async (instance) => {
-  try {
-    await instance.save();
-    console.log("[Suit Insert] √");
-  } catch(err) {
-    console.log("[Suit Insert] X ", err);
-  }
-});
-
-
 // init card rank
-
 let cardRanks = [
   {
     name: '2',
@@ -137,42 +126,9 @@ let cardRanks = [
   },
 ]
 
-let cardRankInstances = cardRanks.map(cardRank => new CardRankModel(cardRank));
-cardRankInstances.forEach(async (instance) => {
-  try {
-    await instance.save();
-    console.log("[cardRankInstances Insert] √");
-  } catch(err) {
-    console.log("[cardRankInstances Insert] X ", err);
-  }
-});
-
-
-// init cards
-
-let cards = [];
-
-for (suitInstance of suitInstances) {
-  for (cardRankInstance of cardRankInstances) {
-    cards.push({
-      cardRank: cardRankInstance._id,
-      suit: suitInstance._id
-    });
-  }
-}
-
-let cardInstances = cards.map(card => new CardModel(card));
-cardInstances.forEach(async (instance) => {
-  try {
-    await instance.save();
-    console.log("[cardInstances Insert] √");
-  } catch(err) {
-    console.log("[cardInstances Insert] X ", err);
-  }
-});
-
 // init politcal cranks
-let politicalRanks = [{
+let politicalRanks = [
+{
   name: 'President',
   value: 8
 },
@@ -205,18 +161,9 @@ let politicalRanks = [{
   value: 1
 }]
 
-let politicalRankInstances = politicalRanks.map(rank => new PoliticalRankModel(rank));
-politicalRankInstances.forEach(async (instance) => {
-  try {
-    await instance.save();
-    console.log("[politicalRankInstances Insert] √");
-  } catch(err) {
-    console.log("[politicalRankInstances Insert] X ", err);
-  }
-});
-
 // init game states
-const states = [{
+const states = [
+  {
   state: 'NOT_STARTED'
 },
 {
@@ -226,16 +173,91 @@ const states = [{
   state: 'FINALIZED'
 }];
 
-let stateInstances = states.map(state => new GameStateModel(state));
-stateInstances.forEach(async (instance) => {
-  try {
-    await instance.save();
-    console.log("[stateInstances Insert] √");
-  } catch(err) {
-    console.log("[stateInstances Insert] X ", err);
-  }
-});
 
+async function initCards() {
+
+  const currentNumberOfCards = await CardModel.countDocuments({});
+
+  if (currentNumberOfCards == 52) {
+    console.log('Cards Already Initialized');
+    return;
+  }
+
+  let suitInstances = suits.map(suit => new SuitModel(suit));
+  suitInstances.forEach(async (instance) => {
+    try {
+      await instance.save();
+      //console.log("[Suit Insert] √");
+    } catch(err) {
+      console.log("[Suit Insert] X ", err);
+    }
+  });
+
+  let cardRankInstances = cardRanks.map(cardRank => new CardRankModel(cardRank));
+  cardRankInstances.forEach(async (instance) => {
+    try {
+      await instance.save();
+      //console.log("[cardRankInstances Insert] √");
+    } catch(err) {
+      console.log("[cardRankInstances Insert] X ", err);
+    }
+  });
+
+
+  // init cards
+  let cards = [];
+
+  for (suitInstance of suitInstances) {
+    for (cardRankInstance of cardRankInstances) {
+      let shortHand = cardRankInstance.character + suitInstance.name;
+      cards.push({
+        cardRank: cardRankInstance._id,
+        suit: suitInstance._id,
+        shortHand: shortHand
+      });
+    }
+  }
+
+  let cardInstances = cards.map(card => new CardModel(card));
+  cardInstances.forEach(async (instance) => {
+    try {
+      await instance.save();
+      //console.log("[cardInstances Insert] √");
+    } catch(err) {
+      console.log("[cardInstances Insert] X ", err);
+    }
+  });
+}
+
+async function initPoliticalRanks() {
+  let politicalRankInstances = politicalRanks.map(rank => new PoliticalRankModel(rank));
+  politicalRankInstances.forEach(async (instance) => {
+    try {
+      await instance.save();
+      console.log("[politicalRankInstances Insert] √");
+    } catch(err) {
+      console.log("[politicalRankInstances Insert] X ", err);
+    }
+  });
+}
+
+async function initGameStates() {
+  let stateInstances = states.map(state => new GameStateModel(state));
+  stateInstances.forEach(async (instance) => {
+    try {
+      await instance.save();
+      console.log("[stateInstances Insert] √");
+    } catch(err) {
+      console.log("[stateInstances Insert] X ", err);
+    }
+  });
+}
+
+
+
+module.exports.initCards = initCards;
+module.exports.initPoliticalRanks = initPoliticalRanks;
+module.exports.initGameStates = initGameStates;
 
 // make promises that save each instance, then save all
 
