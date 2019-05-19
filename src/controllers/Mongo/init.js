@@ -182,51 +182,55 @@ async function initCards() {
     console.log('Cards Already Initialized');
     return;
   }
-
-  let suitInstances = suits.map(suit => new SuitModel(suit));
-  suitInstances.forEach(async (instance) => {
-    try {
-      await instance.save();
-      //console.log("[Suit Insert] √");
-    } catch(err) {
-      console.log("[Suit Insert] X ", err);
+  else {  
+    let suitInstances = suits.map(suit => new SuitModel(suit));
+    suitInstances.forEach(async (instance) => {
+      try {
+        await instance.save();
+        //console.log("[Suit Insert] √");
+      } catch(err) {
+        console.log("[Suit Insert] X ", err);
+      }
+    });
+  
+    let cardRankInstances = cardRanks.map(cardRank => new CardRankModel(cardRank));
+    cardRankInstances.forEach(async (instance) => {
+      try {
+        await instance.save();
+        //console.log("[cardRankInstances Insert] √");
+      } catch(err) {
+        console.log("[cardRankInstances Insert] X ", err);
+      }
+    });
+  
+  
+    // init cards
+    let cards = [];
+  
+    for (suitInstance of suitInstances) {
+      for (cardRankInstance of cardRankInstances) {
+        let shortHand = cardRankInstance.character + suitInstance.name;
+        cards.push({
+          cardRank: cardRankInstance._id,
+          suit: suitInstance._id,
+          shortHand: shortHand
+        });
+      }
     }
-  });
+  
+    let cardInstances = cards.map(card => new CardModel(card));
+    cardInstances.forEach(async (instance) => {
+      try {
+        await instance.save();
+        //console.log("[cardInstances Insert] √");
+      } catch(err) {
+        console.log("[cardInstances Insert] X ", err);
+      }
+    });
 
-  let cardRankInstances = cardRanks.map(cardRank => new CardRankModel(cardRank));
-  cardRankInstances.forEach(async (instance) => {
-    try {
-      await instance.save();
-      //console.log("[cardRankInstances Insert] √");
-    } catch(err) {
-      console.log("[cardRankInstances Insert] X ", err);
-    }
-  });
-
-
-  // init cards
-  let cards = [];
-
-  for (suitInstance of suitInstances) {
-    for (cardRankInstance of cardRankInstances) {
-      let shortHand = cardRankInstance.character + suitInstance.name;
-      cards.push({
-        cardRank: cardRankInstance._id,
-        suit: suitInstance._id,
-        shortHand: shortHand
-      });
-    }
   }
 
-  let cardInstances = cards.map(card => new CardModel(card));
-  cardInstances.forEach(async (instance) => {
-    try {
-      await instance.save();
-      //console.log("[cardInstances Insert] √");
-    } catch(err) {
-      console.log("[cardInstances Insert] X ", err);
-    }
-  });
+
 }
 
 async function initPoliticalRanks() {
