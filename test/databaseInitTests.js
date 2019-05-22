@@ -50,39 +50,30 @@ describe('Initiallizing Database from scratch.', () => {
         describe('Initializing Cards', () => {
 
             it('initializeCards()', done => {
-                let error;
-
-                init.initCards().then(() => {
-                    CardModel.countDocuments({}, numberOfCards => {
-                        if (numberOfCards != 52)
-                            error = new Error('There should be 52 cards, but there are ' + numberOfCards);
+                init.initCards().finally(() => {
+                    CardModel.countDocuments({}, (error, numberOfCards) => {
+                        if (error)
+                            done(error);
+                        else if (numberOfCards != 52)
+                            done(new Error('There should be 52 cards, but there are ' + numberOfCards));
+                        else 
+                            done();
                     });
-                })
-                .catch(done)
-                .finally(() => {
-                    if (error)
-                        done(error);
-                    else
-                        done();
                 });
             });
 
             it('Check that calling initalize twice doesn\'t create duplicate instances', done => {
-                let error;
-
-                init.initCards().then(() => {
-                    CardModel.countDocuments({}, numberOfCards => {
-                        if (numberOfCards != 52)
-                            error = new Error('There should be 52 cards, but there are ' + numberOfCards);
+                init.initCards().finally(() => {
+                    CardModel.countDocuments({}, (error, numberOfCards) => {
+                        if (error)
+                            done(error);
+                        else if (numberOfCards != 52)
+                            done(new Error('There should be 52 cards, but there are ' + numberOfCards));
+                        else 
+                            done();
                     });
-                })
-                .catch(done)
-                .finally(() => {
-                    if (error)
-                        done(error);
-                    else
-                        done();
                 });
+
             });
 
         });
@@ -113,42 +104,28 @@ describe('Initiallizing Database from scratch.', () => {
         describe('Initializing Political Ranks', () => {
 
             it('initializePoliticalRanks()', done => {
-                let error;
-
-                init.initPoliticalRanks().then(() => {
-                    PoliticalRankModel.countDocuments({}, numberOfPoliticalRanks => {
+                init.initPoliticalRanks().finally(() => {
+                    PoliticalRankModel.countDocuments({}, (error, numberOfPoliticalRanks) => {
                         if (numberOfPoliticalRanks != 8)
-                            error = new Error('There should be 8 political ranks, but there are ' + numberOfPoliticalRanks);
+                            done(new Error('There should be 8 political ranks, but there are ' + numberOfPoliticalRanks));
+                        else
+                            done();
                     });
-                })
-                .finally(() => {
-                    if (error)
-                        done(error);
-                    else
-                        done();
                 });
             });
 
             it('Check that calling initalize twice doesn\'t create duplicate instances', done => {
-                let error;
-                let testFailed = true;
 
-                init.initPoliticalRanks().then(() => {
-                    PoliticalRankModel.countDocuments({}).then(numberOfPoliticalRanks => {
+                init.initPoliticalRanks().finally(() => {
+                    PoliticalRankModel.countDocuments({}, (error, numberOfPoliticalRanks) => {
                         if (numberOfPoliticalRanks != 8)
-                            error = new Error('There should be 8 political ranks, but there are ' + numberOfPoliticalRanks);
+                            done(new Error('There should be 8 political ranks, but there are ' + numberOfPoliticalRanks));
                         else
-                            testFailed = false;
-                    }).catch(countError => {error = countError});
-                })
-                .finally(() => {
-                    if (testFailed)
-                        done(error);
-                    else
-                        done();
+                            done();
+                    });
                 });
-            });
 
+            });
         });
     });
 });

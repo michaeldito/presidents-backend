@@ -179,30 +179,20 @@ async function initCards() {
   const currentNumberOfCards = await CardModel.countDocuments({});
 
   if (currentNumberOfCards == 52) {
-    console.log('Cards Already Initialized');
     return;
   }
   else {  
+    let promises = [];
+
     let suitInstances = suits.map(suit => new SuitModel(suit));
-    suitInstances.forEach(async (instance) => {
-      try {
-        await instance.save();
-        //console.log("[Suit Insert] √");
-      } catch(err) {
-        console.log("[Suit Insert] X ", err);
-      }
-    });
+    for (let suitInstance of suitInstances) {
+      promises.push(suitInstance.save(suitInstance));
+    }
   
     let cardRankInstances = cardRanks.map(cardRank => new CardRankModel(cardRank));
-    cardRankInstances.forEach(async (instance) => {
-      try {
-        await instance.save();
-        //console.log("[cardRankInstances Insert] √");
-      } catch(err) {
-        console.log("[cardRankInstances Insert] X ", err);
-      }
-    });
-  
+    for (let cardRankInstance of cardRankInstances) {
+      promises.push(cardRankInstance.save(cardRankInstance))
+    }
   
     // init cards
     let cards = [];
@@ -219,14 +209,11 @@ async function initCards() {
     }
   
     let cardInstances = cards.map(card => new CardModel(card));
-    cardInstances.forEach(async (instance) => {
-      try {
-        await instance.save();
-        //console.log("[cardInstances Insert] √");
-      } catch(err) {
-        console.log("[cardInstances Insert] X ", err);
-      }
-    });
+    for (let cardInstance of cardInstances) {
+      promises.push(cardInstance.save());
+    }
+
+    return Promise.all(promises);
 
   }
 
@@ -235,14 +222,22 @@ async function initCards() {
 
 async function initPoliticalRanks() {
   let politicalRankInstances = politicalRanks.map(rank => new PoliticalRankModel(rank));
-  politicalRankInstances.forEach(async (instance) => {
-    try {
-      await instance.save();
-      console.log("[politicalRankInstances Insert] √");
-    } catch(err) {
-      console.log("[politicalRankInstances Insert] X ", err);
+  let promises = [];
+
+  let numberOfPoliticalRanks = await PoliticalRankModel.countDocuments({});
+
+  if (numberOfPoliticalRanks == 8) {
+    return;
+  }
+  else {
+  
+    for (let politicalRankInstance of politicalRankInstances) {
+      promises.push(politicalRankInstance.save());
     }
-  });
+  
+    return Promise.all(promises);
+
+  }
 }
 
 async function initGameStates() {
