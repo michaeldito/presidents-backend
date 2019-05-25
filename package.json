@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "mocha",
+    "test": "mocha test/*.js",
     "start": "nodemon src/server/index.js"
   },
   "author": "",
@@ -13,6 +13,7 @@
     "bcrypt": "^3.0.6",
     "bcryptjs": "^2.4.3",
     "dotenv": "^4.0.0",
+    "expect": "^24.8.0",
     "jsonwebtoken": "^8.5.1",
     "kcors": "^2.2.2",
     "koa": "^2.7.0",
