@@ -1,12 +1,13 @@
-const { Game } = require('../src/controllers');
+const { createGame } = require('../src/models/GameModel/processing');
 const { PlayerModel, GameModel } = require('../src/models');
 const init = require('./Mongo/init');
 const mongoose = require('mongoose');
 const expect = require('expect');
 const { game } = require('./Mongo/data');
+const assert = require('assert');
 require('dotenv').config();
 
-describe('Controller Tests', () => {
+describe('Processing Tests', () => {
 
   before(async () => {
     const options = { useNewUrlParser: true, useCreateIndex: true };
@@ -19,7 +20,7 @@ describe('Controller Tests', () => {
 
 
 
-  describe('Game Controller Tests', () => {    
+  describe('Game Processing Tests', () => {    
     
     before(async () => {
       await init.initPlayers();
@@ -34,14 +35,13 @@ describe('Controller Tests', () => {
 
       it('createGame() returns the game if successful', async () => {
         const player = await PlayerModel.findOne({});
-        const id = await Game.createGame(player._id, game);
+        const id = await createGame(player._id, game);
         expect(id).toBeTruthy();
       });
 
       it('createGame() returns error for duplicate game name', async () => {
         const player = await PlayerModel.findOne({});
-        let error = await Game.createGame(player._id, game);
-        expect(error.message).toBe('A game with that name already exists.');
+        assert.rejects(createGame(player._id, game), Error, 'A game with that name already exists.');
       });
 
     });
