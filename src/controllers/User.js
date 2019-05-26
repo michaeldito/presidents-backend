@@ -1,5 +1,6 @@
-const User = require('../models/user');
+const User = require('../models');
 const setAccessToken = require('../controllers/Authentication/setAccessToken')
+
 class UserController {
   constructor() {
 
@@ -10,7 +11,7 @@ class UserController {
   // returns: the user
   static async create(ctx) {
     const { username, password } = ctx.request.body;
-    const existingUser = await User.findOne({ username });
+    const existingUser = await UserModel.findOne({ username });
 
     if (existingUser) {
       console.log('[controllers:user:create] username already exists');

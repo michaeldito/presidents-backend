@@ -99,46 +99,38 @@ async function initPlayers() {
   return Promise.all([...userPromises, ...playerPromises]);
 }
 
-// create 2 players
-// have 1 player create the game
-// have the other player join the game
+// create 1 players
+// have player create the game
 async function initGame() {
   const numberOfGames = await GameModel.countDocuments({});
   if (numberOfGames === 1) {
     return;
   }
 
-  // create 2 players
-  let userInstances = users.map(user => new UserModel(user));
-  let userPromises = userInstances.map(instance => instance.save());
-  const players = userInstances.map((user, idx) => {
-    return {
-      user: user._id,
-      seatPosition: idx,
-      drinksToDrink: 0,
-      drinksDrunk: 0
-    }
-  });
-  let playerInstances = players.map(player => new PlayerModel(player));
-  let playerPromises = playerInstances.map(instance => instance.save());
+  // create 1 user
+  let userInstance = new UserModel(users[0]);
 
-  let player1 = playerInstances[0];
-  let player2 = playerInstances[1];
+  let userPromise = userInstance.save();
+  const player = {
+    user: userInstance._id,
+    seatPosition: 0,
+    drinksToDrink: 0,
+    drinksDrunk: 0
+  };
+
+  let playerInstance = new PlayerModel(player);
+  let playerPromise = playerInstance.save();
 
   // have one player create the game
   const NOT_STARTED = await GameStateModel.findOne({state: 'NOT_STARTED'});
   const newGame = new GameModel({
     name: game.name,
     gameState: NOT_STARTED._id,
-    players: [player1._id],
+    players: [playerInstance._id],
   });
-  await newGame.save();
-
-  // have one player join the game
-  newGame.players.push(player2._id);
-  await newGame.save();
+  let gamePromise = newGame.save();
   
-  return Promise.all([...userPromises, ...playerPromises]);
+  return Promise.all([userPromise, playerPromise, gamePromise]);
 }
 
 
