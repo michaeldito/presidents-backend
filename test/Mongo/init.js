@@ -39,7 +39,7 @@ async function initCards() {
 
 // creates 8 political ranks
 async function initPoliticalRanks() {
-  let numberOfPoliticalRanks = await PoliticalRankModel.countDocuments({});
+  const numberOfPoliticalRanks = await PoliticalRankModel.countDocuments({});
   if (numberOfPoliticalRanks === 8) {
     return;
   }
@@ -51,7 +51,7 @@ async function initPoliticalRanks() {
 
 // creates 3 game states
 async function initGameStates() {
-  let numberOfGameStates = await GameStateModel.countDocuments({});
+  const numberOfGameStates = await GameStateModel.countDocuments({});
   if (numberOfGameStates === 3) {
     return;
   }
@@ -63,7 +63,7 @@ async function initGameStates() {
 
 // creates 2 users
 async function initUsers() {
-  let numberOfUsers = await UserModel.countDocuments({});
+  const numberOfUsers = await UserModel.countDocuments({});
   if (numberOfUsers === 2) {
     return;
   }
@@ -76,7 +76,7 @@ async function initUsers() {
 // creates 2 users
 // then creates 2 players
 async function initPlayers() {
-  let numberOfPlayers = await PlayerModel.countDocuments({});
+  const numberOfPlayers = await PlayerModel.countDocuments({});
   if (numberOfPlayers === 2) {
     return;
   }
@@ -99,9 +99,51 @@ async function initPlayers() {
   return Promise.all([...userPromises, ...playerPromises]);
 }
 
+// create 2 players
+// have 1 player create the game
+// have the other player join the game
+async function initGame() {
+  const numberOfGames = await GameModel.countDocuments({});
+  if (numberOfGames === 1) {
+    return;
+  }
+
+  // create 2 players
+  let userInstances = users.map(user => new UserModel(user));
+  let userPromises = userInstances.map(instance => instance.save());
+  const players = userInstances.map((user, idx) => {
+    return {
+      user: user._id,
+      seatPosition: idx,
+      drinksToDrink: 0,
+      drinksDrunk: 0
+    }
+  });
+  let playerInstances = players.map(player => new PlayerModel(player));
+  let playerPromises = playerInstances.map(instance => instance.save());
+
+  let player1 = playerInstances[0];
+  let player2 = playerInstances[1];
+
+  // have one player create the game
+  const NOT_STARTED = await GameStateModel.findOne({state: 'NOT_STARTED'});
+  const newGame = new GameModel({
+    name: game.name,
+    gameState: NOT_STARTED._id,
+    players: [player1._id],
+  });
+  await newGame.save();
+
+  // have one player join the game
+  newGame.players.push(player2._id);
+  await newGame.save();
+  
+  return Promise.all([...userPromises, ...playerPromises]);
+}
+
 
 module.exports = { initCards, initPoliticalRanks, initGameStates, 
-  initUsers, initPlayers };
+  initUsers, initPlayers, initGame };
 
 
 // let deck = this.createDeck();
