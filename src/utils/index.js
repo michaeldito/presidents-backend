@@ -80,7 +80,7 @@ function find3Clubs(allPlayerHands) {
   }
 
   // should never reach here
-  return 0;
+  throw new Exception('3 of Clubs was not in the deck!!');
 }
 
 // todo: check if next player has finished

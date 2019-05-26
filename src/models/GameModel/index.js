@@ -5,7 +5,7 @@ const GameSchema = new mongoose.Schema({
     type: String,
     required: true
   }, 
-  gameState: {
+  state: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'GameState',
     required: true
@@ -37,7 +37,9 @@ const GameSchema = new mongoose.Schema({
   }
 });
 
-
+GameSchema.methods.toJSON = function () {
+  return this.toObject();
+}
 
 const GameModel = mongoose.model('Game', GameSchema);
 

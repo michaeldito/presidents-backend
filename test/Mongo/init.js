@@ -61,10 +61,10 @@ async function initGameStates() {
   return Promise.all(promises);
 }
 
-// creates 2 users
+// creates 3 users
 async function initUsers() {
   const numberOfUsers = await UserModel.countDocuments({});
-  if (numberOfUsers === 2) {
+  if (numberOfUsers === 9) {
     return;
   }
 
@@ -73,11 +73,11 @@ async function initUsers() {
   return Promise.all(promises);
 }
 
-// creates 2 users
-// then creates 2 players
+// creates 3 users
+// then creates 3 players
 async function initPlayers() {
   const numberOfPlayers = await PlayerModel.countDocuments({});
-  if (numberOfPlayers === 2) {
+  if (numberOfPlayers === 9) {
     return;
   }
   let userInstances = users.map(user => new UserModel(user));
@@ -125,7 +125,7 @@ async function initGame() {
   const NOT_STARTED = await GameStateModel.findOne({state: 'NOT_STARTED'});
   const newGame = new GameModel({
     name: game.name,
-    gameState: NOT_STARTED._id,
+    state: NOT_STARTED._id,
     players: [playerInstance._id],
   });
   let gamePromise = newGame.save();

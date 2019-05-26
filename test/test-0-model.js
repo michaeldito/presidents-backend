@@ -78,6 +78,7 @@ describe('Mongoose Model Tests', () => {
     before(async () => {
       await PoliticalRankModel.deleteMany({});
     });
+    
 
     describe('Check that db collections are empty', () => {
 
@@ -162,16 +163,16 @@ describe('Mongoose Model Tests', () => {
     
     describe('Verify Users Initialization', () => {
 
-      it('2 Users are in the DB', async () => {
+      it('3 Users are in the DB', async () => {
         await init.initUsers();
         const count = await UserModel.countDocuments({});
-        expect(count).toBe(2);
+        expect(count).toBe(9);
       });
 
       it('Calling initialize twice doesn\'t create duplicate instances', async () => {
         await init.initUsers();
         const count = await UserModel.countDocuments({});
-        expect(count).toBe(2);
+        expect(count).toBe(9);
       });
 
     });
@@ -202,16 +203,16 @@ describe('Mongoose Model Tests', () => {
     
     describe('Verify Players Initialization', () => {
 
-      it('2 Players are in the DB', async () => {
+      it('3 Players are in the DB', async () => {
         await init.initPlayers();
         const count = await PlayerModel.countDocuments({});
-        expect(count).toBe(2);
+        expect(count).toBe(9);
       });
 
       it('Calling initialize twice doesn\'t create duplicate instances', async () => {
         await init.initUsers();
         const count = await UserModel.countDocuments({});
-        expect(count).toBe(2);
+        expect(count).toBe(9);
       });
 
     });
