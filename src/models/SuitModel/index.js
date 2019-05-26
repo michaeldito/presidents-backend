@@ -7,6 +7,7 @@ const SuitSchema = new mongoose.Schema({
   },
   color: {
     type: String,
+    required: true
   },
   character: {
     type: String,

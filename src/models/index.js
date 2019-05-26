@@ -8,8 +8,12 @@ const SuitModel = require('./SuitModel');
 const UserModel = require('./UserModel');
 
 module.exports = {
-  CardModel, CardRankModel, 
-  GameModel, GameStateModel, 
-  PlayerModel, PoliticalRankModel, 
-  SuitModel, UserModel
+  CardModel, 
+  CardRankModel, 
+  GameModel, 
+  GameStateModel, 
+  PlayerModel, 
+  PoliticalRankModel, 
+  SuitModel, 
+  UserModel
 }

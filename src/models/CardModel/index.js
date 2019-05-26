@@ -7,7 +7,8 @@ const CardSchema = new mongoose.Schema({
   },
   cardRank: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'CardRank'
+    ref: 'CardRank',
+    required: true
   },
   suit: {
     type: mongoose.Schema.Types.ObjectId,

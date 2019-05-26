@@ -12,8 +12,7 @@ const PlayerSchema = new mongoose.Schema({
   },
   game: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'Game',
-    required: true
+    ref: 'Game'
   },
   hand: {
     type: [mongoose.Schema.Types.ObjectId],
@@ -25,9 +24,9 @@ const PlayerSchema = new mongoose.Schema({
   },
   user: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'User'
+    ref: 'User',
+    required: true
   }
-
 });
 
 const Player = mongoose.model('Player', PlayerSchema);

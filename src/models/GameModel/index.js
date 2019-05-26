@@ -7,11 +7,13 @@ const GameSchema = new mongoose.Schema({
   }, 
   gameState: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'GameState'
+    ref: 'GameState',
+    required: true
   },
   players: {
     type: [mongoose.Schema.Types.ObjectId],
-    ref: 'Player'
+    ref: 'Player',
+    required: true
   },
   nextPlayer: {
     type: mongoose.Schema.Types.ObjectId,
