@@ -7,7 +7,7 @@ const mongoose = require('mongoose');
 const expect = require('expect');
 require('dotenv').config();
 
-describe('Mongoose Model Tests', () => {
+describe('MongoDB Init Tests', () => {
 
   before(async () => {
     const options = { useNewUrlParser: true, useCreateIndex: true };
@@ -20,7 +20,7 @@ describe('Mongoose Model Tests', () => {
 
 
 
-  describe('CardRank, Suit, and Card Model Tests', () => {    
+  describe('CardRank, Suit, and Card', () => {    
     
     before(async () => {
       await CardModel.deleteMany({});
@@ -73,7 +73,7 @@ describe('Mongoose Model Tests', () => {
 
 
 
-  describe('Political Rank Tests', () => {
+  describe('Political Rank', () => {
     
     before(async () => {
       await PoliticalRankModel.deleteMany({});
@@ -108,7 +108,7 @@ describe('Mongoose Model Tests', () => {
   });
 
 
-  describe('GameStateModel Tests', () => {
+  describe('Game State', () => {
     
     before(async () => {
       await GameStateModel.deleteMany({});
@@ -142,7 +142,7 @@ describe('Mongoose Model Tests', () => {
   });
 
 
-  describe('UserModel Tests', () => {
+  describe('User', () => {
 
     before(async () => {
       await UserModel.deleteMany({});
@@ -180,7 +180,7 @@ describe('Mongoose Model Tests', () => {
 
   });
 
-  describe('PlayerModel Tests', () => {
+  describe('Player', () => {
 
     before(async () => {
       await PlayerModel.deleteMany({});
@@ -220,7 +220,7 @@ describe('Mongoose Model Tests', () => {
   });
 
 
-  describe('GameModel Tests', () => {
+  describe('Game', () => {
 
     before(async () => {
       await GameModel.deleteMany({});

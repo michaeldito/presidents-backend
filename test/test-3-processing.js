@@ -208,6 +208,64 @@ describe('Processing Tests', () => {
 
     });
 
+    describe('Get Next PlayerId', () => {
+      
+      it('should return a mongo instance id successful', () => {
+      
+      });
+
+      it('should return a status=notfound if unsuccessful', () => {
+      
+      });
+
+    });
+
+    describe('Deal To Player', () => {
+      
+      it('should return 14 cards to each of the 4 players', () => {
+      
+      });
+
+    });
+
+    describe('Play Hand', () => {
+      
+      // game
+      it('should replace played hand with incoming hand if successful', () => {
+      
+      });
+
+      // game
+      it('should add incoming hand to current round & total game card piles if successful', () => {
+      
+      });
+
+      // player
+      it('should remove the cards from the users hand if successful', () => {
+      
+      });
+
+      // game
+      it('should receive status=notfound when getNextPlayerIdx called after final cards are played', () => {
+      
+        context('and so it should return a game with status === FINALIZED', () => {
+      
+        });
+
+      });
+
+    });
+
+
+
+    describe('Is Game Over', () => {
+
+      it('should return true if game.status === FINALIZED', () => {
+      
+      });
+
+    });
+
   });
 
 });

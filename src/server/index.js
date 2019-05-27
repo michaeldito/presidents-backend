@@ -1,3 +1,6 @@
+require('./config/config');
+require('dotenv').config();
+
 const Koa = require('koa');
 const bodyParser = require('koa-bodyparser');
 const http = require('http');
@@ -7,7 +10,6 @@ const router = require('../routes');
 const mongoose = require('mongoose');
 const Game = require('../controllers/Game');
 
-require('dotenv').config();
 
 const app = new Koa();
 

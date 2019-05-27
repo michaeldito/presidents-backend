@@ -18,11 +18,18 @@ async function createGame(playerId, game) {
   // update the players document
   // set game
   // set seat position
-  let createdByPlayer = await PlayerModel.findOne({_id: playerId});
-  createdByPlayer.game = newGame._id;
-  createdByPlayer.seatPosition = 0;
-  //console.log(`${playerId} seat position set to ${createdByPlayer.seatPosition}`);
-  await createdByPlayer.save();
+  // let createdByPlayer = await PlayerModel.findOne({_id: playerId});
+  let updatedPlayer = await PlayerModel.updateOne({_id: playerId}, {
+    $set: {
+      game: newGame._id,
+      seatPosition: 0
+    }
+  });
+
+  // createdByPlayer.game = newGame._id;
+  // createdByPlayer.seatPosition = 0;
+  // //console.log(`${playerId} seat position set to ${createdByPlayer.seatPosition}`);
+  // await createdByPlayer.save();
 
   return newGame
 }
@@ -51,19 +58,16 @@ async function joinGame(playerId, gameId) {
   game.players.push(playerId);
   await game.save();
 
-  game = await GameModel.findOne({_id: gameId});
-
-  // update the players document
-  // set game
-  // set seat position  
-  // game creator gets position 0, to auto incr, just use length of players arr -1
+  // add game to player
   let createdByPlayer = await PlayerModel.findOne({_id: playerId});
   createdByPlayer.game = game._id;
+
+  // add seat position to player
   createdByPlayer.seatPosition = game.players.length - 1;
+ 
   //console.log(`${playerId} seat position set to ${createdByPlayer.seatPosition}`);
   await createdByPlayer.save();
   
-  // return game
   return game
 }
 

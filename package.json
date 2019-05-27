@@ -4,13 +4,13 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "mocha test/*.js",
-    "test-models": "mocha test/*model.js",
-    "test-utils": "mocha test/*utils.js",
-    "test-proc": "mocha --timeout 15000 test/*processing.js",
+    "test": "export NODE_ENV=dev && mocha test/*.js",
+    "test-models": "export NODE_ENV=dev && mocha test/*model.js",
+    "test-utils": "export NODE_ENV=dev && mocha test/*utils.js",
+    "test-proc": "export NODE_ENV=dev && mocha --timeout 15000 test/*processing.js",
     "count-src": "find src -name '*.js' | xargs wc -l",
     "count-test": "find test -name '*.js' | xargs wc -l",
-    "start": "nodemon src/server/index.js"
+    "start": "export NODE_ENV=dev && nodemon server/server.js"
   },
   "author": "",
   "license": "ISC",
@@ -18,7 +18,6 @@
     "assert": "^2.0.0",
     "bcrypt": "^3.0.6",
     "bcryptjs": "^2.4.3",
-    "chai": "^4.2.0",
     "dotenv": "^4.0.0",
     "expect": "^24.8.0",
     "jsonwebtoken": "^8.5.1",
@@ -28,7 +27,6 @@
     "koa-jwt": "^3.3.2",
     "koa-logger": "^3.2.0",
     "koa-router": "^7.3.0",
-    "lodash": "^4.17.11",
     "mongoose": "^5.5.9",
     "socket.io": "^2.2.0"
   },

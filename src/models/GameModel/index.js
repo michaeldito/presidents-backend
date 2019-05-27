@@ -23,15 +23,19 @@ const GameSchema = new mongoose.Schema({
     type: [mongoose.Schema.Types.ObjectId],
     ref: 'Card'
   },
-  playedPile: {
+  lastCardHand: {
     type: [mongoose.Schema.Types.ObjectId],
     ref: 'Card'
   },
-  discardPile: {
+  currentRoundCardPile: {
     type: [mongoose.Schema.Types.ObjectId],
     ref: 'Card'
   },
-  ranks: {
+  totalGameCardPile: {
+    type: [mongoose.Schema.Types.ObjectId],
+    ref: 'Card'
+  },
+  ranksOfPlayers: {
     type: [mongoose.Schema.Types.ObjectId],
     ref: 'PoliticalRank'
   }
