@@ -1,88 +1,27 @@
-require('./config/config');
+require('../config/config');
 require('dotenv').config();
 
 
-
 const Koa = require('koa');
-const bodyParser = require('koa-bodyparser');
 const http = require('http');
-const logger = require('koa-logger');
-const cors = require('kcors');
 const router = require('../routes');
-const mongoose = require('mongoose');
-const Game = require('../controllers/Game');
-
+const compose = require('koa-compose');
+const middleware = require('../middleware');
 
 const app = new Koa();
-app.use(bodyParser());
-app.use(logger());
-app.use(cors({ credentials: true, exposeHeaders: ['Access-Token', 'Cookie'] }));
-app.use(async (ctx, next) => {
-  return next().catch((err) => {
-    if(err.status === 401) {
-      console.log('[index.js] Sending 401 to the client.');
-      ctx.status = 401;
-      ctx.body = 'JWT Token expired.';
-    } else {
-      console.log('[index.js] One of the modules in the chain fired an exception.');
-      console.log(`[index.js] The error message is ${err}`);
-    }
-  });
+app.use(compose(middleware));
+
+app.on('error', (err, ctx) => {
+ console.log('woah!');
 });
+
+app.addListener('no way', (ctx) => {
+  console.log('holy shit');
+});
+
 app.use(router.routes(), router.allowedMethods());
 
-
-
-const options = { useNewUrlParser: true, useCreateIndex: true,};
-mongoose.connect(process.env.MONGODB_URI, options).then(
-  () =>  { console.log("[Database] √") },
-  err => { console.log("[Database] X ", err) }
-);
-
-
-
 const server = http.createServer(app.callback());
-const io = require('socket.io')(server);
 server.listen(process.env.PORT, () => console.log(`[Server] listening on PORT ${process.env.PORT}`));
 
-
-
-io.on('connection', async socket => {
-
-  console.log('[Socket] √')
-
-  socket.on('JOIN_GAME', async function(data){
-    console.log(`[Socket] JOIN_GAME`);
-    console.log(data);
-    /* 
-      Use the Game.joinGame method to add a user to a game
-      If able to join -> emit.toAll(user joined)
-      if unable to join -> emit.toCaller(unable to join)
-    */
-    const ableToJoin = await Game.joinGame(data);
-    console.log(ableToJoin)
-    if (ableToJoin.status)
-      io.emit('UPDATE_GAME', {data: ableToJoin.data});
-    else
-      io.emit('ERROR', ableToJoin.error);
-  });
-
-
-  socket.on('PLAY_HAND', async function(data){
-    /* 
-      Use the Game.playHand method to play a hand for a user
-        - Verify the hand is better than the last
-          - If so remove it from the players hand
-          - Make it the last played hand
-      If it is a valid hand, emit.toAll(update)
-      If it is not a valid hand, emit.toCaller(invalid)
-    */
-    
-    io.emit('UPDATE_GAME', response);
-  });
-
-});
-
-
-
-module.exports = app
+module.exports = server

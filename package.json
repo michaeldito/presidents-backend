@@ -8,6 +8,7 @@
     "test-models": "export NODE_ENV=dev && mocha test/*model.js",
     "test-utils": "export NODE_ENV=dev && mocha test/*utils.js",
     "test-proc": "export NODE_ENV=dev && mocha --timeout 15000 test/*processing.js",
+    "test-server": "export NODE_ENV=dev && mocha --timeout 15000 test/*server.js",
     "count-src": "find src -name '*.js' | xargs wc -l",
     "count-test": "find test -name '*.js' | xargs wc -l",
     "start": "export NODE_ENV=dev && nodemon server/server.js"
@@ -24,11 +25,13 @@
     "kcors": "^2.2.2",
     "koa": "^2.7.0",
     "koa-bodyparser": "^4.2.0",
+    "koa-compose": "^4.1.0",
     "koa-jwt": "^3.3.2",
     "koa-logger": "^3.2.0",
     "koa-router": "^7.3.0",
     "mongoose": "^5.5.9",
-    "socket.io": "^2.2.0"
+    "socket.io": "^2.2.0",
+    "supertest": "^4.0.2"
   },
   "devDependencies": {
     "mocha": "^6.1.4"

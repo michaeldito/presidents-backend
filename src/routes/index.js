@@ -1,31 +1,26 @@
 const Router = require('koa-router');
-const UserController = require('../controllers/User');
-const GameController = require('../controllers/Game');
-const Authentication = require('../controllers/Authentication');
 
 // Public base api
 const router = new Router({ prefix: '/api/v1' });
-router.get('/', (ctx) => ctx.body = '/api/v1' );
 
-// Login
-const loginRouter = new Router({ prefix: '/login' });
-loginRouter.post('/', Authentication);
+router.get('/', (ctx) => {
+  ctx.body = {data: '/api/v1'};
+  ctx.status = 200;
+});
 
-// User
-const userRouter = new Router({ prefix: '/users' });
-userRouter.post('/create', UserController.create);
+router.get('/error', (ctx) => {
+  ctx.throw(400, 'Error Message');
+});
 
-// Game
-const gameRouter = new Router({ prefix: '/games' });
-gameRouter.get('/', GameController.allGameNames);
-gameRouter.post('/create', GameController.create);
-gameRouter.put('/join', GameController.joinGame);
+router.get('/no-way', (ctx) => {
+  ctx.app.emit('no way', 'poop', ctx);
+});
 
 
-router.use(
-  loginRouter.routes(),
-  gameRouter.routes(),
-  userRouter.routes()
-);
+// router.use(
+//   loginRouter.routes(),
+//   gameRouter.routes(),
+//   userRouter.routes()
+// );
 
 module.exports = router;
