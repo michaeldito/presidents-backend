@@ -70,13 +70,15 @@ function sortCards(cards) {
 }
 
 function find3Clubs(allPlayerHands) {
-  let i = 0
+  let p = 0, c = 0;
   for (let player of allPlayerHands) {
     for (let card of player) {
-      if (card.rank === '3' && card.suite === 'C')
-        return i;
+      if (card.shortHand === '3Clubs')
+        return {p, c};
+      c++;
     }
-    i += 1;
+    p += 1;
+    c = 0;
   }
 
   // should never reach here

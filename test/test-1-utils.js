@@ -81,7 +81,9 @@ describe('Utility Tests', () => {
   describe('sort(cards)', () => {
 
     it('Sorts an array of cards by rank', async () => {
-      const cards = await CardModel.find({}).populate('cardRank');
+      const cards = await CardModel.find({})
+        .populate('cardRank')
+        .populate('suit');
       const sorted = utils.sortCards(cards);
       const ranks = sorted.map(card=> card.cardRank.value);
       let v = 2;
@@ -94,6 +96,20 @@ describe('Utility Tests', () => {
         }
         v++;
       }
+    });
+
+  });
+
+  describe('find3Clubs(allPlayerHands)', () => {
+
+    it('Searchs through a 2d array cards, returns index of array with 3♣', async () => {
+      const deck = await CardModel.find({});
+      const shuffled = utils.shuffle(deck);
+      const numPlayers = 4;
+      const playerHands = utils.deal(numPlayers, shuffled);
+      const res = utils.find3Clubs(playerHands);
+      const card = playerHands[res.p][res.c];
+      expect(card.shortHand).toBe('3Clubs');
     });
 
   });
