@@ -78,5 +78,25 @@ describe('Utility Tests', () => {
 
   });
 
+  describe('sort(cards)', () => {
+
+    it('Sorts an array of cards by rank', async () => {
+      const cards = await CardModel.find({}).populate('cardRank');
+      const sorted = utils.sortCards(cards);
+      const ranks = sorted.map(card=> card.cardRank.value);
+      let v = 2;
+      // extract the first four items
+      // check if they are equal to v, continue until v = 14 (Ace)
+      while (v < 15) {
+        let chunk = ranks.splice(0, 4);
+        for (let peice of chunk) {
+          expect(peice).toBe(v);
+        }
+        v++;
+      }
+    });
+
+  });
+  
 
 });

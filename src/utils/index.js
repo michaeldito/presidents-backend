@@ -66,7 +66,7 @@ function intValue(card) {
 }
 
 function sortCards(cards) {
-  return cards.sort((a, b) => (this.intValue(a.rank) > this.intValue(b.rank)) ? 1 : -1)
+  return cards.sort((a, b) => a.cardRank.value > b.cardRank.value ? 1 : -1);
 }
 
 function find3Clubs(allPlayerHands) {
