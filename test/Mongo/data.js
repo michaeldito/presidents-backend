@@ -181,6 +181,7 @@ const users = [
 
 const game = {
   name: 'test-game',
+  skipCount: 0
 }
 
 module.exports = {

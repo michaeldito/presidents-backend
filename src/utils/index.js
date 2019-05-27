@@ -70,7 +70,7 @@ function sortCards(cards) {
 }
 
 function find3Clubs(allPlayerHands) {
-  let p = 0, c = 0;
+let p = 0, c = 0;
   for (let player of allPlayerHands) {
     for (let card of player) {
       if (card.shortHand === '3Clubs')
@@ -82,18 +82,8 @@ function find3Clubs(allPlayerHands) {
   }
 
   // should never reach here
-  throw new Exception('3 of Clubs was not in the deck!!');
+  throw new Error('3 of Clubs was not in the deck.');
 }
-
-// todo: check if next player has finished
-function nextPlayerIdx(prevPlayerIdx, skipCount, numPlayers) {
-  if (skipCount)
-    return (prevPlayerIdx + skipCount + 1) % numPlayers;
-  else
-    return (prevPlayerIdx + 1) % numPlayers;
-}
-
-
 
 module.exports = {
   ranks,
@@ -105,6 +95,5 @@ module.exports = {
   deal,
   intValue,
   sortCards,
-  find3Clubs,
-  nextPlayerIdx
+  find3Clubs
 }

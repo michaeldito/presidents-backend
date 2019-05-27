@@ -1,7 +1,7 @@
 const { PlayerModel, GameModel, UserModel, GameStateModel,
   CardModel, SuitModel, CardRankModel } = require('../src/models');
 const utils = require('../src/utils');
-const init = require('./Mongo/init');
+const init = require('./mongo/init');
 const mongoose = require('mongoose');
 const expect = require('expect');
 const assert = require('assert');
@@ -110,6 +110,11 @@ describe('Utility Tests', () => {
       const res = utils.find3Clubs(playerHands);
       const card = playerHands[res.p][res.c];
       expect(card.shortHand).toBe('3Clubs');
+    });
+
+    it('Throws exception if 2d array does not contain 3♣', () => {
+      const arr = [[{}],[{}],[{}]];
+      assert.throws(() => utils.find3Clubs(arr), Error, '3 of Clubs was not in the deck.');
     });
 
   });

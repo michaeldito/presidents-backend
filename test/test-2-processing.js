@@ -97,6 +97,14 @@ describe('Processing Tests', () => {
       });
 
 
+      it('joinGame() returns the game if successul', async () => {
+        let players = await PlayerModel.find({}).limit(2);
+        let newGame = await createGame(players[0]._id, {name: 'join-return-testeroni'});
+        newGame = await joinGame(players[1]._id, newGame._id);
+        expect(newGame instanceof GameModel).toBeTruthy();
+      });
+
+
 
       it('joinGame() prevents duplicate join', async () => {
         let player = await PlayerModel.findOne({});
@@ -165,7 +173,7 @@ describe('Processing Tests', () => {
         // attempt to join
         // assert error game full
         assert.rejects(joinGame(lastPlayer._id, game._id), Error, 'Unable to join. Maximum number of players reached.');
-      });
+      }).timeout(3000);
 
 
 

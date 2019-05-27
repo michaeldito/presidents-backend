@@ -8,6 +8,8 @@
     "test-models": "mocha test/*model.js",
     "test-utils": "mocha test/*utils.js",
     "test-proc": "mocha --timeout 15000 test/*processing.js",
+    "count-src": "find src -name '*.js' | xargs wc -l",
+    "count-test": "find test -name '*.js' | xargs wc -l",
     "start": "nodemon src/server/index.js"
   },
   "author": "",
