@@ -1,5 +1,8 @@
 const { GameStateModel, GameModel, PlayerModel } = require('../index');
 
+
+// throws error or returns game doc
+// creates game and updates player if successful
 async function createGame(playerId, game) {
   
   const doc = await GameModel.findOne({name: game.name});
@@ -16,9 +19,7 @@ async function createGame(playerId, game) {
   await newGame.save();
 
   // update the players document
-  // set game
-  // set seat position
-  // let createdByPlayer = await PlayerModel.findOne({_id: playerId});
+  // set game & seat position
   let updatedPlayer = await PlayerModel.updateOne({_id: playerId}, {
     $set: {
       game: newGame._id,
@@ -26,16 +27,12 @@ async function createGame(playerId, game) {
     }
   });
 
-  // createdByPlayer.game = newGame._id;
-  // createdByPlayer.seatPosition = 0;
-  // //console.log(`${playerId} seat position set to ${createdByPlayer.seatPosition}`);
-  // await createdByPlayer.save();
-
   return newGame
 }
 
 
-
+// throws error or returns game doc
+// updates game and player if successful
 async function joinGame(playerId, gameId) {
 
   let game = await GameModel.findOne({_id: gameId});
@@ -64,13 +61,15 @@ async function joinGame(playerId, gameId) {
 
   // add seat position to player
   createdByPlayer.seatPosition = game.players.length - 1;
- 
-  //console.log(`${playerId} seat position set to ${createdByPlayer.seatPosition}`);
   await createdByPlayer.save();
+  //console.log(`${playerId} seat position set to ${createdByPlayer.seatPosition}`);
   
   return game
 }
 
+
+// sets game status to in progress
+// throws error or returns game doc
 async function startGame(gameId) {
   const game = await GameModel.findOne({ _id: gameId });
 

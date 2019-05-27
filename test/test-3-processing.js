@@ -81,7 +81,7 @@ describe('Processing Tests', () => {
         const [p1, p2] = [players[0], players[1]];
         let newGame = await createGame(p1._id, {name: 'join-test-1'});
         newGame = await joinGame(p2._id, newGame._id);
-        newGame = newGame.toJSON();
+        //newGame = newGame.toJSON();
 
         let updatedPlayers = [];
         for (let player of players) {
@@ -208,7 +208,7 @@ describe('Processing Tests', () => {
 
     });
 
-    describe('Get Next PlayerId', () => {
+    describe.skip('Get Next PlayerId', () => {
       
       it('should return a mongo instance id successful', () => {
       
@@ -220,7 +220,7 @@ describe('Processing Tests', () => {
 
     });
 
-    describe('Deal To Player', () => {
+    describe.skip('Deal To Player', () => {
       
       it('should return 14 cards to each of the 4 players', () => {
       
@@ -228,7 +228,7 @@ describe('Processing Tests', () => {
 
     });
 
-    describe('Play Hand', () => {
+    describe.skip('Play Hand', () => {
       
       // game
       it('should replace played hand with incoming hand if successful', () => {
@@ -258,7 +258,7 @@ describe('Processing Tests', () => {
 
 
 
-    describe('Is Game Over', () => {
+    describe.skip('Is Game Over', () => {
 
       it('should return true if game.status === FINALIZED', () => {
       

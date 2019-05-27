@@ -1,6 +1,8 @@
 require('./config/config');
 require('dotenv').config();
 
+
+
 const Koa = require('koa');
 const bodyParser = require('koa-bodyparser');
 const http = require('http');
@@ -12,15 +14,9 @@ const Game = require('../controllers/Game');
 
 
 const app = new Koa();
-
 app.use(bodyParser());
 app.use(logger());
 app.use(cors({ credentials: true, exposeHeaders: ['Access-Token', 'Cookie'] }));
-
-process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';  
-
-// Custom error catch for koa-jwt so that we can log the specific error message
-// when attempting to read and parse the access_token
 app.use(async (ctx, next) => {
   return next().catch((err) => {
     if(err.status === 401) {
@@ -33,26 +29,26 @@ app.use(async (ctx, next) => {
     }
   });
 });
-
 app.use(router.routes(), router.allowedMethods());
 
-const options = {
-  useNewUrlParser: true,
-  useCreateIndex: true,
-};
 
+
+const options = { useNewUrlParser: true, useCreateIndex: true,};
 mongoose.connect(process.env.MONGODB_URI, options).then(
   () =>  { console.log("[Database] √") },
   err => { console.log("[Database] X ", err) }
 );
 
+
+
 const server = http.createServer(app.callback());
-
 const io = require('socket.io')(server);
-
 server.listen(process.env.PORT, () => console.log(`[Server] listening on PORT ${process.env.PORT}`));
 
+
+
 io.on('connection', async socket => {
+
   console.log('[Socket] √')
 
   socket.on('JOIN_GAME', async function(data){
@@ -69,16 +65,8 @@ io.on('connection', async socket => {
       io.emit('UPDATE_GAME', {data: ableToJoin.data});
     else
       io.emit('ERROR', ableToJoin.error);
-  })
+  });
 
-  socket.on('START_GAME', async function(data){
-    /* 
-      Use the Game.startGame method to assign cards to players & whoseTurn
-      emit('update game)
-    */
-    const response = { data: {...data, hello: 'world'}};
-    io.emit('UPDATE_GAME', response);
-  })
 
   socket.on('PLAY_HAND', async function(data){
     /* 
@@ -91,17 +79,10 @@ io.on('connection', async socket => {
     */
     
     io.emit('UPDATE_GAME', response);
-  })
+  });
 
-  socket.on('SKIP', async function(data){
-    /* 
-      Use the Game.getNextPlayerIdx(currentPlayerIdx)
-        - update the game state in mongo
-      emit.toAll(newState)
-    */
-    const response = { data: {...data, hello: 'world'}};
-    io.emit('UPDATE_GAME', response);
-  })
 });
+
+
 
 module.exports = app

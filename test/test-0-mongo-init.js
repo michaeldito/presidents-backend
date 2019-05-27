@@ -210,7 +210,7 @@ describe('MongoDB Init Tests', () => {
       });
 
       it('Calling initialize twice doesn\'t create duplicate instances', async () => {
-        await init.initUsers();
+        await init.initPlayers();
         const count = await UserModel.countDocuments({});
         expect(count).toBe(9);
       });
