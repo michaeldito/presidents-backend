@@ -1,3 +1,4 @@
+const compose = require('koa-compose');
 const bodyParser = require('koa-bodyparser');
 const logger = require('koa-logger');
 const cors = require('kcors');
@@ -14,10 +15,10 @@ const errorHandler = async (ctx, next) => {
 
 const middleware = [
   bodyParser(), 
-  logger(), 
+ // logger(), 
   cors(),
   errorHandler
 ];
 
 
-module.exports = middleware;
+module.exports = compose(middleware);

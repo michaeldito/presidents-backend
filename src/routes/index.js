@@ -12,8 +12,8 @@ router.get('/error', (ctx) => {
   ctx.throw(400, 'Error Message');
 });
 
-router.get('/no-way', (ctx) => {
-  ctx.app.emit('no way', 'poop', ctx);
+router.get('/logging', (ctx) => {
+  ctx.app.emit('logging', 'poop', ctx);
 });
 
 

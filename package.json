@@ -11,11 +11,12 @@
     "test-server": "export NODE_ENV=dev && mocha --timeout 15000 test/*server.js",
     "count-src": "find src -name '*.js' | xargs wc -l",
     "count-test": "find test -name '*.js' | xargs wc -l",
-    "start": "export NODE_ENV=dev && nodemon server/server.js"
+    "start": "export NODE_ENV=dev && nodemon src/server/index.js"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@babel/node": "^7.4.5",
     "assert": "^2.0.0",
     "bcrypt": "^3.0.6",
     "bcryptjs": "^2.4.3",
@@ -29,6 +30,8 @@
     "koa-jwt": "^3.3.2",
     "koa-logger": "^3.2.0",
     "koa-router": "^7.3.0",
+    "koa-socket": "^4.4.0",
+    "koa-socket-2": "^1.1.0",
     "mongoose": "^5.5.9",
     "socket.io": "^2.2.0",
     "supertest": "^4.0.2"
