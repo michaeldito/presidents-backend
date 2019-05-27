@@ -154,7 +154,7 @@ const users = [
     password: 'mortadella'
   },
   { 
-    username: 'tonny',
+    username: 'tony',
     password: 'pepperoni'
   },
   { 

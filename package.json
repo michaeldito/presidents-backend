@@ -5,6 +5,9 @@
   "main": "index.js",
   "scripts": {
     "test": "mocha test/*.js",
+    "test-models": "mocha test/*model.js",
+    "test-utils": "mocha test/*utils.js",
+    "test-proc": "mocha --timeout 15000 test/*processing.js",
     "start": "nodemon src/server/index.js"
   },
   "author": "",
