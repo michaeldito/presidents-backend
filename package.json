@@ -4,11 +4,13 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "export NODE_ENV=dev && mocha test/*.js",
+    "test": "export NODE_ENV=dev && mocha test/*js",
+    "jest": "export NODE_ENV=dev && jest",
     "test-models": "export NODE_ENV=dev && mocha test/*model.js",
     "test-utils": "export NODE_ENV=dev && mocha test/*utils.js",
     "test-proc": "export NODE_ENV=dev && mocha --timeout 15000 test/*processing.js",
     "test-server": "export NODE_ENV=dev && mocha --timeout 15000 test/*server.js",
+    "test-play": "export NODE_ENV=dev && mocha --timeout 15000 test/*playground.js",
     "count-src": "find src -name '*.js' | xargs wc -l",
     "count-test": "find test -name '*.js' | xargs wc -l",
     "start": "export NODE_ENV=dev && nodemon src/server/index.js"
@@ -22,6 +24,7 @@
     "bcryptjs": "^2.4.3",
     "dotenv": "^4.0.0",
     "expect": "^24.8.0",
+    "jest": "^24.8.0",
     "jsonwebtoken": "^8.5.1",
     "kcors": "^2.2.2",
     "koa": "^2.7.0",
@@ -33,10 +36,17 @@
     "koa-socket": "^4.4.0",
     "koa-socket-2": "^1.1.0",
     "mongoose": "^5.5.9",
+    "should": "^13.2.3",
     "socket.io": "^2.2.0",
     "supertest": "^4.0.2"
   },
   "devDependencies": {
     "mocha": "^6.1.4"
+  },
+  "jest": {
+    "testEnvironment": "node",
+    "testMatch": [
+      "<rootDir>/test/*js"
+    ]
   }
 }
