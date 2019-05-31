@@ -108,7 +108,10 @@ async function initGame() {
   }
 
   // create 1 user
-  let userInstance = new UserModel(users[0]);
+  let userInstance = new UserModel({ 
+    username: 'another',
+    password: 'test'
+  });
 
   let userPromise = userInstance.save();
   const player = {

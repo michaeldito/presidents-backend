@@ -23,6 +23,7 @@ describe('Processing Tests', () => {
     
     before(async () => {
       await init.initPlayers();
+      await init.initGameStates();
       await GameModel.deleteMany({});
     });
 

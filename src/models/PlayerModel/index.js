@@ -29,6 +29,18 @@ const PlayerSchema = new mongoose.Schema({
   }
 });
 
+PlayerSchema.statics.findAll = function() {
+  return this.find({});
+}
+
+PlayerSchema.statics.findRandom = function() {
+  return this.findOne({});
+}
+
+PlayerSchema.statics.findRandoms = function(howMany) {
+  return this.find({}).limit(howMany);
+}
+
 const Player = mongoose.model('Player', PlayerSchema);
 
 module.exports = Player;

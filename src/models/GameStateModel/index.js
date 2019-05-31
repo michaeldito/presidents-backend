@@ -7,6 +7,10 @@ const GameStateSchema = new mongoose.Schema({
   }
 });
 
+GameStateSchema.statics.findByState = function(state) {
+  return this.findOne({state});
+}
+
 const GameStateModel = mongoose.model('GameState', GameStateSchema);
 
 module.exports = GameStateModel;

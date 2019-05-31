@@ -19,6 +19,10 @@ CardRankSchema.statics.getAll = function() {
   return this.find({});
 }
 
+CardRankSchema.statics.findByChar = function(character) {
+  return this.findOne({character});
+}
+
 const CardRankModel = mongoose.model('CardRank', CardRankSchema);
 
 module.exports = CardRankModel;

@@ -19,8 +19,12 @@ const SuitSchema = new mongoose.Schema({
   }
 });
 
-SuitSchema.statics.getAll = function() {
+SuitSchema.statics.findAll = function() {
   return this.find({});
+}
+
+SuitSchema.statics.findByName = function(name) {
+  return this.findOne({name});
 }
 
 const SuitModel = mongoose.model('Suit', SuitSchema);

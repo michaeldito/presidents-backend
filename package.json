@@ -6,7 +6,8 @@
   "scripts": {
     "test": "export NODE_ENV=dev && mocha test/*js",
     "jest": "export NODE_ENV=dev && jest",
-    "test-models": "export NODE_ENV=dev && mocha test/*model.js",
+    "test-mongo": "export NODE_ENV=dev && mocha test/*mongo-init.js",
+    "test-methods": "export NODE_ENV=dev && mocha test/*methods.js",
     "test-utils": "export NODE_ENV=dev && mocha test/*utils.js",
     "test-proc": "export NODE_ENV=dev && mocha --timeout 15000 test/*processing.js",
     "test-server": "export NODE_ENV=dev && mocha --timeout 15000 test/*server.js",

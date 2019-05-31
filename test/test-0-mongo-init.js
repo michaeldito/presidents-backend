@@ -78,6 +78,11 @@ describe('MongoDB Init Tests', () => {
     before(async () => {
       await PoliticalRankModel.deleteMany({});
     });
+
+    after(async () => {
+      await PoliticalRankModel.deleteMany({});
+    });
+    
     
 
     describe('Check that db collections are empty', () => {
@@ -111,6 +116,10 @@ describe('MongoDB Init Tests', () => {
   describe('Game State', () => {
     
     before(async () => {
+      await GameStateModel.deleteMany({});
+    });
+
+    after(async () => {
       await GameStateModel.deleteMany({});
     });
 
@@ -224,12 +233,15 @@ describe('MongoDB Init Tests', () => {
 
     before(async () => {
       await GameModel.deleteMany({});
+      await GameStateModel.deleteMany({});
+      await init.initGameStates();
     });
 
     after(async () => {
       await GameModel.deleteMany({});
       await PlayerModel.deleteMany({});
       await UserModel.deleteMany({});
+      await GameStateModel.deleteMany({});
     });
 
     describe('Check that db collections are empty', () => {

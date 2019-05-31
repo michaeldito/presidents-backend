@@ -45,6 +45,10 @@ GameSchema.methods.toJSON = function () {
   return this.toObject();
 }
 
+GameSchema.statics.findByName = function(name) {
+  return this.findOne({name});
+}
+
 const GameModel = mongoose.model('Game', GameSchema);
 
 module.exports = GameModel;
