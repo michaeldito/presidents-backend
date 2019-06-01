@@ -11,7 +11,7 @@ require('dotenv').config();
 describe('Utility Tests', () => {
 
   before(async () => {
-    const options = { useNewUrlParser: true, useCreateIndex: true };
+    const options = { useNewUrlParser: true, useCreateIndex: true, useFindAndModify: false };
     await mongoose.connect(process.env.MONGODB_URI_TEST, options);
   });
 

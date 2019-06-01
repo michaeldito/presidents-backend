@@ -17,6 +17,10 @@ const CardSchema = new mongoose.Schema({
   }
 });
 
+CardSchema.statics.getDeck = function() {
+  return this.find({});
+}
+
 const CardModel = mongoose.model('Card', CardSchema);
 
 module.exports = CardModel;

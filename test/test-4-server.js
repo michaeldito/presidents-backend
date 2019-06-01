@@ -9,7 +9,7 @@ const assert = require('assert');
 describe('Koa Server', () => {
 
   before(async () => {
-    const options = { useNewUrlParser: true, useCreateIndex: true };
+    const options = { useNewUrlParser: true, useCreateIndex: true, useFindAndModify: false };
     await mongoose.connect(process.env.MONGODB_URI_TEST, options);
   });
 

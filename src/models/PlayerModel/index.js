@@ -41,6 +41,11 @@ PlayerSchema.statics.findRandoms = function(howMany) {
   return this.find({}).limit(howMany);
 }
 
+PlayerSchema.statics.findByUsername = async function(username) {
+  const user = await this.model('User').findOne({username});
+  return this.findOne({user: user._id});
+}
+
 const Player = mongoose.model('Player', PlayerSchema);
 
 module.exports = Player;

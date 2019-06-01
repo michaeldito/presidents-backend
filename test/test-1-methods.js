@@ -14,7 +14,7 @@ describe('Model Method Tests', function() {
 
     this.slow(4000);
 
-    const options = { useNewUrlParser: true, useCreateIndex: true };
+    const options = { useNewUrlParser: true, useCreateIndex: true, useFindAndModify: false };
     await mongoose.connect(process.env.MONGODB_URI_TEST, options);
     await CardModel.deleteMany({});
     await CardRankModel.deleteMany({});
