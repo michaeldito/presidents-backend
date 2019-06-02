@@ -6,7 +6,7 @@ const expect = require('expect');
 const assert = require('assert');
 
 
-describe('Koa Server', () => {
+describe.skip('Koa Server', () => {
 
   before(async () => {
     const options = { useNewUrlParser: true, useCreateIndex: true, useFindAndModify: false };

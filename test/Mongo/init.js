@@ -1,14 +1,67 @@
 const { CardModel, CardRankModel, GameModel, GameStateModel, 
-  PlayerModel, PoliticalRankModel, SuitModel, UserModel } = require('../../src/models');
+  PlayerModel, PoliticalRankModel, SuitModel, UserModel, DeckModel,
+  GameConfigModel } = require('../../src/models');
 
-const { suits, cardRanks, politicalRanks, states, users, game } = require('./data');
+const { suits, cardRanks, politicalRanks, users, game } = require('./data');
+
+
+
+// creates 9 political ranks
+async function initPoliticalRanks() {
+  const numberOfPoliticalRanks = await PoliticalRankModel.countDocuments({});
+  if (numberOfPoliticalRanks === 9) {
+    return;
+  }
+
+  let instances = politicalRanks.map(rank => new PoliticalRankModel(rank));
+  let promises = instances.map(instance => instance.save());
+  return Promise.all(promises);
+}
+
+
+
+// creates 9 users
+// then creates 9 players
+async function initPlayers() {
+  const numberOfPlayers = await PlayerModel.countDocuments({});
+  if (numberOfPlayers === 9) {
+    return;
+  }
+  let userInstances = users.map(user => new UserModel(user));
+  let userPromises = userInstances.map(instance => instance.save());
+
+  const nullRankInstance = await PoliticalRankModel.findByName('NullRank')
+  const players = userInstances.map((user, idx) => {
+    return {
+      user: user._id,
+      seatPosition: idx,
+      drinksToDrink: 0,
+      drinksDrunk: 0,
+      rankAssignments: [nullRankInstance._id]
+    }
+  });
+
+  let playerInstances = players.map(player => new PlayerModel(player));
+  let playerPromises = playerInstances.map(instance => instance.save());
+
+  return Promise.all([...userPromises, ...playerPromises]);
+}
+
+
 
 // creates 4 suits
 // creates 13 card ranks
-// then creates 52 cards
-async function initCards() {
-  const currentNumberOfCards = await CardModel.countDocuments({});
-  if (currentNumberOfCards === 52) {
+// creates 52 cards
+// creates deck
+// creates game config
+async function initPresidents() {
+  // do not init if already done
+  const suitCount = await CardModel.countDocuments({});
+  const rankCount = await CardRankModel.countDocuments({});
+  const cardCount = await CardModel.countDocuments({});
+  const deckCount = await DeckModel.countDocuments({});
+  const configCount = await GameConfigModel.countDocuments({});
+  if (suitCount === 4 && rankCount == 13 && cardCount === 52 && deckCount === 1 && configCount === 1) {
     return;
   }
 
@@ -34,115 +87,55 @@ async function initCards() {
   let cardInstances = cards.map(card => new CardModel(card));
   let cardPromises = cardInstances.map(instance => instance.save());
 
-  return Promise.all([...suitPromises, ...cardRankPromises, ...cardPromises]);
-}
 
-// creates 8 political ranks
-async function initPoliticalRanks() {
-  const numberOfPoliticalRanks = await PoliticalRankModel.countDocuments({});
-  if (numberOfPoliticalRanks === 8) {
-    return;
-  }
-
-  let instances = politicalRanks.map(rank => new PoliticalRankModel(rank));
-  let promises = instances.map(instance => instance.save());
-  return Promise.all(promises);
-}
-
-// creates 3 game states
-async function initGameStates() {
-  const numberOfGameStates = await GameStateModel.countDocuments({});
-  if (numberOfGameStates === 3) {
-    return;
-  }
-
-  let instances = states.map(state => new GameStateModel(state));
-  let promises = instances.map(instance => instance.save());
-  return Promise.all(promises);
-}
-
-// creates 3 users
-async function initUsers() {
-  const numberOfUsers = await UserModel.countDocuments({});
-  if (numberOfUsers === 9) {
-    return;
-  }
-
-  let instances = users.map(user => new UserModel(user));
-  let promises = instances.map(instance => instance.save());
-  return Promise.all(promises);
-}
-
-// creates 3 users
-// then creates 3 players
-async function initPlayers() {
-  const numberOfPlayers = await PlayerModel.countDocuments({});
-  if (numberOfPlayers === 9) {
-    return;
-  }
-  let userInstances = users.map(user => new UserModel(user));
-  let userPromises = userInstances.map(instance => instance.save());
-
-
-  const players = userInstances.map((user, idx) => {
-    return {
-      user: user._id,
-      seatPosition: idx,
-      drinksToDrink: 0,
-      drinksDrunk: 0
-    }
+  let presidentsDeck = new DeckModel({
+    cards: cardInstances,
   });
 
-  let playerInstances = players.map(player => new PlayerModel(player));
-  let playerPromises = playerInstances.map(instance => instance.save());
+  let deckPromise = presidentsDeck.save();
 
-  return Promise.all([...userPromises, ...playerPromises]);
+  let presidentsConfig = new GameConfigModel({
+    name: 'Presidents',
+    maxPlayers: 8,
+    deck: presidentsDeck
+  });
+
+  let gameConfigPromise = presidentsConfig.save();
+
+  // init ranks first so initPlayers can grab null rank
+  await initPoliticalRanks();
+
+  return Promise.all([
+    ...suitPromises, 
+    ...cardRankPromises, 
+    ...cardPromises, 
+    deckPromise, 
+    gameConfigPromise,
+    initPlayers()
+  ]);
 }
 
-// create 1 players
-// have player create the game
-async function initGame() {
-  const numberOfGames = await GameModel.countDocuments({});
-  if (numberOfGames === 1) {
-    return;
-  }
-
-  // create 1 user
-  let userInstance = new UserModel({ 
-    username: 'another',
-    password: 'test'
-  });
-
-  let userPromise = userInstance.save();
-  const player = {
-    user: userInstance._id,
-    seatPosition: 0,
-    drinksToDrink: 0,
-    drinksDrunk: 0
-  };
-
-  let playerInstance = new PlayerModel(player);
-  let playerPromise = playerInstance.save();
-
-  // have one player create the game
-  const NOT_STARTED = await GameStateModel.findOne({state: 'NOT_STARTED'});
-  const newGame = new GameModel({
-    name: game.name,
-    state: NOT_STARTED._id,
-    players: [playerInstance._id],
-  });
-  let gamePromise = newGame.save();
-  
-  return Promise.all([userPromise, playerPromise, gamePromise]);
+async function dropAll() {
+  return Promise.all([
+    CardModel.deleteMany({}),
+    CardRankModel.deleteMany({}),
+    SuitModel.deleteMany({}),
+    DeckModel.deleteMany({}),
+    UserModel.deleteMany({}),
+    PlayerModel.deleteMany({}),
+    PoliticalRankModel.deleteMany({}),
+    GameConfigModel.deleteMany({}),
+    GameModel.deleteMany({})
+  ])
 }
 
 
-module.exports = { initCards, initPoliticalRanks, initGameStates, 
-  initUsers, initPlayers, initGame };
 
+
+module.exports = {initPresidents, dropAll}
 
 // let deck = this.createDeck();
 // let shuffledDeck = this.shuffle(deck);
-// let playerHands = this.deal(numPlayers, shuffledDeck);
+// let playerHands = this.deal(numberOfPlayers, shuffledDeck);
 // let sortedPlayersHands = playerHands.map(hand => this.sortCards(hand));
 // const whoseTurnIdx = this.find3Clubs(sortedPlayersHands);

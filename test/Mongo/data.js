@@ -125,6 +125,10 @@ const politicalRanks = [
   {
     name: 'Asshole',
     value: 1
+  },
+  {
+    name: 'NullRank',
+    value: 0
   }
 ];
 

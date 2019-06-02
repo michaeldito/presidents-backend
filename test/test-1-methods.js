@@ -95,39 +95,6 @@ describe('Model Method Tests', function() {
   });
 
 
-  describe('GameStateModel', function() {    
-    
-    describe('findByState(state)', function() {    
-    
-      context('should return instance if successful', function() {    
-    
-        it('should return NOT_STARTED', async function() {  
-          const notStarted = await GameStateModel.findByState('NOT_STARTED');  
-          expect(notStarted.state).toBe('NOT_STARTED');
-        });
-
-        it('should return IN_PROGRESS', async function() {    
-          const inProgress = await GameStateModel.findByState('IN_PROGRESS');  
-          expect(inProgress.state).toBe('IN_PROGRESS');
-        });
-
-        it('should return FINALIZED', async function() {    
-          const finalized = await GameStateModel.findByState('FINALIZED');  
-          expect(finalized.state).toBe('FINALIZED');
-        });
-
-        it('should throw error if no instance found', async function() {    
-          const foo = await GameStateModel.findByState('foo');  
-          expect(foo).toBeFalsy();
-        });
-
-      });
-
-    });
-
-  });
-
-
   describe('PoliticalRankModel', function() {    
     
     it('findByName(name)', async function() {    

@@ -1,272 +1,81 @@
 const { CardModel, CardRankModel, 
   SuitModel, PoliticalRankModel, 
-  UserModel, PlayerModel, GameModel,
-  GameStateModel } = require('../src/models');
+  UserModel, PlayerModel, DeckModel } = require('../src/models');
 const init = require('./Mongo/init');
 const mongoose = require('mongoose');
 const expect = require('expect');
 require('dotenv').config();
 
-describe('MongoDB Init Tests', () => {
+describe('MongoDB Init Tests', function() {
 
-  before(async () => {
+  before(async function() {
     const options = { useNewUrlParser: true, useCreateIndex: true, useFindAndModify: false };
     await mongoose.connect(process.env.MONGODB_URI_TEST, options);
   });
 
-  after(async () => {
+  after(async function() {
+    await init.dropAll();
     await mongoose.connection.close();
   });
 
+  describe('Check that db collections are empty.', function() {
 
-
-  describe('CardRank, Suit, and Card', () => {    
-    
-    before(async () => {
-      await CardModel.deleteMany({});
-      await CardRankModel.deleteMany({});
-      await SuitModel.deleteMany({});
+    after(async function() {
+      await init.initPresidents();
     });
 
-    after(async () => {
-      await CardModel.deleteMany({});
-      await CardRankModel.deleteMany({});
-      await SuitModel.deleteMany({});
+    it('No Card Ranks in DB', async function() {
+      const count = await CardRankModel.countDocuments({});
+      expect(count).toBe(0);
     });
 
-    describe('Check that db collections are empty.', () => {
-
-      it('No Card Ranks in DB', async () => {
-        const count = await CardRankModel.countDocuments({});
-        expect(count).toBe(0);
-      });
-
-      it('No Suits in DB', async () => {
-        const count = await SuitModel.countDocuments({});
-        expect(count).toBe(0);
-      });
-
-      it('No Cards in DB', async () => {
-        const count = await CardModel.countDocuments({});
-        expect(count).toBe(0);
-      });
-
+    it('No Suits in DB', async function() {
+      const count = await SuitModel.countDocuments({});
+      expect(count).toBe(0);
     });
 
-    describe('Verify Card Initialization', () => {
-
-      it('52 Cards are in the DB', async () => {
-        await init.initCards();
-        const count = await CardModel.countDocuments({});
-        expect(count).toBe(52);
-      });
-
-      it('Calling initialize twice doesn\'t create duplicate instances', async () => {
-        await init.initCards();
-        const count = await CardModel.countDocuments({});
-        expect(count).toBe(52);
-      });
-
+    it('No Cards in DB', async function() {
+      const count = await CardModel.countDocuments({});
+      expect(count).toBe(0);
     });
 
   });
 
+  describe('Verify DB Initialization', function() {    
 
-
-  describe('Political Rank', () => {
-    
-    before(async () => {
-      await PoliticalRankModel.deleteMany({});
+    it('1 Deck is in the DB', async function() {
+      const count = await DeckModel.countDocuments({});
+      expect(count).toBe(1);
     });
 
-    after(async () => {
-      await PoliticalRankModel.deleteMany({});
-    });
-    
-    
-
-    describe('Check that db collections are empty', () => {
-
-      it('No Political Ranks in DB', async () => {
-        const count = await PoliticalRankModel.countDocuments({});
-        expect(count).toBe(0);
-      });
-
+    it('52 Cards are in the DB', async function() {
+      const count = await CardModel.countDocuments({});
+      expect(count).toBe(52);
     });
 
-    describe('Verify Political Rank Initialization', () => {
-
-      it('8 Political Ranks are in the DB', async () => {
-        await init.initPoliticalRanks();
-        const count = await PoliticalRankModel.countDocuments({});
-        expect(count).toBe(8);
-      });
-
-      it('Calling initialize twice doesn\'t create duplicate instances', async () => {
-        await init.initPoliticalRanks();
-        const count = await PoliticalRankModel.countDocuments({});
-        expect(count).toBe(8);
-      });
-
+    it('4 Suits are in the DB', async function() {
+      const count = await SuitModel.countDocuments({});
+      expect(count).toBe(4);
     });
 
-  });
-
-
-  describe('Game State', () => {
-    
-    before(async () => {
-      await GameStateModel.deleteMany({});
+    it('13 Ranks are in the DB', async function() {
+      const count = await CardRankModel.countDocuments({});
+      expect(count).toBe(13);
     });
 
-    after(async () => {
-      await GameStateModel.deleteMany({});
+    it('9 Political Ranks are in the DB', async function() {
+      const count = await PoliticalRankModel.countDocuments({});
+      expect(count).toBe(9);
     });
 
-    describe('Check that db collections are empty', () => {
-
-      it('No Game States in DB', async () => {
-        const count = await GameStateModel.countDocuments({});
-        expect(count).toBe(0);
-      });
-
+    it('9 Users are in the DB', async function() {
+      const count = await UserModel.countDocuments({});
+      expect(count).toBe(9);
     });
 
-    describe('Verify Game State Initialization', () => {
-
-      it('3 Game States are in the DB', async () => {
-        await init.initGameStates();
-        const count = await GameStateModel.countDocuments({});
-        expect(count).toBe(3);
-      });
-
-      it('Calling initialize twice doesn\'t create duplicate instances', async () => {
-        await init.initGameStates();
-        const count = await GameStateModel.countDocuments({});
-        expect(count).toBe(3);
-      });
-
-    });
-
-  });
-
-
-  describe('User', () => {
-
-    before(async () => {
-      await UserModel.deleteMany({});
-    });
-
-    after(async () => {
-      await UserModel.deleteMany({});
-    });
-
-    describe('Check that db collections are empty', () => {
-      
-      it('No Users in DB', async () => {
-        const count = await UserModel.countDocuments({});
-        expect(count).toBe(0);
-      });
-
-    })
-    
-    describe('Verify Users Initialization', () => {
-
-      it('3 Users are in the DB', async () => {
-        await init.initUsers();
-        const count = await UserModel.countDocuments({});
-        expect(count).toBe(9);
-      });
-
-      it('Calling initialize twice doesn\'t create duplicate instances', async () => {
-        await init.initUsers();
-        const count = await UserModel.countDocuments({});
-        expect(count).toBe(9);
-      });
-
-    });
-
-
-  });
-
-  describe('Player', () => {
-
-    before(async () => {
-      await PlayerModel.deleteMany({});
-      await UserModel.deleteMany({});
-    });
-
-    after(async () => {
-      await PlayerModel.deleteMany({});
-      await UserModel.deleteMany({});
-    });
-
-    describe('Check that db collections are empty', () => {
-      
-      it('No Players in DB', async () => {
-        const count = await PlayerModel.countDocuments({});
-        expect(count).toBe(0);
-      });
-
-    })
-    
-    describe('Verify Players Initialization', () => {
-
-      it('3 Players are in the DB', async () => {
-        await init.initPlayers();
-        const count = await PlayerModel.countDocuments({});
-        expect(count).toBe(9);
-      });
-
-      it('Calling initialize twice doesn\'t create duplicate instances', async () => {
-        await init.initPlayers();
-        const count = await UserModel.countDocuments({});
-        expect(count).toBe(9);
-      });
-
-    });
-
-  });
-
-
-  describe('Game', () => {
-
-    before(async () => {
-      await GameModel.deleteMany({});
-      await GameStateModel.deleteMany({});
-      await init.initGameStates();
-    });
-
-    after(async () => {
-      await GameModel.deleteMany({});
-      await PlayerModel.deleteMany({});
-      await UserModel.deleteMany({});
-      await GameStateModel.deleteMany({});
-    });
-
-    describe('Check that db collections are empty', () => {
-      
-      it('No Games in DB', async () => {
-        const count = await GameModel.countDocuments({});
-        expect(count).toBe(0);
-      });
-
-    })
-    
-    describe('Verify Game Initialization', () => {
-
-      it('1 Game is in the DB', async () => {
-        await init.initGame();
-        const count = await GameModel.countDocuments({});
-        expect(count).toBe(1);
-      });
-
-      it('Calling initialize twice doesn\'t create duplicate instances', async () => {
-        await init.initGame();
-        const count = await GameModel.countDocuments({});
-        expect(count).toBe(1);
-      });
-
+    it('9 Players are in the DB', async function() {
+      const count = await PlayerModel.countDocuments({});
+      expect(count).toBe(9);
     });
 
   });

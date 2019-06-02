@@ -5,7 +5,7 @@ const expect = require('expect');
 const assert = require('assert');
 require('dotenv').config();
 
-describe('Processing Tests', () => {
+describe.skip('Processing Tests', () => {
 
   before(async () => {
     const options = { useNewUrlParser: true, useCreateIndex: true, useFindAndModify: false };

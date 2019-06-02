@@ -18,9 +18,14 @@ const PlayerSchema = new mongoose.Schema({
     type: [mongoose.Schema.Types.ObjectId],
     ref: 'Card',
   },
-  rank: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'PoliticalRank'
+  turns: {
+    type: [mongoose.Schema.Types.ObjectId],
+    ref: 'Turn',
+  },
+  rankAssignments: {
+    type: [mongoose.Schema.Types.ObjectId],
+    ref: 'RankAssignment',
+    required: true
   },
   user: {
     type: mongoose.Schema.Types.ObjectId,

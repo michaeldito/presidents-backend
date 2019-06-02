@@ -1,12 +1,16 @@
-const io = new IO();
-const chat = new IO('chat');
+
 const IO = require('koa-socket-2');
 const fs = require('fs');
 const path = require('path');
 const Koa = require('koa');
+
+const io = new IO();
+const chat = new IO('chat');
 const app = new Koa();
+
 io.attach(app);
 chat.attach(app);
+
 // set app middleware
 // serve the html
 app.use(ctx => {
