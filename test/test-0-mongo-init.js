@@ -4,6 +4,7 @@ const { CardModel, CardRankModel,
 const init = require('./Mongo/init');
 const mongoose = require('mongoose');
 const expect = require('expect');
+const assert = require('assert');
 require('dotenv').config();
 
 describe('MongoDB Init Tests', function() {
@@ -19,10 +20,6 @@ describe('MongoDB Init Tests', function() {
   });
 
   describe('Check that db collections are empty.', function() {
-
-    after(async function() {
-      await init.initPresidents();
-    });
 
     it('No Card Ranks in DB', async function() {
       const count = await CardRankModel.countDocuments({});
@@ -41,7 +38,54 @@ describe('MongoDB Init Tests', function() {
 
   });
 
-  describe('Verify DB Initialization', function() {    
+  describe('Verify DB Initialization', function() {
+    
+    before(async () => {
+      await init.initPresidents();
+    });
+
+    it('1 Deck is in the DB', async function() {
+      const count = await DeckModel.countDocuments({});
+      expect(count).toBe(1);
+    });
+
+    it('52 Cards are in the DB', async function() {
+      const count = await CardModel.countDocuments({});
+      expect(count).toBe(52);
+    });
+
+    it('4 Suits are in the DB', async function() {
+      const count = await SuitModel.countDocuments({});
+      expect(count).toBe(4);
+    });
+
+    it('13 Ranks are in the DB', async function() {
+      const count = await CardRankModel.countDocuments({});
+      expect(count).toBe(13);
+    });
+
+    it('9 Political Ranks are in the DB', async function() {
+      const count = await PoliticalRankModel.countDocuments({});
+      expect(count).toBe(9);
+    });
+
+    it('9 Users are in the DB', async function() {
+      const count = await UserModel.countDocuments({});
+      expect(count).toBe(9);
+    });
+
+    it('9 Players are in the DB', async function() {
+      const count = await PlayerModel.countDocuments({});
+      expect(count).toBe(9);
+    });
+
+  });
+
+  describe('Verify calling init() twice does not create duplicates.', function() {
+    
+    it('should throw duplicate init error', async () => {
+      assert.rejects(init.initPresidents(), Error, 'Unable to init Presidents. Already initialized.');
+    });
 
     it('1 Deck is in the DB', async function() {
       const count = await DeckModel.countDocuments({});

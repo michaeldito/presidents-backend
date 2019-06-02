@@ -56,13 +56,15 @@ async function initPlayers() {
 // creates game config
 async function initPresidents() {
   // do not init if already done
-  const suitCount = await CardModel.countDocuments({});
+  const suitCount = await SuitModel.countDocuments({});
   const rankCount = await CardRankModel.countDocuments({});
   const cardCount = await CardModel.countDocuments({});
   const deckCount = await DeckModel.countDocuments({});
   const configCount = await GameConfigModel.countDocuments({});
-  if (suitCount === 4 && rankCount == 13 && cardCount === 52 && deckCount === 1 && configCount === 1) {
-    return;
+
+
+  if (suitCount || rankCount || cardCount || deckCount || configCount) {
+    throw new Error('Unable to init Presidents. Already initialized.');
   }
 
   let suitInstances = suits.map(suit => new SuitModel(suit));
