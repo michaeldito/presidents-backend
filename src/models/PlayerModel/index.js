@@ -51,6 +51,10 @@ PlayerSchema.statics.findByUsername = async function(username) {
   return this.findOne({user: user._id});
 }
 
+PlayerSchema.statics.find3ClubsForGame = async function(game) {
+  return this.findOne({game});
+}
+
 const Player = mongoose.model('Player', PlayerSchema);
 
 module.exports = Player;

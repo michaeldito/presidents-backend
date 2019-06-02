@@ -1,7 +1,10 @@
 const mongoose = require('mongoose');
-const PlayerModel = require('../PlayerModel/index');
-const UserModel = require('../UserModel/index');
-const GameConfigModel = require('../GameConfigModel/index');
+const PlayerModel = require('../PlayerModel');
+const UserModel = require('../UserModel');
+const GameConfigModel = require('../GameConfigModel');
+const PoliticalRankModel = require('../PoliticalRankModel');
+const RoundModel = require('../RoundModel');
+const RankAssignmentModel = require('../RankAssignmentModel');
 
 const GameSchema = new mongoose.Schema({
   name: {
@@ -70,56 +73,100 @@ GameSchema.statics.create = async function(user, {name}, gameConfig) {
  * @param user: A User object, the user joining the game. 
  */
 GameSchema.methods.addPlayer = async function(user) {
-  let error = false;
   // begin validations
-  // 1 - player is already in the game, return it
-  let gameConfig = await GameConfigModel.findById(this.gameConfig);
 
-  for (let playerId of this.players) {
-    let player = await PlayerModel.findById(playerId);
-    let existingUser = await UserModel.findById(player.user);
+  if (! user) {
+    throw new Error('Missing argument, user is required.');
+  }
 
-    if (existingUser._id === user._id) {
-      error = new Error('User has already joined game.');
+  // 1 - game has started
+  if (this.rounds.length) {
+    throw new Error('Cannot join game. It is already in progress.');
+  }
+
+  // 2 - max players reached
+  const gameConfig = await GameConfigModel.findById(this.gameConfig);
+  if (this.players.length >= gameConfig.maxPlayers) {
+    throw new Error('Cannot join game. It is already full.');
+  }
+
+  // 3 - player is already in the game
+  for (let player of this.players) {
+    const playerDoc = await PlayerModel.findById(player);
+    const existingUserDoc = await UserModel.findById(playerDoc.user);
+
+    // console.log(`${existingUserDoc._id} == ${user._id} ?`)
+    if (existingUserDoc._id.toString() === user._id.toString()) {
+    // if (existingUserDoc._id === user._id) {
+        // console.log('true')
+      throw new Error('User has already joined game.');
     }
+  }
 
-  }
-  if (!error && this.rounds.length) {
-    error = new Error('Cannot join game. It is already in progress.');
-  }
-  // 3 - game has max players, throw err
-  // end validations
-  if (!error && this.players.length >= gameConfig.maxPlayers) {
-    error = new Error('Cannot join game. It is already full.');
-  }
+
+  // add player to game & save
+  let player = new PlayerModel({
+    seatPosition: 0,
+    drinksToDrink: 0,
+    user,
+    game: this,
+  });
   
-  if (error) {
-    return error;
-  }
-  else {
-    // add player to game & save
-    let player = new PlayerModel({
-      seatPosition: 0,
-      drinksToDrink: 0,
-      user,
-      game: this,
-    });
-    
-    this.players.push(player);
-    await player.save();
-    await this.save();
+  this.players.push(player);
+  await player.save();
+  await this.save();
 
-    return this.toObject();
-  }
+  return this.model('Game').findOne({name: this.name});
 }
 
 
 
-GameSchema.statics.startGame = async function(gameId) {
+GameSchema.methods.start = async function() {
   // validations
   // 1 - Unable to start game. It is already in progress.
+  if (this.rounds.length > 0) {
+    throw new Error('Unable to start game. It is already in progress.');
+  }
   // 2 - Unable to start game. It has already finished.
+  if (this.finalized) {
+    throw new Error('Unable to start game. It has already finished.');
+  }
   // 3 - Unable to start game. Minimum number of players is 2.
+  if (this.players.length < 2) {
+    throw new Error('Unable to start game. Minimum number of players is 2.');
+  }
+
+  this.allowedRanks = await PoliticalRankModel.getRanks(this.players.length);
+  const nullRank = await PoliticalRankModel.getNullRank();
+  const playerWith3Clubs = await PlayerModel.find3ClubsForGame(this);
+
+  let round;
+  let rankAssignments;
+  if (this.rounds.length === 0) { // first round
+    round = new RoundModel({
+      roundNumber: 1,
+      currentPlayer: playerWith3Clubs,
+      game: this,
+      turns: []
+    });
+    rankAssignments = this.players.map(player => {
+      return RankAssignmentModel({
+        politicalRank: nullRank,
+        player: player,
+        round
+      })
+    });
+    round.rankAssignments = rankAssignments;
+  }
+  this.rounds.push(round);
+
+  await Promise.all([
+    this.save(),
+    round.save(), 
+    ...rankAssignments
+  ]);
+  
+  return this.model('Game').findOne({name: this.name});
 }
 
 const GameModel = mongoose.model('Game', GameSchema);

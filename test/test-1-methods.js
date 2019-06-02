@@ -60,29 +60,11 @@ describe('Model Method Tests', function() {
       expect(rank.value).toBe(1);
     });
 
-  });
-
-
-
-  describe('DeckModel', function() {    
-    
-    it('', async function() {    
-
+    it.skip('getRanks(howMany) returns ranks 1->howMany inclusive', async function() {    
+      
     });
 
   });
-
-
-
-  describe('GameConfigModel', function() {    
-    
-    it('', async function() {    
-
-    });
-
-  });
-
-
 
 
   describe('UserModel', function() {    
@@ -147,23 +129,87 @@ describe('Model Method Tests', function() {
       })
     
       it('should throw error if user already joined', async function() {  
-        assert.rejects(game.addPlayer(users[0]), Error, 'User has already joined game.');
+        try {
+          await game.addPlayer(users[0]);
+        } catch (err) {
+          expect(err.message).toBe('User has already joined game.');
+        }
       });
 
       it('should throw error if capacity reached', async function() { 
-        let rest = users.slice(1, users.length-1);  
+        const rest = users.slice(1, users.length-1); 
         for (let user of rest) {
-          console.log(`adding user: ${user._id}`)
-          await game.addPlayer(user);
+          //console.log(`adding user: ${user._id}`)
+          try {
+            await game.addPlayer(user);
+          } catch (err) {
+            console.log('Couldn\'t add 7 players to make capacity 8. One of the users might be in the game already.');
+          }
         } 
+        // above synch code allows us to catch err, below does not
+        // Promise.all(rest.map(user=>game.addPlayer(user)));
         const lastPlayer = users[users.length-1];
-        assert.rejects(game.addPlayer(lastPlayer), Error, 'Cannot join game. It is already full.');
+        try {
+          await game.addPlayer(lastPlayer);
+        } catch (err) {
+          expect(err.message).toBe('Cannot join game. It is already full.');
+        }      
       })
 
-      it.skip('should throw error if game is in progress', async function() {    
-        assert.rejects(game.addPlayer(), Error, 'Cannot join game. It is already in progress.');
+
+      it('should throw error if no user passed', async function() {    
+        try {
+          await game.addPlayer();
+        } catch (err) {
+          expect(err.message).toBe('Missing argument, user is required.');
+        }
+      });
+
+
+      it('should throw error if game is in progress', async function() {    
+        try {
+          game.rounds = ['someRandomId'];
+          await game.save();
+          await game.addPlayer(users[0]);
+        } catch (err) {
+          expect(err.message).toBe('Cannot join game. It is already in progress.');
+        }
+      });
+
+  
+    });
+
+
+    describe('startGame()', function() {   
+      let users;
+      let game;
+      let gameConfig
+
+      before(async function() {
+        users = await UserModel.findRandoms(2);
+        gameConfig = await GameConfigModel.findOne({name: 'Presidents'});
+        game = await GameModel.create(users[0], {name: 'start-game-test'}, gameConfig);
+        game = await game.addPlayer(users[1]);
+        game = await game.start();
+      })
+    
+      it('should set allowed ranks', async function() {    
+        expect(game.allowedRanks.length).toBe(game.players.length);
+      });
+
+      it('should add a round', async function() {    
+        expect(game.rounds.length).toBe(1);
       });
   
+    });
+
+
+  });
+
+  describe('PlayerModel', function() {    
+    
+    it('find3ClubsForGame returns player with 3 of clubs in game', async function() {    
+
     });
 
   });
