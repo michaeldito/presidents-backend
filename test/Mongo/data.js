@@ -188,6 +188,11 @@ const game = {
   skipCount: 0
 }
 
+const gameConfig = {
+    maxPlayers: 8,
+    name: 'Presidents',
+};
+
 module.exports = {
-  suits, cardRanks, users, game, states, politicalRanks
+  suits, cardRanks, users, game, states, politicalRanks, gameConfig
 }

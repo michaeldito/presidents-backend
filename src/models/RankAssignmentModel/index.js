@@ -18,6 +18,12 @@ const RankAssignmentSchema = new mongoose.Schema({
   },
 });
 
+RankAssignmentSchema.method.getRankValue = async function() {
+  return this.populate('politicalRank').value
+}
+
+// 
+
 
 const RankAssignmentModel = mongoose.model('RankAssignment', RankAssignmentSchema);
 

@@ -1,78 +1,29 @@
-const { CardModel, CardRankModel, 
+const { CardRankModel, 
   SuitModel, PoliticalRankModel, 
-  UserModel, PlayerModel, GameModel,
-  GameStateModel } = require('../src/models');
+  UserModel, PlayerModel, GameConfigModel, 
+  GameModel } = require('../src/models');
 const init = require('./Mongo/init');
 const mongoose = require('mongoose');
 const expect = require('expect');
+const assert = require('assert');
 require('dotenv').config();
 
 
 describe('Model Method Tests', function() {
     
   before(async function() {
-
-    this.slow(4000);
-
     const options = { useNewUrlParser: true, useCreateIndex: true, useFindAndModify: false };
+    mongoose.Promise = global.Promise;
     await mongoose.connect(process.env.MONGODB_URI_TEST, options);
-    await CardModel.deleteMany({});
-    await CardRankModel.deleteMany({});
-    await SuitModel.deleteMany({});
-    await UserModel.deleteMany({});
-    await PlayerModel.deleteMany({});
-    await GameModel.deleteMany({});
-    await GameStateModel.deleteMany({});
-    
+    await init.dropAll();
+    await init.initPresidents();
   });
 
   after(async function() {
-
-    this.slow(4000);
-
-    await CardModel.deleteMany({});
-    await CardRankModel.deleteMany({});
-    await SuitModel.deleteMany({});
-    await UserModel.deleteMany({});
-    await PlayerModel.deleteMany({});
-    await GameModel.deleteMany({});
-    await GameStateModel.deleteMany({});
+    await init.dropAll();
     await mongoose.connection.close();
   });
 
-
-  describe('DB', function() { 
-    this.timeout(3000)
-
-    it('db check', async function() { 
-
-      await init.initCards();
-      await init.initPlayers();
-      await init.initGameStates();
-      await init.initPoliticalRanks();
-      await init.initGame();
-
-      const cards = await CardModel.find({});
-      const suits = await SuitModel.find({});
-      const ranks = await CardRankModel.find({});
-      const users = await UserModel.find({});
-      const players = await PlayerModel.find({});
-      const games = await GameModel.find({});
-      const states = await GameStateModel.find({});
-      const polRanks = await PoliticalRankModel.find({});
-      
-      expect(cards.length).toBe(52);
-      expect(suits.length).toBe(4);
-      expect(ranks.length).toBe(13);
-      expect(users.length).toBe(10);
-      expect(players.length).toBe(10);
-      expect(games.length).toBe(1);
-      expect(states.length).toBe(3);
-      expect(polRanks.length).toBe(8);
-
-    });
-
-  });
 
 
   describe('CardRankModel', function() {    
@@ -85,6 +36,7 @@ describe('Model Method Tests', function() {
   });
 
 
+
   describe('SuitModel', function() {    
     
     it('getSuitByName returns clubs', async function() {    
@@ -93,6 +45,7 @@ describe('Model Method Tests', function() {
     });
 
   });
+
 
 
   describe('PoliticalRankModel', function() {    
@@ -110,6 +63,28 @@ describe('Model Method Tests', function() {
   });
 
 
+
+  describe('DeckModel', function() {    
+    
+    it('', async function() {    
+
+    });
+
+  });
+
+
+
+  describe('GameConfigModel', function() {    
+    
+    it('', async function() {    
+
+    });
+
+  });
+
+
+
+
   describe('UserModel', function() {    
     
     describe('findByUsername(username)', function() {    
@@ -124,62 +99,96 @@ describe('Model Method Tests', function() {
   });
 
 
-  describe('PlayerModel', function() {   
-    
-    describe('findAll()', function() {    
-    
-      it('should return all instances if successful', async function() {    
-        const players = await PlayerModel.findAll();
-        expect(players).toBeTruthy();
+
+  describe('GameModel', function() {    
+
+    describe('create()', function() {
+      let user;
+      let game;
+      let gameConfig
+
+      before(async function() {
+        user = await UserModel.findOne({});
+        gameConfig = await GameConfigModel.findOne({name: 'Presidents'});
+        game = await GameModel.create(user, {name: 'create-game-test'}, gameConfig);
+      });
+
+      it('Game was created.', async function() {
+        expect(game).toBeTruthy();
+      });
+
+      it('Game was saved in database', async function() {
+        const savedGame = await GameModel.findById(game._id);
+        expect(savedGame).toBeTruthy();
+      });
+
+      it('Saved Game has players array with size 1', async function() {
+        let savedGame = await GameModel.findById(game._id).populate('players');
+        expect(savedGame.players.length).toBe(1);
+      });
+
+      it('Correct User saved for player', async () => {
+        let savedGame = await GameModel.findById(game._id).populate({path: 'players', populate: {path: 'user'}});
+        expect(savedGame.players[0].user.username).toBe(user.username);
       });
 
     });
-    
 
-    describe('findRandom()', function() {    
-    
-      it('should return instance if successful', async function() {    
-        const player = await PlayerModel.findRandom();
-        expect(player).toBeTruthy();
-      });
-
-    });
-
-
-    describe('findRandoms(howMany)', function() {    
-    
-      it('should return instances if successful', async function() {    
-        const players = await PlayerModel.findRandoms(3);
-        expect(players.length).toBe(3);
-      });
+    describe('addPlayer()', function() {   
       
+      let users;
+      let game;
+      let gameConfig
+
+      before(async function() {
+        users = await UserModel.findRandoms(9);
+        gameConfig = await GameConfigModel.findOne({name: 'Presidents'});
+        game = await GameModel.create(users[0], {name: 'join-game-test'}, gameConfig);
+      })
+    
+      it('should throw error if user already joined', async function() {  
+        assert.rejects(game.addPlayer(users[0]), Error, 'User has already joined game.');
+      });
+
+      it('should throw error if capacity reached', async function() { 
+        let rest = users.slice(1, users.length-1);  
+        for (let user of rest) {
+          console.log(`adding user: ${user._id}`)
+          await game.addPlayer(user);
+        } 
+        const lastPlayer = users[users.length-1];
+        assert.rejects(game.addPlayer(lastPlayer), Error, 'Cannot join game. It is already full.');
+      })
+
+      it.skip('should throw error if game is in progress', async function() {    
+        assert.rejects(game.addPlayer(), Error, 'Cannot join game. It is already in progress.');
+      });
+  
     });
 
+  });
 
-    describe.skip('findByUsername(username)', function() {    
+  
+
+  describe('RoundModel', function() {    
     
-      it('should return instance if successful', async function() {    
-        const player = await PlayerModel.findByUsername('bella');
-        expect(players.length).toBe(3);
-      });
+    it('', async function() {    
 
     });
 
   });
 
 
-  describe('GameModel', function() {  
+  
+
+  describe('TurnModel', function() {    
     
-    describe('findByName(name)', function() {    
-    
-      it('should return instance if successful', async function() {    
-        const game = await GameModel.findByName('test-game');
-        expect(game.name).toBe(`test-game`);
-      });
+    it('', async function() {    
 
     });
 
   });
+
     
 
 });

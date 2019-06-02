@@ -29,6 +29,10 @@ UserSchema.statics.findByUsername = function(username) {
   return this.findOne({username});
 }
 
+UserSchema.statics.findRandoms = function(howMany) {
+  return this.find({}).limit(howMany);
+}
+
 
 //
 //

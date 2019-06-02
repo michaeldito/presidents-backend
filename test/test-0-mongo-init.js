@@ -12,6 +12,7 @@ describe('MongoDB Init Tests', function() {
   before(async function() {
     const options = { useNewUrlParser: true, useCreateIndex: true, useFindAndModify: false };
     await mongoose.connect(process.env.MONGODB_URI_TEST, options);
+    await init.dropAll();
   });
 
   after(async function() {
@@ -40,7 +41,7 @@ describe('MongoDB Init Tests', function() {
 
   describe('Verify DB Initialization', function() {
     
-    before(async () => {
+    before(async function() {
       await init.initPresidents();
     });
 
@@ -83,7 +84,7 @@ describe('MongoDB Init Tests', function() {
 
   describe('Verify calling init() twice does not create duplicates.', function() {
     
-    it('should throw duplicate init error', async () => {
+    it('should throw duplicate init error', async function() {
       assert.rejects(init.initPresidents(), Error, 'Unable to init Presidents. Already initialized.');
     });
 
@@ -123,5 +124,50 @@ describe('MongoDB Init Tests', function() {
     });
 
   });
+
+
+  describe('Verify dropAll() drops all', function() {
+    
+    before(async function() {
+      await init.dropAll();
+    })
+
+    it('0 Decks are in the DB', async function() {
+      const count = await DeckModel.countDocuments({});
+      expect(count).toBe(0);
+    });
+
+    it('0 Cards are in the DB', async function() {
+      const count = await CardModel.countDocuments({});
+      expect(count).toBe(0);
+    });
+
+    it('0 Suits are in the DB', async function() {
+      const count = await SuitModel.countDocuments({});
+      expect(count).toBe(0);
+    });
+
+    it('0 Ranks are in the DB', async function() {
+      const count = await CardRankModel.countDocuments({});
+      expect(count).toBe(0);
+    });
+
+    it('0 Political Ranks are in the DB', async function() {
+      const count = await PoliticalRankModel.countDocuments({});
+      expect(count).toBe(0);
+    });
+
+    it('0 Users are in the DB', async function() {
+      const count = await UserModel.countDocuments({});
+      expect(count).toBe(0);
+    });
+
+    it('0 Players are in the DB', async function() {
+      const count = await PlayerModel.countDocuments({});
+      expect(count).toBe(0);
+    });
+
+  });
+
 
 });

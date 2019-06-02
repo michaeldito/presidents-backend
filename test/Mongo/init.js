@@ -1,8 +1,8 @@
-const { CardModel, CardRankModel, GameModel, GameStateModel, 
+const { CardModel, CardRankModel, GameModel, 
   PlayerModel, PoliticalRankModel, SuitModel, UserModel, DeckModel,
   GameConfigModel } = require('../../src/models');
 
-const { suits, cardRanks, politicalRanks, users, game } = require('./data');
+const { suits, cardRanks, politicalRanks, users, gameConfig } = require('./data');
 
 
 
@@ -21,32 +21,15 @@ async function initPoliticalRanks() {
 
 
 // creates 9 users
-// then creates 9 players
-async function initPlayers() {
-  const numberOfPlayers = await PlayerModel.countDocuments({});
-  if (numberOfPlayers === 9) {
+async function initUsers() {
+  const numberOfUsers = await UserModel.countDocuments({});
+  if (numberOfUsers === 9) {
     return;
   }
   let userInstances = users.map(user => new UserModel(user));
   let userPromises = userInstances.map(instance => instance.save());
-
-  const nullRankInstance = await PoliticalRankModel.findByName('NullRank')
-  const players = userInstances.map((user, idx) => {
-    return {
-      user: user._id,
-      seatPosition: idx,
-      drinksToDrink: 0,
-      drinksDrunk: 0,
-      rankAssignments: [nullRankInstance._id]
-    }
-  });
-
-  let playerInstances = players.map(player => new PlayerModel(player));
-  let playerPromises = playerInstances.map(instance => instance.save());
-
-  return Promise.all([...userPromises, ...playerPromises]);
+  return Promise.all([...userPromises]);
 }
-
 
 
 // creates 4 suits
@@ -97,8 +80,8 @@ async function initPresidents() {
   let deckPromise = presidentsDeck.save();
 
   let presidentsConfig = new GameConfigModel({
-    name: 'Presidents',
-    maxPlayers: 8,
+    name: gameConfig.name,
+    maxPlayers: gameConfig.maxPlayers,
     deck: presidentsDeck
   });
 
@@ -113,7 +96,7 @@ async function initPresidents() {
     ...cardPromises, 
     deckPromise, 
     gameConfigPromise,
-    initPlayers()
+    initUsers()
   ]);
 }
 
