@@ -4,10 +4,12 @@ const DeckSchema = new mongoose.Schema({
   cards: {
     type: [mongoose.Schema.Types.ObjectId],
     ref: 'Card',
-    required: true
+    required: true,
+    autopopulate: true
   },
 });
 
+DeckSchema.plugin(require('mongoose-autopopulate'));
 
 const DeckModel = mongoose.model('Deck', DeckSchema);
 

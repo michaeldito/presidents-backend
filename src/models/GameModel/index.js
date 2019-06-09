@@ -12,19 +12,19 @@ const GameSchema = new mongoose.Schema({
     required: true,
     unique: true
   },
-  players: [{
-    type: mongoose.Schema.Types.ObjectId,
+  players: {
+    type: [mongoose.Schema.Types.ObjectId],
     ref: 'Player',
     required: true
-  }],
-  allowedRanks: [{
-    type: mongoose.Schema.Types.ObjectId,
+  },
+  allowedRanks: {
+    type: [mongoose.Schema.Types.ObjectId],
     ref: 'PoliticalRank'
-  }],
-  rounds: [{
-    type: mongoose.Schema.Types.ObjectId,
+  },
+  rounds: {
+    type: [mongoose.Schema.Types.ObjectId],
     ref: 'Round'
-  }],
+  },
   gameConfig: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'GameConfig',
@@ -168,6 +168,7 @@ GameSchema.methods.start = async function() {
   
   return this.model('Game').findOne({name: this.name});
 }
+
 
 const GameModel = mongoose.model('Game', GameSchema);
 

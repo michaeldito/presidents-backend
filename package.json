@@ -37,6 +37,7 @@
     "koa-socket": "^4.4.0",
     "koa-socket-2": "^1.1.0",
     "mongoose": "^5.5.9",
+    "mongoose-autopopulate": "^0.9.1",
     "should": "^13.2.3",
     "socket.io": "^2.2.0",
     "supertest": "^4.0.2"

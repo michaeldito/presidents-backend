@@ -20,7 +20,7 @@ describe('MongoDB Init Tests', function() {
     await mongoose.connection.close();
   });
 
-  describe('Check that db collections are empty.', function() {
+  describe('Verify that db collections are empty.', function() {
 
     it('No Card Ranks in DB', async function() {
       const count = await CardRankModel.countDocuments({});
@@ -39,7 +39,7 @@ describe('MongoDB Init Tests', function() {
 
   });
 
-  describe('Verify DB Initialization', function() {
+  describe('Verify init() inits', function() {
     
     before(async function() {
       await init.initPresidents();
@@ -72,11 +72,6 @@ describe('MongoDB Init Tests', function() {
 
     it('9 Users are in the DB', async function() {
       const count = await UserModel.countDocuments({});
-      expect(count).toBe(9);
-    });
-
-    it('9 Players are in the DB', async function() {
-      const count = await PlayerModel.countDocuments({});
       expect(count).toBe(9);
     });
 
@@ -118,10 +113,6 @@ describe('MongoDB Init Tests', function() {
       expect(count).toBe(9);
     });
 
-    it('9 Players are in the DB', async function() {
-      const count = await PlayerModel.countDocuments({});
-      expect(count).toBe(9);
-    });
 
   });
 
@@ -159,11 +150,6 @@ describe('MongoDB Init Tests', function() {
 
     it('0 Users are in the DB', async function() {
       const count = await UserModel.countDocuments({});
-      expect(count).toBe(0);
-    });
-
-    it('0 Players are in the DB', async function() {
-      const count = await PlayerModel.countDocuments({});
       expect(count).toBe(0);
     });
 

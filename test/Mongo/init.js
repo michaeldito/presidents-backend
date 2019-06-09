@@ -86,8 +86,6 @@ async function initPresidents() {
   });
 
   let gameConfigPromise = presidentsConfig.save();
-
-  // init ranks first so initPlayers can grab null rank
   await initPoliticalRanks();
 
   return Promise.all([
@@ -118,9 +116,3 @@ async function dropAll() {
 
 
 module.exports = {initPresidents, dropAll}
-
-// let deck = this.createDeck();
-// let shuffledDeck = this.shuffle(deck);
-// let playerHands = this.deal(numberOfPlayers, shuffledDeck);
-// let sortedPlayersHands = playerHands.map(hand => this.sortCards(hand));
-// const whoseTurnIdx = this.find3Clubs(sortedPlayersHands);

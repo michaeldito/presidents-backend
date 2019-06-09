@@ -16,6 +16,7 @@ const GameConfigSchema = new mongoose.Schema({
   },
 });
 
+GameConfigSchema.plugin(require('mongoose-autopopulate'));
 
 const GameConfigModel = mongoose.model('GameConfigModel', GameConfigSchema);
 

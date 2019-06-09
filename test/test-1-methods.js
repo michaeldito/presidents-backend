@@ -99,19 +99,13 @@ describe('Model Method Tests', function() {
         expect(game).toBeTruthy();
       });
 
-      it('Game was saved in database', async function() {
-        const savedGame = await GameModel.findById(game._id);
-        expect(savedGame).toBeTruthy();
-      });
-
-      it('Saved Game has players array with size 1', async function() {
-        let savedGame = await GameModel.findById(game._id).populate('players');
-        expect(savedGame.players.length).toBe(1);
+      it('Game has players array with size 1', async function() {
+        expect(game.players.length).toBe(1);
       });
 
       it('Correct User saved for player', async () => {
-        let savedGame = await GameModel.findById(game._id).populate({path: 'players', populate: {path: 'user'}});
-        expect(savedGame.players[0].user.username).toBe(user.username);
+        let player = await PlayerModel.findById(game.players[0]).populate('user');
+        expect(player.user.username).toBe(user.username);
       });
 
     });
@@ -205,15 +199,6 @@ describe('Model Method Tests', function() {
 
 
   });
-
-  describe('PlayerModel', function() {    
-    
-    it('find3ClubsForGame returns player with 3 of clubs in game', async function() {    
-
-    });
-
-  });
-
   
 
   describe('RoundModel', function() {    

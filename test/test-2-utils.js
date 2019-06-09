@@ -1,5 +1,5 @@
 const { PlayerModel, GameModel, UserModel, GameStateModel,
-  CardModel, SuitModel, CardRankModel } = require('../src/models');
+  CardModel, DeckModel, SuitModel, CardRankModel, GameConfigModel } = require('../src/models');
 const utils = require('../src/utils');
 const init = require('./mongo/init');
 const mongoose = require('mongoose');
@@ -10,55 +10,36 @@ require('dotenv').config();
 
 describe('Utility Tests', () => {
 
-  before(async () => {
+  before(async function() {
     const options = { useNewUrlParser: true, useCreateIndex: true, useFindAndModify: false };
+    mongoose.Promise = global.Promise;
     await mongoose.connect(process.env.MONGODB_URI_TEST, options);
+    await init.dropAll();
+    await init.initPresidents();
   });
 
-  after(async () => {
-    await CardModel.deleteMany({});
-    await CardRankModel.deleteMany({});
-    await SuitModel.deleteMany({});
-
+  after(async function() {
+    await init.dropAll();
     await mongoose.connection.close();
   });
 
 
 
-  describe('Populate DB with cards', () => {    
-    
-    before(async () => {
-      await CardModel.deleteMany({});
-      await CardRankModel.deleteMany({});
-      await SuitModel.deleteMany({});
-    });
-
-    describe('Verify Card Initialization', () => {
-
-      it('52 Cards are in the DB', async () => {
-        await init.initCards();
-        const count = await CardModel.countDocuments({});
-        expect(count).toBe(52);
-      });
-
-    });
-
-  });
-
 
   describe('shuffle(deck)', () => {
 
     it('Shuffles 52 card object ids', async () => {
-      const deck = await CardModel.find({});
-      const shuffled = utils.shuffle(deck);
+      const config = await GameConfigModel.findOne({name: 'Presidents'}).populate('deck');
+
+      const shuffled = utils.shuffle(config.deck.cards);
 
       expect(shuffled.length).toBe(52);
       
       // how to test the shuffle? 
       // lets grab a few indexes and hope they dont match i guess
-      expect(deck[0]).not.toEqual(shuffled[0]);
-      expect(deck[25]).not.toEqual(shuffled[25]);
-      expect(deck[51]).not.toEqual(shuffled[51]);
+      expect(config.deck.cards[0]).not.toEqual(shuffled[0]);
+      expect(config.deck.cards[25]).not.toEqual(shuffled[25]);
+      expect(config.deck.cards[51]).not.toEqual(shuffled[51]);
     });
 
   });
@@ -67,8 +48,9 @@ describe('Utility Tests', () => {
   describe('deal(numPlayers=4, shuffledDeck)', () => {
 
     it('Creates a an array of length numPlayers each containing 13 cards', async () => {
-      const deck = await CardModel.find({});
-      const shuffled = utils.shuffle(deck);
+      const config = await GameConfigModel.findOne({name: 'Presidents'}).populate('deck');
+
+      const shuffled = utils.shuffle(config.deck.cards);
       const numPlayers = 4;
       const playerHands = utils.deal(numPlayers, shuffled);
 
@@ -81,14 +63,14 @@ describe('Utility Tests', () => {
   describe('sort(cards)', () => {
 
     it('Sorts an array of cards by rank', async () => {
-      const cards = await CardModel.find({})
-        .populate('cardRank')
-        .populate('suit');
-      const sorted = utils.sortCards(cards);
+      const config = await GameConfigModel.findOne({name: 'Presidents'}).populate('deck');
+
+      const sorted = utils.sortCards(config.deck.cards);
       const ranks = sorted.map(card=> card.cardRank.value);
-      let v = 2;
+
       // extract the first four items
       // check if they are equal to v, continue until v = 14 (Ace)
+      let v = 2;
       while (v < 15) {
         let chunk = ranks.splice(0, 4);
         for (let peice of chunk) {
@@ -103,18 +85,20 @@ describe('Utility Tests', () => {
   describe('find3Clubs(allPlayerHands)', () => {
 
     it('Searchs through a 2d array cards, returns index of array with 3♣', async () => {
-      const deck = await CardModel.find({});
-      const shuffled = utils.shuffle(deck);
+      const config = await GameConfigModel.findOne({name: 'Presidents'}).populate('deck');
+
+      const shuffled = utils.shuffle(config.deck.cards);
       const numPlayers = 4;
       const playerHands = utils.deal(numPlayers, shuffled);
       const res = utils.find3Clubs(playerHands);
       const card = playerHands[res.p][res.c];
+
       expect(card.shortHand).toBe('3Clubs');
     });
 
     it('Throws exception if 2d array does not contain 3♣', () => {
       const arr = [[{}],[{}],[{}]];
-      assert.throws(() => utils.find3Clubs(arr), Error, '3 of Clubs was not in the deck.');
+      assert.throws(() => utils.find3Clubs(arr), Error, '4 of Clubs was not in the deck.');
     });
 
   });

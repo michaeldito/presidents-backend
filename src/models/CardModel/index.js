@@ -8,18 +8,22 @@ const CardSchema = new mongoose.Schema({
   cardRank: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'CardRank',
-    required: true
+    required: true,
+    autopopulate: true
   },
   suit: {
     type: mongoose.Schema.Types.ObjectId,
     required: true,
-    ref: 'Suit'
+    ref: 'Suit',
+    autopopulate: true
   }
 });
 
 CardSchema.statics.getDeck = function() {
   return this.find({});
 }
+
+CardSchema.plugin(require('mongoose-autopopulate'));
 
 const CardModel = mongoose.model('Card', CardSchema);
 
