@@ -5,14 +5,13 @@
   "main": "index.js",
   "scripts": {
     "test": "export NODE_ENV=dev && mocha --timeout 15000 test/*js",
-    "jest": "export NODE_ENV=dev && jest",
-    "test-mongo": "export NODE_ENV=dev && mocha --timeout 15000 test/*mongo-init.js",
-    "test-methods": "export NODE_ENV=dev && mocha --timeout 15000 test/*methods.js",
-    "test-utils": "export NODE_ENV=dev && mocha --timeout 15000 test/*utils.js",
-    "test-server": "export NODE_ENV=dev && mocha --timeout 15000 test/*server.js",
-    "test-play": "export NODE_ENV=dev && mocha --timeout 15000 test/*playground.js",
-    "count-src": "find src -name '*.js' | xargs wc -l",
-    "count-test": "find test -name '*.js' | xargs wc -l",
+    "test:mongo": "export NODE_ENV=dev && mocha --timeout 15000 test/*mongo-init.js",
+    "test:methods": "export NODE_ENV=dev && mocha --timeout 15000 test/*methods.js",
+    "test:utils": "export NODE_ENV=dev && mocha --timeout 15000 test/*utils.js",
+    "test:server": "export NODE_ENV=dev && mocha --timeout 15000 test/*server.js",
+    "test:play": "export NODE_ENV=dev && mocha --timeout 15000 test/*playground.js",
+    "count:src": "find src -name '*.js' | xargs wc -l",
+    "count:test": "find test -name '*.js' | xargs wc -l",
     "start": "export NODE_ENV=dev && nodemon src/server/index.js"
   },
   "author": "",
@@ -24,7 +23,6 @@
     "bcryptjs": "^2.4.3",
     "dotenv": "^4.0.0",
     "expect": "^24.8.0",
-    "jest": "^24.8.0",
     "jsonwebtoken": "^8.5.1",
     "kcors": "^2.2.2",
     "koa": "^2.7.0",
@@ -46,11 +44,5 @@
   },
   "engines": {
     "node": ">=10"
-  },
-  "jest": {
-    "testEnvironment": "node",
-    "testMatch": [
-      "<rootDir>/test/*js"
-    ]
   }
 }
