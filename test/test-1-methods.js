@@ -60,8 +60,9 @@ describe('Model Method Tests', function() {
       expect(rank.value).toBe(1);
     });
 
-    it.skip('getRanks(howMany) returns ranks 1->howMany inclusive', async function() {    
-      
+    it('getRanks(howMany) returns ranks 1->howMany inclusive', async function() {    
+      const ranks = await PoliticalRankModel.getRanks(2);
+      ranks.forEach(rank => expect(rank.value > 0 && rank.value < 3).toBeTruthy())
     });
 
   });
@@ -174,7 +175,7 @@ describe('Model Method Tests', function() {
     });
 
 
-    describe('startGame()', function() {   
+    describe('startFirstRound()', function() {   
       let users;
       let game;
       let gameConfig
@@ -184,21 +185,71 @@ describe('Model Method Tests', function() {
         gameConfig = await GameConfigModel.findOne({name: 'Presidents'});
         game = await GameModel.create(users[0], {name: 'start-game-test'}, gameConfig);
         game = await game.addPlayer(users[1]);
-        game = await game.start();
+        game = await game.startFirstRound();
       })
     
-      it('should set allowed ranks', async function() {    
+      it('should set allowed ranks on game', async function() {  
         expect(game.allowedRanks.length).toBe(game.players.length);
       });
 
-      it('should add a round', async function() {    
+      it('should add a round to game', async function() {    
         expect(game.rounds.length).toBe(1);
       });
+
+      it('players should have been dealt 26 cards each', async function() {  
+      });
+
+      it('game.round.roundNumber should be 1', async function() {    
+      });
+
+      it('game.round.currentPlayer should have 3 ♣', async function() {    
+      });
+
+      it('all players should have null rank has their rank', async function() {    
+      });
+    });
+
+    describe('playerTakesTurn()', function() {   
+      let users;
+      let game;
+      let gameConfig
   
+      before(async function() {
+        users = await UserModel.findRandoms(2);
+        gameConfig = await GameConfigModel.findOne({name: 'Presidents'});
+        game = await GameModel.create(users[0], {name: 'take-turn-test'}, gameConfig);
+        game = await game.addPlayer(users[1]);
+        game = await game.startFirstRound();
+      })
+    
+      it('should throw error if not players turn', async function() {  
+      });
+  
+      it('should throw error if passing and have cards selected', async function() {  
+      });
+  
+      it('should throw error if cards are not >= last turns cards', async function() {  
+      });
+  
+      it('should skip one time, so current player is the same', async function() {  
+      });
+  
+      it('skip makes game.turn.length === 2', async function() {  
+      });
+  
+      it('should finalize game when only 1 player has cards left', async function() {  
+      });
+  
+      it('should set next player correctly', async function() {  
+      });
     });
 
 
   });
+
+  
+
+
   
 
   describe('RoundModel', function() {    
@@ -220,6 +271,5 @@ describe('Model Method Tests', function() {
 
   });
 
-    
-
+  
 });

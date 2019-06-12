@@ -52,7 +52,7 @@ function sortCards(cards) {
 }
 
 function find3Clubs(allPlayerHands) {
-let p = 0, c = 0;
+  let p = 0, c = 0;
   for (let player of allPlayerHands) {
     for (let card of player) {
       if (card.shortHand === '3Clubs')

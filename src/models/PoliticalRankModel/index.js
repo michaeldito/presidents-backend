@@ -20,7 +20,7 @@ PoliticalRankSchema.statics.findByValue = function(value) {
 }
 
 PoliticalRankSchema.statics.getRanks = function(howMany) {
-  return this.find({}).limit(howMany);
+  return this.find({value: { $gt: 0 , $lt: howMany + 1 } });
 }
 
 PoliticalRankSchema.statics.getNullRank = function() {

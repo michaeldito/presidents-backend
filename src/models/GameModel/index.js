@@ -5,6 +5,7 @@ const GameConfigModel = require('../GameConfigModel');
 const PoliticalRankModel = require('../PoliticalRankModel');
 const RoundModel = require('../RoundModel');
 const RankAssignmentModel = require('../RankAssignmentModel');
+const utils = require('../../utils');
 
 const GameSchema = new mongoose.Schema({
   name: {
@@ -121,7 +122,7 @@ GameSchema.methods.addPlayer = async function(user) {
 
 
 
-GameSchema.methods.start = async function() {
+GameSchema.methods.startFirstRound = async function() {
   // validations
   // 1 - Unable to start game. It is already in progress.
   if (this.rounds.length > 0) {
@@ -136,29 +137,56 @@ GameSchema.methods.start = async function() {
     throw new Error('Unable to start game. Minimum number of players is 2.');
   }
 
-  this.allowedRanks = await PoliticalRankModel.getRanks(this.players.length);
+  // get deck
+  const config = await GameConfigModel.findOne({name: 'Presidents'}).populate('deck');
+
+  
+  // shuffle
+  const shuffled = utils.shuffle(config.deck.cards);
+
+
+  // deal
+  const playerHands = utils.deal(this.players.length, shuffled).map(hand => utils.sortCards(hand));
+
+  // assign cards based on seat position
+  this.players.forEach(async player => {
+    await PlayerModel.updateOne({_id: player._id}, {
+      $set: {
+        hand: playerHands[player.seatPosition]
+      }
+    });
+  });
+  
+  // determine who has 3 clubs
+  const whoStarts = utils.find3Clubs(playerHands);
+
+  // player with seat position == whoStarts is current
+  const playersInGame = await PlayerModel.find({'_id': { $in: this.players } });
+  const currentPlayer = playersInGame.find(player => player.seatPosition === whoStarts);
+
   const nullRank = await PoliticalRankModel.getNullRank();
-  const playerWith3Clubs = await PlayerModel.find3ClubsForGame(this);
 
   let round;
   let rankAssignments;
   if (this.rounds.length === 0) { // first round
     round = new RoundModel({
       roundNumber: 1,
-      currentPlayer: playerWith3Clubs,
+      currentPlayer,
       game: this,
       turns: []
     });
     rankAssignments = this.players.map(player => {
       return RankAssignmentModel({
         politicalRank: nullRank,
-        player: player,
+        player,
         round
       })
     });
     round.rankAssignments = rankAssignments;
   }
+
   this.rounds.push(round);
+  this.allowedRanks = await PoliticalRankModel.getRanks(this.players.length);
 
   await Promise.all([
     this.save(),
@@ -168,6 +196,54 @@ GameSchema.methods.start = async function() {
   
   return this.model('Game').findOne({name: this.name});
 }
+
+GameSchema.methods.startNextRound = async function() {
+  // validations
+  // cannot start next round if game has no rounds
+  // cannot start next round if game is finalized
+
+  // get all rounds, find max round number, nextRound.roundNumber = that + 1
+  
+  // get deck, shuffle
+
+  // find player who is asshole
+  // begin dealing at asshole.seatPosition + 1
+  // wrap around when idx == players.length
+
+  // current player = player with 3 clubs
+
+  // get ranks
+
+  // create round
+
+  // save
+  
+  // return game
+}
+
+GameSchema.methods.playerTakesTurn = async function(turn) {
+  // validations
+  // turn = { player, cards: [card], pass: Boolean }
+  // cannot take turn if not players turn
+  // cannot take turn if passing and have cards selected
+  // turn.cards are not >= lastTurn.cards
+
+  // does the turn cause skips?
+  // create round
+  // if turn causes skips, process skips
+  // save turn(s)
+  
+  // add turn(s) to round, synchronously if > 1
+
+  // if player has no more cards and only 1 other player has cards, round is finalized
+
+  // set next player
+
+  // save round
+  
+  // return game
+}
+
 
 
 const GameModel = mongoose.model('Game', GameSchema);
