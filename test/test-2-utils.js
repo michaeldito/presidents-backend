@@ -1,7 +1,7 @@
 const { PlayerModel, GameModel, UserModel, GameStateModel,
   CardModel, DeckModel, SuitModel, CardRankModel, GameConfigModel } = require('../src/models');
 const utils = require('../src/utils');
-const init = require('./mongo/init');
+const init = require('./Mongo/init');
 const mongoose = require('mongoose');
 const expect = require('expect');
 const assert = require('assert');
