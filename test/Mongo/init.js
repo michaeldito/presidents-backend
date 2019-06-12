@@ -28,7 +28,7 @@ async function initUsers() {
   }
   let userInstances = users.map(user => new UserModel(user));
   let userPromises = userInstances.map(instance => instance.save());
-  return Promise.all([...userPromises]);
+  return Promise.all(userPromises);
 }
 
 

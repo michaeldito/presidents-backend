@@ -6,10 +6,11 @@ const expect = require('expect');
 const assert = require('assert');
 
 
-describe.skip('Koa Server', () => {
+describe('Koa Server', () => {
 
   before(async () => {
     const options = { useNewUrlParser: true, useCreateIndex: true, useFindAndModify: false };
+    mongoose.Promise = global.Promise;
     await mongoose.connect(process.env.MONGODB_URI_TEST, options);
   });
 

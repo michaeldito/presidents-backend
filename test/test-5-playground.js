@@ -1,11 +1,11 @@
 const expect = require('expect');
 const should = require('should');
 
-describe.skip('Playground', () => {
+describe('Playground', () => {
 
   const globalVar = 'global';
 
-  describe.skip('mocha.js', () => {
+  describe('mocha.js', () => {
 
     describe('hooks', function() {
 

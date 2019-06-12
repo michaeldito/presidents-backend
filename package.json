@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "export NODE_ENV=dev && mocha --timeout 15000 test/*js",
+    "test": "export NODE_ENV=dev && mocha --timeout 15000 --exit test/*js",
     "test:mongo": "export NODE_ENV=dev && mocha --timeout 15000 test/*mongo-init.js",
     "test:methods": "export NODE_ENV=dev && mocha --timeout 15000 test/*methods.js",
     "test:utils": "export NODE_ENV=dev && mocha --timeout 15000 test/*utils.js",
