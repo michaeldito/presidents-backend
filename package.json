@@ -9,7 +9,6 @@
     "test-mongo": "export NODE_ENV=dev && mocha --timeout 15000 test/*mongo-init.js",
     "test-methods": "export NODE_ENV=dev && mocha --timeout 15000 test/*methods.js",
     "test-utils": "export NODE_ENV=dev && mocha --timeout 15000 test/*utils.js",
-    "test-proc": "export NODE_ENV=dev && mocha --timeout 15000 test/*processing.js",
     "test-server": "export NODE_ENV=dev && mocha --timeout 15000 test/*server.js",
     "test-play": "export NODE_ENV=dev && mocha --timeout 15000 test/*playground.js",
     "count-src": "find src -name '*.js' | xargs wc -l",
@@ -44,6 +43,9 @@
   },
   "devDependencies": {
     "mocha": "^6.1.4"
+  },
+  "engines": {
+    "node": ">=10"
   },
   "jest": {
     "testEnvironment": "node",
