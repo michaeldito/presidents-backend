@@ -1,3 +1,9 @@
 language: node_js
 node_js:
-  - "10"
+- 10
+before_script:
+- npm install -g mocha
+script:
+- npm run test
+notifications:
+  slack: larrysquad:UpeUfCs6ty4vrmNJ4tWai01o
