@@ -1,20 +1,19 @@
 const { CardRankModel, 
   SuitModel, PoliticalRankModel, 
   UserModel, PlayerModel, GameConfigModel, 
-  GameModel } = require('../src/models');
+  GameModel, RoundModel, RankAssignmentModel } = require('../src/models');
 const init = require('./Mongo/init');
 const mongoose = require('mongoose');
 const expect = require('expect');
-const assert = require('assert');
+const connectToMongo = require('../src/config/db');
+
 require('dotenv').config();
 
 
 describe('Model Method Tests', function() {
     
   before(async function() {
-    const options = { useNewUrlParser: true, useCreateIndex: true, useFindAndModify: false };
-    mongoose.Promise = global.Promise;
-    await mongoose.connect(process.env.MONGODB_URI_TEST, options);
+    await connectToMongo();
     await init.dropAll();
     await init.initPresidents();
   });
@@ -196,20 +195,42 @@ describe('Model Method Tests', function() {
         expect(game.rounds.length).toBe(1);
       });
 
-      it('players should have been dealt 26 cards each', async function() {  
+      it('players should have been dealt 26 cards each', async function() { 
+        const p1 = await PlayerModel.findById(game.players[0]._id);
+        const p2 = await PlayerModel.findById(game.players[1]._id);
+        expect(p1.hand.length).toBe(26);
+        expect(p2.hand.length).toBe(26);
       });
 
-      it('game.round.roundNumber should be 1', async function() {    
+      it('game.currentRound is set & game.round.roundNumber is 1', async function() {
+        expect(game.currentRound).toBeTruthy();
+        const r = await RoundModel.findById(game.currentRound); 
+        expect(r.roundNumber).toBe(1); 
       });
 
-      it('game.round.currentPlayer should have 3 ♣', async function() {    
+      it('game.round.currentPlayer should have 3 ♣', async function() {
+        const r = await RoundModel.findById(game.currentRound);
+        const p = await PlayerModel.findById(r.currentPlayer);
+        let found = false;
+        for (let card of p.hand)
+          if (card.shortHand === '3Clubs')
+            found = true;
+        expect(found).toBeTruthy();
       });
 
-      it('all players should have null rank has their rank', async function() {    
+      it('all players should have one rank assignment', async function() {  
+        const playersInGame = await PlayerModel.find({'_id': { $in: game.players } });
+        playersInGame.forEach(p => expect(p.rankAssignments.length).toBe(1));
+      });
+
+      it('all players should have one null rank assignment', async function() {  
+      });
+
+      it('round.playerRankAssignments should have 2 null ranks', async function() {  
       });
     });
 
-    describe('playerTakesTurn()', function() {   
+    describe.skip('playerTakesTurn()', function() {   
       let users;
       let game;
       let gameConfig

@@ -4,14 +4,12 @@ const init = require('./Mongo/init');
 const mongoose = require('mongoose');
 const expect = require('expect');
 const assert = require('assert');
-
+const connectToMongo = require('../src/config/db');
 
 describe('Koa Server', () => {
 
   before(async () => {
-    const options = { useNewUrlParser: true, useCreateIndex: true, useFindAndModify: false };
-    mongoose.Promise = global.Promise;
-    await mongoose.connect(process.env.MONGODB_URI_TEST, options);
+    await connectToMongo();
   });
 
   after(async () => {

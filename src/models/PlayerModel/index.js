@@ -17,6 +17,7 @@ const PlayerSchema = new mongoose.Schema({
   hand: {
     type: [mongoose.Schema.Types.ObjectId],
     ref: 'Card',
+    autopopulate: true
   },
   turns: {
     type: [mongoose.Schema.Types.ObjectId],
@@ -33,6 +34,8 @@ const PlayerSchema = new mongoose.Schema({
     required: true
   }
 });
+
+PlayerSchema.plugin(require('mongoose-autopopulate'));
 
 PlayerSchema.statics.findAll = function() {
   return this.find({});
@@ -54,6 +57,7 @@ PlayerSchema.statics.findByUsername = async function(username) {
 PlayerSchema.statics.find3ClubsForGame = async function(game) {
   return this.findOne({game});
 }
+
 
 const Player = mongoose.model('Player', PlayerSchema);
 

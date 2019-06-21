@@ -56,7 +56,7 @@ function find3Clubs(allPlayerHands) {
   for (let player of allPlayerHands) {
     for (let card of player) {
       if (card.shortHand === '3Clubs')
-        return {p, c};
+        return [p, c];
       c++;
     }
     p += 1;

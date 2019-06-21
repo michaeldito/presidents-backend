@@ -1,7 +1,7 @@
 const expect = require('expect');
 const should = require('should');
 
-describe('Playground', () => {
+describe.skip('Playground', () => {
 
   const globalVar = 'global';
 

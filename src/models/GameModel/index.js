@@ -13,6 +13,10 @@ const GameSchema = new mongoose.Schema({
     required: true,
     unique: true
   },
+  currentRound: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Round',
+  },
   players: {
     type: [mongoose.Schema.Types.ObjectId],
     ref: 'Player',
@@ -104,10 +108,9 @@ GameSchema.methods.addPlayer = async function(user) {
     }
   }
 
-
   // add player to game & save
   let player = new PlayerModel({
-    seatPosition: 0,
+    seatPosition: this.players.length,
     drinksToDrink: 0,
     user,
     game: this,
@@ -139,35 +142,30 @@ GameSchema.methods.startFirstRound = async function() {
 
   // get deck
   const config = await GameConfigModel.findOne({name: 'Presidents'}).populate('deck');
-
   
   // shuffle
   const shuffled = utils.shuffle(config.deck.cards);
-
 
   // deal
   const playerHands = utils.deal(this.players.length, shuffled).map(hand => utils.sortCards(hand));
 
   // assign cards based on seat position
-  this.players.forEach(async player => {
-    await PlayerModel.updateOne({_id: player._id}, {
-      $set: {
-        hand: playerHands[player.seatPosition]
-      }
-    });
+  await this.players.forEach(async player => {
+    let p = await PlayerModel.findById(player);
+    p.hand = playerHands[p.seatPosition];
+    await p.save();
   });
   
   // determine who has 3 clubs
-  const whoStarts = utils.find3Clubs(playerHands);
+  const [p, c] = utils.find3Clubs(playerHands);
 
-  // player with seat position == whoStarts is current
+  // player with seat position == p is current
   const playersInGame = await PlayerModel.find({'_id': { $in: this.players } });
-  const currentPlayer = playersInGame.find(player => player.seatPosition === whoStarts);
+  const currentPlayer = playersInGame.find(player => player.seatPosition === p);
 
   const nullRank = await PoliticalRankModel.getNullRank();
 
   let round;
-  let rankAssignments;
   if (this.rounds.length === 0) { // first round
     round = new RoundModel({
       roundNumber: 1,
@@ -175,23 +173,24 @@ GameSchema.methods.startFirstRound = async function() {
       game: this,
       turns: []
     });
-    rankAssignments = this.players.map(player => {
-      return RankAssignmentModel({
-        politicalRank: nullRank,
-        player,
-        round
-      })
-    });
-    round.rankAssignments = rankAssignments;
+    rankInstances = [];
+    for (let player of playersInGame) {
+      const rank = new RankAssignmentModel({ politicalRank: nullRank, player, round });
+      rankInstances.push(rank);
+      player.rankAssignments.push(rank);
+      await player.save();
+      await rank.save();
+    }
+    round.rankAssignments = rankInstances;
   }
 
+  this.currentRound = round;
   this.rounds.push(round);
   this.allowedRanks = await PoliticalRankModel.getRanks(this.players.length);
 
   await Promise.all([
     this.save(),
-    round.save(), 
-    ...rankAssignments
+    round.save()
   ]);
   
   return this.model('Game').findOne({name: this.name});

@@ -24,7 +24,7 @@ PoliticalRankSchema.statics.getRanks = function(howMany) {
 }
 
 PoliticalRankSchema.statics.getNullRank = function() {
-  return this.find({value: 0});
+  return this.findOne({value: 0});
 }
 
 const PoliticalRank = mongoose.model('PoliticalRank', PoliticalRankSchema);
