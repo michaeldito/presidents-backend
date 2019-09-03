@@ -2,8 +2,11 @@ const { init: initCardRanks, drop: dropCardRanks } = require('../CardRank/test')
 const { init: initSuits, drop: dropSuits } = require('../Suit/test');
 const { init: initCards, drop: dropCards } = require('../Card/test');
 const { gameConfigurations } = require('./data');
+
 const GameConfiguration = require('./');
 const Card = require('../Card');
+const CardRank = require('../CardRank');
+
 const db = require('../../config/db');
 const expect = require('expect');
 
@@ -14,14 +17,14 @@ const init = async () => {
   let configs = gameConfigurations.map(config => ({...config, deck}));
   let instances = configs.map(config => new GameConfiguration(config));
   let promises = instances.map(instance => instance.save());
-  return Promise.all(promises);
+  await Promise.all(promises);
 }
 
 const drop = async () => {
   await GameConfiguration.deleteMany({});
 }
 
-const test = async () => describe('GameConfiguration', function() {
+const test = async () => describe('GameConfiguration', async function() {
     
   before(async function() {
     await db.connect();
@@ -80,17 +83,37 @@ const test = async () => describe('GameConfiguration', function() {
       expect(error.errors['maxPlayers'].message).toBe(message);
     });
 
-    it('deck is required', function() {    
+    
+    it('deck must not be empty', async function() {     
       const config = {
         name: 'name',
         maxPlayers: 1,
-        numDecks: 1
+        numDecks: 1,
+        deck: []
       };
       const instance = new GameConfiguration(config);
-      const error = instance.validateSync();
-      const message = 'A deck cannot be empty or have non ObjectId values.';
+      const message = 'empty deck';
+      instance.validate(error => {
+        expect(error.errors['deck'].reason.message).toBe(message);
+      });
 
-      expect(error.errors['deck'].message).toBe(message);
+    });
+
+    it('deck must be array of Card instances', async function() {   
+      const rank = await CardRank.findOne({});
+      const card = await Card.findOne({});
+      const config = {
+        name: 'name',
+        maxPlayers: 1,
+        numDecks: 1,
+        deck: [rank, card]
+      };
+      const instance = new GameConfiguration(config);
+      const message = 'objectId does not reference a card';
+      instance.validate(error => {
+        expect(error.errors['deck'].reason.message).toBe(message);
+      });
+
     });
     
     it('numDecks is required', async function() {  
@@ -106,6 +129,7 @@ const test = async () => describe('GameConfiguration', function() {
       
       expect(error.errors['numDecks'].message).toBe(message);
     });
+    
   });
 
 
@@ -116,7 +140,7 @@ const str = require.main.filename.split('/');
 const isMochaRunning = str[str.length - 1] === 'mocha';
 
 if (isMochaRunning){
-  test();
+  //test();
 }
 
 module.exports = { init, drop, test};

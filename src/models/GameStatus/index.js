@@ -1,18 +1,6 @@
 const mongoose = require('mongoose');
+const Status = require('../Status');
 
-const GameStatusSchema = new mongoose.Schema({
-  status: {
-    type: String,
-    required: true,
-    trim: true,
-    unique: true,
-  }
-});
-
-GameStatusSchema.statics.findByStatus = function(status) {
-  return this.findOne({status});
-}
-
-const GameStatus = mongoose.model('GameStatus', GameStatusSchema);
+const GameStatus = Status.discriminator('GameStatus', new mongoose.Schema({}));
 
 module.exports = GameStatus;

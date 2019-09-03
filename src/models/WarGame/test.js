@@ -18,7 +18,7 @@ const expect = require('expect');
 
 const init = async () => {
   const name = 'test war game';
-  const status = await GameStatus.findByStatus('NOT_STARTED');
+  const status = await GameStatus.findByValue('NOT_STARTED');
   const config = await GameConfiguration.findOne({name: 'War'});
   const rules = { reverseWar: false };
   const cards = await Card.find({}).limit(8);
@@ -148,7 +148,7 @@ const str = require.main.filename.split('/');
 const isMochaRunning = str[str.length - 1] === 'mocha';
 
 if (isMochaRunning){
-  test();
+  //test();
 }
 
 

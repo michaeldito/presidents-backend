@@ -19,7 +19,7 @@ const expect = require('expect');
 
 
 const init = async () => {
-  const status = await GameStatus.findByStatus('NOT_STARTED');
+  const status = await GameStatus.findByValue('NOT_STARTED');
   const config = await GameConfiguration.findOne({name: 'Presidents'});
   const currentPlayer = await User.findByUsername('tommypastrami');
   const cardsPlayed = await Card.find({shortHand: '3Clubs'});
@@ -141,7 +141,7 @@ const str = require.main.filename.split('/');
 const isMochaRunning = str[str.length - 1] === 'mocha';
 
 if (isMochaRunning){
-  test();
+  //test();
 }
 
 

@@ -122,7 +122,7 @@ const str = require.main.filename.split('/');
 const isMochaRunning = str[str.length - 1] === 'mocha';
 
 if (isMochaRunning){
-  test();
+  //test();
 }
 
 module.exports = { init, drop, test};

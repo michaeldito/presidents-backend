@@ -8,7 +8,7 @@ const expect = require('expect');
 const init = async () => {
   let instances = gameStatuses.map(status => new GameStatus(status));
   let promises = instances.map(instance => instance.save());
-  return Promise.all(promises);
+  await Promise.all(promises);
 }
 
 const drop = async () => {
@@ -32,12 +32,12 @@ const test = async () => describe('GameStatus', function() {
   });
     
   it('Verify findByStatus(status) returns correct game status document', async function() {    
-    let doc = await GameStatus.findByStatus('IN_PROGRESS');
-    expect(doc.status).toBe('IN_PROGRESS');
-    doc = await GameStatus.findByStatus('NOT_STARTED');
-    expect(doc.status).toBe('NOT_STARTED');
-    doc = await GameStatus.findByStatus('FINALIZED');
-    expect(doc.status).toBe('FINALIZED');
+    let doc = await GameStatus.findByValue('IN_PROGRESS');
+    expect(doc.value).toBe('IN_PROGRESS');
+    doc = await GameStatus.findByValue('NOT_STARTED');
+    expect(doc.value).toBe('NOT_STARTED');
+    doc = await GameStatus.findByValue('FINALIZED');
+    expect(doc.value).toBe('FINALIZED');
   });
 
   it('Verify drop() deletes all game status documents', async function() {    

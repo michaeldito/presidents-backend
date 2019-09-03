@@ -3,6 +3,9 @@ const { init: initInviteStatuses, drop: dropInviteStatuses } = require('../Invit
 const { init: initGames, drop: dropGames } = require('../Game/test');
 const { init: initGameStatus, drop: dropGameStatus } = require('../GameStatus/test');
 const { init: initConfigs, drop: dropConfigs } = require('../GameConfiguration/test');
+const { init: initCardRanks, drop: dropCardRanks } = require('../CardRank/test');
+const { init: initSuits, drop: dropSuits } = require('../Suit/test');
+const { init: initCards, drop: dropCards } = require('../Card/test');
 
 const Invite = require('./');
 const User = require('../User');
@@ -17,7 +20,7 @@ const init = async () => {
   const forUser = await User.findByUsername('tommypastrami');
   const seenByUser = false;
   const sentBy = forUser;
-  const status = await InviteStatus.findByStatus('PENDING');
+  const status = await InviteStatus.findByValue('PENDING');
   const game = await Game.findOne({name: 'test game'});
   const invite = { forUser, seenByUser, sentBy, status, game };
 
@@ -33,6 +36,9 @@ const test = async () => describe('Invite', function() {
   before(async function() {
     await db.connect();
     await initGameStatus();
+    await initCardRanks();
+    await initSuits();
+    await initCards();
     await initConfigs();
     await initUsers();
     await initInviteStatuses();
@@ -41,6 +47,9 @@ const test = async () => describe('Invite', function() {
 
   after(async function() {
     await dropUsers();
+    await dropCards();
+    await dropCardRanks();
+    await dropSuits();
     await dropGameStatus();
     await dropConfigs();
     await dropInviteStatuses();
@@ -68,7 +77,7 @@ const str = require.main.filename.split('/');
 const isMochaRunning = str[str.length - 1] === 'mocha';
 
 if (isMochaRunning){
-  test();
+  //test();
 }
 
 

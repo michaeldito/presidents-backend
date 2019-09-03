@@ -32,12 +32,12 @@ const test = async () => describe('InviteStatus', function() {
   });
     
   it('Verify findByStatus(status) returns correct invite status document', async function() {    
-    let doc = await InviteStatus.findByStatus('ACCEPTED');
-    expect(doc.status).toBe('ACCEPTED');
-    doc = await InviteStatus.findByStatus('DECLINED');
-    expect(doc.status).toBe('DECLINED');
-    doc = await InviteStatus.findByStatus('PENDING');
-    expect(doc.status).toBe('PENDING');
+    let doc = await InviteStatus.findByValue('ACCEPTED');
+    expect(doc.value).toBe('ACCEPTED');
+    doc = await InviteStatus.findByValue('DECLINED');
+    expect(doc.value).toBe('DECLINED');
+    doc = await InviteStatus.findByValue('PENDING');
+    expect(doc.value).toBe('PENDING');
   });
 
   it('Verify drop() deletes all invite status documents', async function() {    

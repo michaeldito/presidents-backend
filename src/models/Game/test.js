@@ -1,4 +1,6 @@
 const { init: initUsers, drop: dropUsers } = require('../User/test');
+const { init: initCardRanks, drop: dropCardRanks } = require('../CardRank/test');
+const { init: initSuits, drop: dropSuits } = require('../Suit/test');
 const { init: initCards, drop: dropCards } = require('../Card/test');
 const { init: initGameStatuses, drop: dropGameStatuses } = require('../GameStatus/test');
 const { init: initGameConfigurations, drop: dropGameConfigurations } = require('../GameConfiguration/test');
@@ -13,7 +15,7 @@ const expect = require('expect');
 
 
 const init = async () => {
-  const status = await GameStatus.findByStatus('NOT_STARTED');
+  const status = await GameStatus.findByValue('NOT_STARTED');
   const config = await GameConfiguration.findOne({name: 'test-game'});
   const currentPlayer = await User.findByUsername('tommypastrami');
   const name = 'test game';
@@ -30,6 +32,8 @@ const test = async () => describe('Game', function() {
     
   before(async function() {
     await db.connect();
+    await initCardRanks();
+    await initSuits();
     await initCards();
     await Promise.all([
       initUsers(),
@@ -41,6 +45,8 @@ const test = async () => describe('Game', function() {
   after(async function() {
     await Promise.all([
       dropCards(),
+      dropSuits(),
+      dropCardRanks(),
       dropUsers(),
       dropGameStatuses(),
       dropGameConfigurations(),

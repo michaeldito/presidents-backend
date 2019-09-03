@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "export NODE_ENV=dev && mocha --timeout 15000 --exit src/tests/*",
-    "test:unit": "export NODE_ENV=dev && mocha --timeout 15000 --exit src/tests/unit*",
+    "test:unit": "export NODE_ENV=dev && mocha --timeout 15000 --exit src/tests/unit* -- $*",
     "test:system": "export NODE_ENV=dev && mocha --timeout 15000 --exit src/tests/system*",
     "test:cardrank": "export NODE_ENV=dev && mocha --timeout 15000 --exit src/models/CardRank/test.js",
     "test:suit": "export NODE_ENV=dev && mocha --timeout 15000 --exit src/models/Suit/test.js",
@@ -20,6 +20,7 @@
     "test:inboxitem": "export NODE_ENV=dev && mocha --timeout 15000 --exit src/models/InboxItem/test.js",
     "test:invitestatus": "export NODE_ENV=dev && mocha --timeout 15000 --exit src/models/InviteStatus/test.js",
     "test:invite": "export NODE_ENV=dev && mocha --timeout 15000 --exit src/models/Invite/test.js",
+    "test:status": "export NODE_ENV=dev && mocha --timeout 15000 --exit src/models/Status/test.js",
     "count:src": "find src -name '*.js' | xargs wc -l",
     "start": "export NODE_ENV=dev && nodemon src/server/index.js"
   },
@@ -39,6 +40,7 @@
     "koa-router": "^7.3.0",
     "mongoose": "^5.5.9",
     "mongoose-autopopulate": "^0.9.1",
+    "mongoose-id-validator": "^0.5.3",
     "should": "^13.2.3",
     "socket.io": "^2.2.0"
   },

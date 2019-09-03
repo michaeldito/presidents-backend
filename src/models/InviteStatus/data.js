@@ -1,11 +1,11 @@
 module.exports.inviteStatuses = [
   {
-    status: 'PENDING'
+    value: 'PENDING'
   },
   {
-    status: 'ACCEPTED'
+    value: 'ACCEPTED'
   },
   {
-    status: 'DECLINED'
+    value: 'DECLINED'
   }
 ];

@@ -1,11 +1,11 @@
 module.exports.gameStatuses = [
   {
-    status: 'NOT_STARTED'
+    value: 'NOT_STARTED'
   },
   {
-    status: 'IN_PROGRESS'
+    value: 'IN_PROGRESS'
   },
   {
-    status: 'FINALIZED'
+    value: 'FINALIZED'
   }
 ];
