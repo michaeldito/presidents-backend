@@ -4,23 +4,29 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "export NODE_ENV=dev && mocha --timeout 15000 --exit test/*js",
-    "test:mongo": "export NODE_ENV=dev && mocha --timeout 15000 test/*mongo-init.js",
-    "test:methods": "export NODE_ENV=dev && mocha --timeout 15000 test/*methods.js",
-    "test:utils": "export NODE_ENV=dev && mocha --timeout 15000 test/*utils.js",
-    "test:server": "export NODE_ENV=dev && mocha --timeout 15000 test/*server.js",
-    "test:play": "export NODE_ENV=dev && mocha --timeout 15000 test/*playground.js",
+    "test": "export NODE_ENV=dev && mocha --timeout 15000 --exit src/tests/*",
+    "test:unit": "export NODE_ENV=dev && mocha --timeout 15000 --exit src/tests/unit*",
+    "test:system": "export NODE_ENV=dev && mocha --timeout 15000 --exit src/tests/system*",
+    "test:cardrank": "export NODE_ENV=dev && mocha --timeout 15000 --exit src/models/CardRank/test.js",
+    "test:suit": "export NODE_ENV=dev && mocha --timeout 15000 --exit src/models/Suit/test.js",
+    "test:card": "export NODE_ENV=dev && mocha --timeout 15000 --exit src/models/Card/test.js",
+    "test:config": "export NODE_ENV=dev && mocha --timeout 15000 --exit src/models/GameConfiguration/test.js",
+    "test:gamestatus": "export NODE_ENV=dev && mocha --timeout 15000 --exit src/models/GameStatus/test.js",
+    "test:politicalrank": "export NODE_ENV=dev && mocha --timeout 15000 --exit src/models/PoliticalRank/test.js",
+    "test:user": "export NODE_ENV=dev && mocha --timeout 15000 --exit src/models/User/test.js",
+    "test:game": "export NODE_ENV=dev && mocha --timeout 15000 --exit src/models/Game/test.js",
+    "test:presidents": "export NODE_ENV=dev && mocha --timeout 15000 --exit src/models/PresidentsGame/test.js",
+    "test:war": "export NODE_ENV=dev && mocha --timeout 15000 --exit src/models/WarGame/test.js",
+    "test:inboxitem": "export NODE_ENV=dev && mocha --timeout 15000 --exit src/models/InboxItem/test.js",
+    "test:invitestatus": "export NODE_ENV=dev && mocha --timeout 15000 --exit src/models/InviteStatus/test.js",
+    "test:invite": "export NODE_ENV=dev && mocha --timeout 15000 --exit src/models/Invite/test.js",
     "count:src": "find src -name '*.js' | xargs wc -l",
-    "count:test": "find test -name '*.js' | xargs wc -l",
     "start": "export NODE_ENV=dev && nodemon src/server/index.js"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@babel/node": "^7.4.5",
     "assert": "^2.0.0",
-    "bcrypt": "^3.0.6",
-    "bcryptjs": "^2.4.3",
     "dotenv": "^4.0.0",
     "expect": "^24.8.0",
     "jsonwebtoken": "^8.5.1",
@@ -31,16 +37,13 @@
     "koa-jwt": "^3.3.2",
     "koa-logger": "^3.2.0",
     "koa-router": "^7.3.0",
-    "koa-socket": "^4.4.0",
-    "koa-socket-2": "^1.1.0",
     "mongoose": "^5.5.9",
     "mongoose-autopopulate": "^0.9.1",
     "should": "^13.2.3",
-    "socket.io": "^2.2.0",
-    "supertest": "^4.0.2"
+    "socket.io": "^2.2.0"
   },
   "devDependencies": {
-    "mocha": "^6.1.4"
+    "mocha": "^6.2.0"
   },
   "engines": {
     "node": ">=10"

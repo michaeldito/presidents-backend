@@ -67,6 +67,24 @@ function find3Clubs(allPlayerHands) {
   throw new Error('3 of Clubs was not in the deck.');
 }
 
+function isCurrentTurnBetter(lastTurn, currentTurn) {
+  return true
+}
+
+
+function calculateSkips(currentHand, previousHand) {
+  return 0
+}
+
+// the cards should all be of the same rank
+// so check the first card's rank value against them all
+// bad cards will pass the filter test
+function areCardsOfSameRank(cards) {
+  const rank = cards[0].cardRank.value;
+  const badCards = cards.filter(card => card.cardRank.value !== rank);
+  return badCards ? false : true
+}
+
 module.exports = {
   ranks,
   suites,
@@ -76,5 +94,8 @@ module.exports = {
   shuffle,
   deal,
   sortCards,
-  find3Clubs
+  find3Clubs,
+  isCurrentTurnBetter,
+  calculateSkips,
+  areCardsOfSameRank
 }
