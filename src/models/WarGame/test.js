@@ -14,16 +14,21 @@ const Game = require('../Game');
 
 const db = require('../../config/db');
 const expect = require('expect');
-
+const mongoose = require('mongoose');
 
 const init = async () => {
+  const count = await WarGame.countDocuments({});
+  if (count === 1) 
+    return Promise.resolve();
+
   const name = 'test war game';
   const status = await GameStatus.findByValue('NOT_STARTED');
   const config = await GameConfiguration.findOne({name: 'War'});
   const rules = { reverseWar: false };
   const cards = await Card.find({}).limit(8);
+  const createdBy = await User.findByUsername('tommypastrami');
 
-  const user1 = await User.findByUsername('tommypastrami');
+  const user1 = createdBy;
   const card1 = cards[0];
   const player1Turn = {
     card: card1,
@@ -80,6 +85,7 @@ const init = async () => {
     startedAt: new Date(),
     rules,
     currentPlayer: user1,
+    createdBy: user1,
     turns: [{
       player1Turn,
       player2Turn,
@@ -98,7 +104,7 @@ const drop = async () => {
   await WarGame.deleteMany({});
 }
 
-const test = async () => describe('WarGame', function() {
+const test = async () => describe('WarGame', async function() {
     
   before(async function() {
     await db.connect();
@@ -122,35 +128,204 @@ const test = async () => describe('WarGame', function() {
       dropUsers(),
       dropGameStatuses(),
       dropGameConfigurations()
-    ])
+    ]);
     await db.close();
   });
 
-  it('Verify init() creates 1 war game document', async function() {  
-    await init();  
-    const docs = await WarGame.find({});
-    docs[0].config.deck=[]
-    console.log(JSON.stringify(docs[0], null, 2))
-    expect(docs.length).toBe(1);
+  describe('#init()', async function() {    
+
+    it('verify it creates 1 war game document', async function() {  
+      await init();  
+      const docs = await WarGame.find({});
+      // docs[0].config.deck=[]
+      // console.log(JSON.stringify(docs[0], null, 2))
+      expect(docs.length).toBe(1);
+    });
+
+
+    describe('validations', async function() {    
+
+      describe('rules', async function() {    
+
+        it('rules.reverseWar is required', async function() {
+          const instance = new WarGame({});
+          const error = instance.validateSync();
+          const message = 'A value is required for rules.reverseWar to create a war game.';
+          
+          expect(error.errors['rules.reverseWar'].message).toBe(message);
+        });
+
+      });
+
+      describe('turns', async function() {  
+
+        it('turns[i].player1Turn.card is required', async function() {    
+          const doc = await WarGame.findOne({});
+          doc.turns.push({});
+          doc.save(error => {
+            const message = 'A value for turns[i].player1Turn.card is required.';	
+            expect(error.errors['turns.1.player1Turn.card'].message).toBe(message);
+          });
+        });
+
+        it('turns[i].player1Turn.user is required', async function() {
+          const doc = await WarGame.findOne({});
+          doc.turns.push({});
+          doc.save(error => {
+            const message = 'A value for turns[i].player1Turn.user is required.';	
+            expect(error.errors['turns.1.player1Turn.user'].message).toBe(message);
+          });
+        });
+
+        it('turns[i].player2Turn.card is required', async function() {    
+          const doc = await WarGame.findOne({});
+          doc.turns.push({});
+          doc.save(error => {
+            const message = 'A value for turns[i].player2Turn.card is required.';	
+            expect(error.errors['turns.1.player2Turn.card'].message).toBe(message);
+          });
+        });
+
+        it('turns[i].player2Turn.user is required', async function() {
+          const doc = await WarGame.findOne({});
+          doc.turns.push({});
+          doc.save(error => {
+            const message = 'A value for turns[i].player2Turn.user is required.';	
+            expect(error.errors['turns.1.player2Turn.user'].message).toBe(message);
+          });
+        });
+
+        it('turns[i].causedBattle is required', async function() {
+          const doc = await WarGame.findOne({});
+          doc.turns.push({});
+          doc.save(error => {
+            const message = 'A value for turns[i].causedBattle is required.';	
+            expect(error.errors['turns.1.causedBattle'].message).toBe(message);
+          });
+        });
+
+        it('turns[i].player1Battle is required', async function() {    
+          const doc = await WarGame.findOne({});
+          doc.turns.push({});
+          doc.save(error => {
+            const message = 'A value for turns[i].player1Battle is required.';	
+            expect(error.errors['turns.1.player1Battle'].message).toBe(message);
+          });
+        });
+
+        it('turns[i].player2Battle is required', async function() {
+          const doc = await WarGame.findOne({});
+          doc.turns.push({});
+          doc.save(error => {
+            const message = 'A value for turns[i].player2Battle is required.';	
+            expect(error.errors['turns.1.player2Battle'].message).toBe(message);
+          });
+        });
+
+        it('turns[i].player1Battle.battleCardsDown is required', async function() {    
+          const doc = await WarGame.findOne({});
+          doc.turns.push({
+            player1Battle: {},
+            player2Battle: {}
+          });
+          doc.save(error => {
+            const message = 'battle cards down must contain two cards.';	
+            expect(error.errors['turns.1.player1Battle.battleCardsDown'].reason.message).toBe(message);
+          });
+        });
+
+        it('turns[i].player2Battle.battleCardsDown is required', async function() {
+          const doc = await WarGame.findOne({});
+          doc.turns.push({
+            player1Battle: {},
+            player2Battle: {}
+          });
+          doc.save(error => {
+            const message = 'battle cards down must contain two cards.';	
+            expect(error.errors['turns.1.player2Battle.battleCardsDown'].reason.message).toBe(message);
+          });
+        });
+
+        it('turns[i].player1Battle.battleCardUp is required', async function() {
+          const doc = await WarGame.findOne({});
+          doc.turns.push({
+            player1Battle: {},
+            player2Battle: {}
+          });;
+          doc.save(error => {
+            const message = 'A value for battleCardUp is required.';	
+            expect(error.errors['turns.1.player1Battle.battleCardUp'].message).toBe(message);
+          });
+        });
+
+        it('turns[i].player2Battle.battleCardUp is required', async function() {
+          const doc = await WarGame.findOne({});
+          doc.turns.push({
+            player1Battle: {},
+            player2Battle: {}
+          });
+          doc.save(error => {
+            const message = 'A value for battleCardUp is required.';	
+            expect(error.errors['turns.1.player2Battle.battleCardUp'].message).toBe(message);
+          });
+        });
+
+      });
+
+      describe('players', async function() {    
+
+        it('players[i].user is required', async function() {
+          const doc = await WarGame.findOne({});
+          doc.players.push({});
+          doc.save(error => {
+            const message = 'A value for players[i].user is required.';
+            expect(error.errors['players.2.user'].message).toBe(message);
+          });
+        });
+
+        it('players[i].seatPosition is required', async function() {
+          const doc = await WarGame.findOne({});
+          doc.players.push({});
+          doc.save(error => {
+            const message = 'A value for players[i].seatPosition is required.';
+            expect(error.errors['players.2.seatPosition'].message).toBe(message);
+          });
+        });
+
+        it('players[i].battlesWon is required', async function() {
+          const doc = await WarGame.findOne({});
+          doc.players.push({});
+          doc.save(error => {
+            const message = 'A value for players[i].battlesWon is required.';
+            expect(error.errors['players.2.battlesWon'].message).toBe(message);
+          });
+        });
+
+        it('players[i].battlesLost is required', async function() {
+          const doc = await WarGame.findOne({});
+          doc.players.push({});
+          doc.save(error => {
+            const message = 'A value for players[i].battlesLost is required.';
+            expect(error.errors['players.2.battlesLost'].message).toBe(message);
+          });
+        });
+
+      });
+      
+    });
+
   });
 
-  it('Verify drop() deletes all war game documents', async function() {    
-    await drop();
-    const docs = await Game.find({});
-    expect(docs.length).toBe(0);
+  describe('#drop()', async function() {    
+
+    it('verify it deletes all war game documents', async function() {    
+      await drop();
+      const docs = await WarGame.find({});
+      expect(docs.length).toBe(0);
+    });
+
   });
 
 });
-
-
-
-const str = require.main.filename.split('/');
-const isMochaRunning = str[str.length - 1] === 'mocha';
-
-if (isMochaRunning){
-  //test();
-}
-
-
 
 module.exports = { init, drop, test };

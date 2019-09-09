@@ -3,14 +3,14 @@ const mongoose = require('mongoose');
 const UserSchema = new mongoose.Schema({
   username: {
     type: String,
-    required: [true, 'A username is required for every user.'],
+    required: [true, 'A username is required to create a user.'],
     trim: true,
     minlength: 1,
-    unique: true,
+    unique: true
   },
   password: {
     type: String,
-    required: [true, 'A password is required for every user.'],
+    required: [true, 'A password is required to create a user.'],
     minlength: 1
   },
   gamesPlayed: {
@@ -127,6 +127,7 @@ UserSchema.statics.findByCredentials = function (email, password) {
 
 };
 
+UserSchema.plugin(require('mongoose-unique-validator'));
 
 const User = mongoose.model('User', UserSchema);
 

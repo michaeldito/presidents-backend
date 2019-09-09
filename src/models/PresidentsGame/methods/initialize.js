@@ -1,5 +1,5 @@
 
-PresidentsGameSchema.methods.startFirstRound = async function() {
+module.exports = async function() {
   // validations
   // 1 - Unable to start game. It is already in progress.
   if (0) {

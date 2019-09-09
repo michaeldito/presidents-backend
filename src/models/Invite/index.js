@@ -5,17 +5,17 @@ const InviteSchema = new mongoose.Schema({
   sentBy: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
-    required: true
+    required: [true, 'A sentBy is required to create an invite.']
   },
   status: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'InviteStatus',
-    required: true
+    required: [true, 'A status is required to create an invite.']
   },
   game: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Game',
-    required: true
+    required: [true, 'A game is required to create an invite.']
   }
 });
 

@@ -8,11 +8,11 @@ const InboxItemSchema = new mongoose.Schema({
   forUser: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
-    required: true
+    required: [true, 'A forUser is required to create an inbox item.']
   },
   seenByUser: {
     type: Boolean,
-    required: true
+    required: [true, 'A seenByUser is required to create an inbox item.']
   }
 }, options);
 

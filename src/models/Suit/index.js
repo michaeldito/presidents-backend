@@ -3,7 +3,8 @@ const mongoose = require('mongoose');
 const SuitSchema = new mongoose.Schema({
   name: {
     type: String,
-    required: [true, 'A name is required for every suit.']
+    required: [true, 'A name is required for every suit.'],
+    unique: true
   },
   color: {
     type: String,
@@ -11,11 +12,13 @@ const SuitSchema = new mongoose.Schema({
   },
   character: {
     type: String,
-    required: [true, 'A character is required for every suit.']
+    required: [true, 'A character is required for every suit.'],
+    unique: true
   },
   value: {
     type: Number,
-    required: [true, 'A value is required for every suit.']
+    required: [true, 'A value is required for every suit.'],
+    unique: true
   }
 });
 
@@ -26,6 +29,8 @@ SuitSchema.statics.findAll = function() {
 SuitSchema.statics.findByName = function(name) {
   return this.findOne({name});
 }
+
+SuitSchema.plugin(require('mongoose-unique-validator'));
 
 const Suit = mongoose.model('Suit', SuitSchema);
 

@@ -8,6 +8,7 @@ const GameSchema = new mongoose.Schema({
   name: {
     type: String,
     required: [true, 'A name is required to create a game.'],
+    unique: true,
     trim: true
   },
   createdAt: {
@@ -32,11 +33,18 @@ const GameSchema = new mongoose.Schema({
     required: [true, 'A config is required to create a game.'],
     autopopulate: true
   },
+  createdBy: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+    required: [true, 'A createdBy is required to create a game.']
+  },
   currentPlayer: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User'
   }
 }, options);
+
+GameSchema.plugin(require('mongoose-unique-validator'));
 
 const Game = mongoose.model('Game', GameSchema);
 

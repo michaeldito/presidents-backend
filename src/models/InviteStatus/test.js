@@ -6,6 +6,10 @@ const expect = require('expect');
 
 
 const init = async () => {
+  const count = await InviteStatus.countDocuments({});
+  if (count === 3) 
+    return Promise.resolve();
+
   let instances = inviteStatuses.map(status => new InviteStatus(status));
   let promises = instances.map(instance => instance.save());
   return Promise.all(promises);
@@ -15,7 +19,7 @@ const drop = async () => {
   await InviteStatus.deleteMany({});
 }
 
-const test = async () => describe('InviteStatus', function() {
+const test = async () => describe('InviteStatus', async function() {
     
   before(async function() {
     await db.connect();
@@ -47,13 +51,5 @@ const test = async () => describe('InviteStatus', function() {
   });
 
 });
-
-
-const str = require.main.filename.split('/');
-const isMochaRunning = str[str.length - 1] === 'mocha';
-
-if (isMochaRunning){
-  //test();
-}
 
 module.exports = { init, drop, test};

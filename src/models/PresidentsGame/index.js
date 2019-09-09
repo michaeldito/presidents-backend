@@ -1,150 +1,180 @@
 const mongoose = require('mongoose');
 const Game = require('../Game');
 
-const PresidentsSchema = new mongoose.Schema({
+const PresidentsRulesSchema = new mongoose.Schema({
+  doubleSkips: {
+    type: Boolean,
+    required: [true, 'A value for rules.doubleSkips is required to create a Presidents game.']
+  },
+  scumStarts: {
+    type: Boolean,
+    required: [true, 'A value for rules.scumStarts is required to create a Presidents game.']
+  },
+  scumHandsTwo: {
+    type: Boolean,
+    required: [true, 'A value for rules.scumHandsTwo is required to create a Presidents game.']
+  },
+  oneEyedJacksAndKingOfHearts: {
+    type: Boolean,
+    required: [true, 'A value for rules.oneEyedJacksAndKingOfHearts is required to create a Presidents game.']
+  },
+  reversePresidentScumTrade: {
+    type: Boolean,
+    required: [true, 'A value for rules.reversePresidentScumTrade is required to create a Presidents game.']
+  },
+  presidentDeals: {
+    type: Boolean,
+    required: [true, 'A value for rules.presidentDeals is required to create a Presidents game.']
+  },
+  goLow: {
+    type: Boolean,
+    required: [true, 'A value for rules.goLow is required to create a Presidents game.']
+  },
+  equalNumber: {
+    type: Boolean,
+    required: [true, 'A value for rules.equalNumber is required to create a Presidents game.']
+  },
+  noEndOnBomb: {
+    type: Boolean,
+    required: [true, 'A value for rules.noEndOnBomb is required to create a Presidents game.']
+  },
+  tripleSixes: {
+    type: Boolean,
+    required: [true, 'A value for rules.tripleSixes is required to create a Presidents game.']
+  },
+  passOut: {
+    type: Boolean,
+    required: [true, 'A value for rules.passOut is required to create a Presidents game.']
+  },
+  fourInARow: {
+    type: Boolean,
+    required: [true, 'A value for rules.fourInARow is required to create a Presidents game.']
+  },
+  larryPresidents: {
+    type: Boolean,
+    required: [true, 'A value for rules.larryPresidents is required to create a Presidents game.']
+  }
+});
+
+const PresidentsTurnSchema = new mongoose.Schema({
+  user: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+    required: [true, 'A value for rounds[i].turns[i].user is required.']
+  },
+  takenAt: {
+    type: Date,
+    default: Date.now
+  },
+  cardsPlayed: {
+    type: [mongoose.Schema.Types.ObjectId],
+    ref: 'Card'
+  },
+  wasPassed: {
+    type: Boolean,
+    required: [true, 'A value for rounds[i].turns[i].wasPassed is required.']
+  },
+  wasSkipped: {
+    type: Boolean,
+    required: [true, 'A value for rounds[i].turns[i].wasSkipped is required.']
+  },
+  didCauseSkips: {
+    type: Boolean,
+    required: [true, 'A value for rounds[i].turns[i].didCauseSkips is required.']
+  },
+  skipsRemaining: {
+    type: Number,
+    required: [true, 'A value for rounds[i].turns[i].skipsRemaining is required.']
+  },
+  endedRound: {
+    type: Boolean,
+    required: [true, 'A value for rounds[i].turns[i].endedRound is required.']
+  }
+});
+
+const RoundSchema = new mongoose.Schema({
+  startedAt: {
+    type: Date
+  },
+  turns: {
+    type: [PresidentsTurnSchema],
+  }
+});
+
+const PresidentsPlayerSchema = new mongoose.Schema({
+  user: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+    required: [true, 'A value for players[i].user is required.']
+  },
+  joinedAt: {
+    type: Date,
+    default: Date.now
+  },
+  seatPosition: {
+    type: Number,
+    required: [true, 'A value for players[i].seatPosition is required.']
+  },
+  hand: {
+    type: [mongoose.Schema.Types.ObjectId],
+    ref: 'Card'
+  },
+  politicalRank: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'PoliticalRank'
+  },
+  nextGameRank: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'PoliticalRank'
+  },
+  drinksDrunk: {
+    type: Number
+  },
+  drinksReceived: [{
+    createdAt: {
+      type: Date,
+      default: Date.now()
+    },
+    sentBy: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User',
+      required: [true, 'A value for players[i].drinksReceived.sentBy is required.']
+    }
+  }],
+  drinksSent: [{
+    createdAt: {
+      type: Date
+    },
+    sentTo: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User',
+      required: [true, 'A value for players[i].drinksSent.sentTo is required.']
+    }
+  }]
+});
+
+const PresidentsGameSchema = new mongoose.Schema({
   winner: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User'
   },
   rules: {
-    doubleSkips: {
-      type: Boolean,
-      required: true
-    },
-    scumStarts: {
-      type: Boolean,
-      required: true
-    },
-    scumHandsTwo: {
-      type: Boolean,
-      required: true
-    },
-    oneEyedJacksAndKingOfHearts: {
-      type: Boolean,
-      required: true
-    },
-    reversePresidentScumTrade: {
-      type: Boolean,
-      required: true
-    },
-    presidentDeals: {
-      type: Boolean,
-      required: true
-    },
-    goLow: {
-      type: Boolean,
-      required: true
-    },
-    equalNumber: {
-      type: Boolean,
-      required: true
-    },
-    noEndOnBomb: {
-      type: Boolean,
-      required: true
-    },
-    tripleSixes: {
-      type: Boolean,
-      required: true
-    },
-    passOut: {
-      type: Boolean,
-      required: true
-    },
-    fourInARow: {
-      type: Boolean,
-      required: true
-    },
-    larryPresidents: {
-      type: Boolean,
-      required: true
-    }
+    type: PresidentsRulesSchema,
+    required: [true, 'A value for rules is required to create a Presidents game.']
   },
-  rounds: [{
-    startedAt: {
-      type: Date
-    },
-    turns: [{
-      user: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'User'
-      },
-      takenAt: {
-        type: Date,
-        default: Date.now
-      },
-      cardsPlayed: {
-        type: [mongoose.Schema.Types.ObjectId],
-        ref: 'Card'
-      },
-      wasPassed: {
-        type: Boolean,
-        default: false
-      },
-      wasSkipped: {
-        type: Boolean
-      },
-      didCauseSkips: {
-        type: Boolean
-      },
-      skipsRemaining: {
-        type: Number
-      },
-      endedRound: {
-        type: Boolean
-      }
-    }]
-  }],
-  players: [{
-    user: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'User'
-    },
-    joinedAt: {
-      type: Date,
-      default: Date.now
-    },
-    seatPosition: {
-      type: Number
-    },
-    hand: {
-      type: [mongoose.Schema.Types.ObjectId],
-      ref: 'Card'
-    },
-    politicalRank: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'PoliticalRank'
-    },
-    nextGameRank: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'PoliticalRank'
-    },
-    drinksDrunk: {
-      type: Number
-    },
-    drinksReceived: [{
-      createdAt: {
-        type: Date
-      },
-      sentBy: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'User'
-      }
-    }],
-    drinksSent: [{
-      createdAt: {
-        type: Date
-      },
-      sentTo: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'User'
-      }
-    }],
-  }]
+  rounds: {
+    type: [RoundSchema],
+    required: true
+  },
+  players: {
+    type: [PresidentsPlayerSchema],
+    required: true
+  }
 });
 
-PresidentsSchema.plugin(require('mongoose-autopopulate'));
+PresidentsGameSchema.plugin(require('mongoose-autopopulate'));
+PresidentsGameSchema.method.join = require('./updates/join');
 
-const PresidentsGame = Game.discriminator('PresidentsGame', PresidentsSchema);
+const PresidentsGame = Game.discriminator('PresidentsGame', PresidentsGameSchema);
 
 module.exports = PresidentsGame;

@@ -18,6 +18,7 @@ const GameConfigurationSchema = new mongoose.Schema({
     required: true, // mongoose will make empty array by default if required is true
     validate: {
       validator: async function(deck) {
+
         // deck must not be empty
         if(deck.length === 0)
           return Promise.reject(new Error('empty deck'));
@@ -34,6 +35,7 @@ const GameConfigurationSchema = new mongoose.Schema({
           
         // deck is valid
         return Promise.resolve();
+        
       },
       message: 'A deck must be a non-empty array of Card ObjectIds.'
     }
@@ -43,6 +45,8 @@ const GameConfigurationSchema = new mongoose.Schema({
     required: [true, 'A numDecks field is required for every game configuration.'],
   }
 });
+
+GameConfigurationSchema.plugin(require('mongoose-unique-validator'));
 
 const GameConfiguration = mongoose.model('GameConfiguration', GameConfigurationSchema);
 

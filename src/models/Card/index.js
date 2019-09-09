@@ -3,7 +3,8 @@ const mongoose = require('mongoose');
 const CardSchema = new mongoose.Schema({
   shortHand: {
     type: String,
-    required: [true, 'A shorthand is required for every card.']
+    required: [true, 'A shorthand is required for every card.'],
+    unique: true
   },
   cardRank: {
     type: mongoose.Schema.Types.ObjectId,
@@ -24,6 +25,7 @@ CardSchema.statics.getDeck = function() {
 }
 
 CardSchema.plugin(require('mongoose-autopopulate'));
+CardSchema.plugin(require('mongoose-unique-validator'));
 
 const Card = mongoose.model('Card', CardSchema);
 
