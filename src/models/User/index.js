@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const bcrypt = require('bcrypt');
 
 const UserSchema = new mongoose.Schema({
   username: {
@@ -7,6 +8,13 @@ const UserSchema = new mongoose.Schema({
     trim: true,
     minlength: 1,
     unique: true
+  },
+  email: {
+    type: String,
+    trim: true,
+    minlength: 1,
+    unique: true,
+    required: true
   },
   password: {
     type: String,
@@ -38,93 +46,75 @@ UserSchema.statics.findRandoms = function(howMany) {
   return this.find({}).limit(howMany);
 }
 
+UserSchema.statics.register = async function(user) {
+  const salt = await bcrypt.genSalt(10);
+  const hash = await bcrypt.hash(user.password, salt);
+  user.password = hash;
+  const instance = new User(user);
+  await instance.save();
+}
 
-//
-//
-// Code below is not tested!
-//
-//
-
-
-// Arrow functions do not bind a this keyword.
-// We need a this keyword for our user methods! 
-UserSchema.methods.generateAuthToken = function () {
-
-  const access = 'auth';
-  const token = jwt.sign({_id: user._id.toHexString(), access}, process.env.JWT_SECRET).toString();
-
-  user.tokens = user.tokens.concat([{access, token}]);
-
-  // user.save() returns a promise, so we call .then()
-  // Usually we return inside of this line, but here it's
-  // legal because we're returning the value of the callback.
-  return this.save().then(() => {
-    return token;
+UserSchema.statics.findByCredentials = async function (username, password) {
+  const user = await this.findOne({username});
+  if (! user)
+    return Promise.reject(new Error('username doesn\t exist.'));
+  
+  return new Promise((resolve, reject) => {
+    bcrypt.compare(password, user.password, (err, res) => {
+      if (res)
+        resolve(user);
+      else
+        reject();
+    });
   });
 };
 
+UserSchema.methods.generateAuthToken = async function (type) {
+  const access = type === 'admin' ? 'admin' : 'user';
+  const token = jwt.sign({_id: user._id.toHexString(), access}, process.env.JWT_SECRET).toString();
 
-// $pull lets you remove an item from an array that matches criteria
+  this.tokens = this.tokens.concat([{access, token}]);
+  await this.save();
+  return token;
+};
+
 UserSchema.methods.removeToken = function (token) {
-
-  return thid.update({
+  return this.update({
     $pull: {
       tokens: {token}
     }
   });
-
 };
 
-
-// Statics are model methods, not instance methods.
-// Methods get called with the individual document.
-// Model methods get called with the model as the 'this' binding.
 UserSchema.statics.findByToken = function (token) {
-
   let decoded;
 
   try {
-    // token to decode, and secret
     decoded = jwt.verify(token, process.env.JWT_SECRET);
   }
-  catch (e) {
-    // when the token is invalid, return a promise that is
-    // always going to reject. 
-    return Promise.reject(new Error('Invalid token.'));
+  catch (err) {
+    return Promise.reject('invalid token');
   }
-  // return the promise so that we can do chaining in server.js
+  // query a nested doc
   return this.findOne({
     '_id': decoded._id,
-    // find a user whose tokens arry has an object where tokens has a token
-    // that equals token prop we have here.
-    // to query a nested doc wrap value in quotes and specify
-    // what to query for
-    'tokens.token': token,
-    'tokens.access': 'auth'
+    'tokens.token': token
   });
-
 };
 
 
-UserSchema.statics.findByCredentials = function (email, password) {
-
-  return this.findOne({email}).then((user) => {
-    if (!user) {
-      return Promise.reject();
-    }
-
-    return new Promise((resolve, reject) => {
-      bcrypt.compare(password, user.password, (err, res) => {
-        if (res) {
-          resolve(user);
-        }
-        else {
-          reject();
-        }
-      });
+UserSchema.statics.findByCredentials = async function (username, password) {
+  const user = await this.findOne({username});
+  return new Promise((resolve, reject) => {
+    bcrypt.compare(password, user.password, (err, res) => {
+      if (res) {
+        resolve(user);
+      }
+      else {
+        reject(new Error('invalid username and password combination.'));
+      }
     });
   });
-
 };
 
 UserSchema.plugin(require('mongoose-unique-validator'));

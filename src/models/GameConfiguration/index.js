@@ -11,6 +11,32 @@ const GameConfigurationSchema = new mongoose.Schema({
   maxPlayers: {
     type: Number,
     required: [true, 'A maxPlayers field is required for every game configuration.'],
+    validate: {
+      validator: async function(maxPlayers) {
+
+        if(maxPlayers < this.minPlayers)
+          return Promise.reject();
+
+        return Promise.resolve();
+        
+      },
+      message: 'A value for maxPlayers must be greater than or equal to minPlayers.'
+    }
+  },
+  minPlayers: {
+    type: Number,
+    required: [true, 'A maxPlayers field is required for every game configuration.'],
+    validate: {
+      validator: async function(minPlayers) {
+
+        if(minPlayers > this.maxPlayers)
+          return Promise.reject();
+
+        return Promise.resolve();
+        
+      },
+      message: 'A value for minPlayers must be less than or equal to maxPlayers.'
+    }
   },
   deck: {
     type: [mongoose.Schema.Types.ObjectId],

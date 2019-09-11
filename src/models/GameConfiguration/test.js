@@ -97,8 +97,15 @@ const test = async () => describe('GameConfiguration', async function() {
   
         expect(error.errors['maxPlayers'].message).toBe(message);
       });
+
+      it.skip('maxPlayers must be >= minPlayers', async function() {    
+        
+      });
+
+      it.skip('minPlayers must be <= maxPlayers', async function() {    
+        
+      });
   
-      
       it('deck must not be empty', async function() {     
         const config = {
           name: 'name',

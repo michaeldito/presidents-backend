@@ -7,6 +7,10 @@ const { init: initGameConfigurations, drop: dropGameConfigurations } = require('
 const { init: initPoliticalRanks, drop: dropPoliticalRanks } = require('../PoliticalRank/test');
 
 const joinTest = require('./updates/join.test');
+const initializeTest = require('./updates/initialize.test');
+const initializeNextRoundTest = require('./updates/initializeNextRound.test');
+const takeTurnTest = require('./updates/takeTurn.test');
+const getNextPlayerTest = require('./queries/getNextPlayer.test');
 
 const Card = require('../Card');
 const GameStatus = require('../GameStatus');
@@ -484,6 +488,10 @@ const test = async () => describe('PresidentsGame', async function() {
 	});
 
 	joinTest();
+	initializeTest();
+	initializeNextRoundTest();
+	takeTurnTest();
+	getNextPlayerTest();
 
 	describe('#drop()', async function() {    
 

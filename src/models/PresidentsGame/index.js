@@ -94,7 +94,8 @@ const PresidentsTurnSchema = new mongoose.Schema({
 
 const RoundSchema = new mongoose.Schema({
   startedAt: {
-    type: Date
+    type: Date,
+    default: Date.now
   },
   turns: {
     type: [PresidentsTurnSchema],

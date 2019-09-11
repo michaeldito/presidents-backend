@@ -1,17 +1,18 @@
 const User = require('.');
 const { users } = require('./data');
 const db = require('../../config/db');
-const expect = require('expect');
-
+const chai = require('chai');
+const expect = require('expect')
+const chaiexpect = chai.expect;
 
 const init = async () => {
   const count = await User.countDocuments({});
   if (count === 9) 
     return Promise.resolve();
-
+  
   let instances = users.map(user => new User(user));
   let promises = instances.map(instance => instance.save());
-  return Promise.all(promises);
+  await Promise.all(promises);
 }
 
 const drop = async () => {
@@ -22,13 +23,14 @@ const test = async () => describe('User', async function() {
     
   before(async function() {
     await db.connect();
+    await drop();
   });
 
   after(async function() {
     await db.close();
   });
 
-  describe('#init()', function() {    
+  describe('#init()', async function() {    
 
     it('verify it initializes 9 user documents', async function() {    
       await init();
@@ -106,7 +108,25 @@ const test = async () => describe('User', async function() {
 
   });
 
-  describe('findByUsername(username)', async function() {    
+  describe('#register(user)', async function() {    
+  
+    it('should hash the password and create a user', async function() {    
+      const user = {
+        username: 'mcdito13',
+        password: '1234',
+        email: 'mcdito13@gmail.com'
+      };
+
+      await User.register(user);
+      const doc = await User.findOne({username: user.username});
+      expect(doc.username).toBe('mcdito13');
+      expect(doc.password[0]).toBe('$');
+    });
+
+  });
+
+
+  describe('#findByUsername(username)', async function() {    
   
     it('should return instance if successful', async function() {    
       const doc = await User.findByUsername('bella');
@@ -120,13 +140,36 @@ const test = async () => describe('User', async function() {
 
   });
 
-  describe.skip('findByCredentials(username, password)', async function() {    
+  describe('findByCredentials(username, password)', async function() {    
   
     it('should return instance if successful', async function() {    
-
+      const user = {
+        username: 'mcdito13',
+        password: '1234',
+        email: 'mcdito13@gmail.com'
+      };
+      const doc = await User.findByCredentials(user.username, user.password);
+      expect(doc).toBeTruthy();
     });
 
     it('should not return instance if unsuccessful', async function() {    
+      const user = {
+        username: 'mcdito13',
+        password: '4321',
+        email: 'mcdito13@gmail.com'
+      };
+      try {
+        await User.findByCredentials(user.username, user.password);
+      } catch (err){
+        expect(err.message).toBe('invalid username and password combination.');
+      }
+    });
+
+  });
+
+  describe.skip('#findByToken(token)', async function() {    
+    
+    it('verify it does the right thing', async function() {    
 
     });
 
@@ -141,7 +184,7 @@ const test = async () => describe('User', async function() {
     });
 
   });
-
+  
 });
 
 module.exports = { init, drop, test};

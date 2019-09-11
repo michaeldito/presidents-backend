@@ -1,5 +1,4 @@
-
-PresidentsGameSchema.methods.processTurn = async function(turn) {
+module.exports = async function(turn) {
   // validations
   // turn = { player, cards: [card], pass: Boolean }
 

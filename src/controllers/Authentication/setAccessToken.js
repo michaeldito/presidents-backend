@@ -1,4 +1,4 @@
-const jwt = require('jsonwebtoken');
+const jwt = require('./node_modules/jsonwebtoken');
 
 function setAccessToken(ctx, user) {
   const expDate = Date.now() + (20 * 60 * 1000);
@@ -9,9 +9,9 @@ function setAccessToken(ctx, user) {
     user
   };
 
-  const access_token = jwt.sign(options, process.env.JWT_KEY);
+  const token = jwt.sign(options, process.env.JWT_KEY);
 
-  ctx.cookies.set('access_token', access_token, {
+  ctx.cookies.set('access_token', token, {
     httpOnly: true,
     expires: new Date(expDate)
   });

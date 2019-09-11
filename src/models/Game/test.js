@@ -65,6 +65,7 @@ const test = async () => describe('Game', async function() {
     it('verify it creates 1 game document', async function() {  
       await init();  
       const docs = await Game.find({});
+      console.log(docs)
       expect(docs.length).toBe(1);
     });
 

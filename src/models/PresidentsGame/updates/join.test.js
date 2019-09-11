@@ -1,20 +1,20 @@
-module.exports = async () => describe('join()', async function() {    
+module.exports = async () => describe('#join()', async function() {    
 
   describe('validations', async function() {    
 
-    it('user required', async function() {
+    it('game is in progress', async function() {
 
     });
 
-    it('game status must be not started', async function() {
+    it('game is finished', async function() {
 
     });
 
-    it('game must not be full', async function() {
+    it('game is full', async function() {
 
     });
 
-    it('user has already joined game', async function() {
+    it('user has already joined', async function() {
 
     });
 
@@ -30,7 +30,7 @@ module.exports = async () => describe('join()', async function() {
 
     });
 
-    it('player[user].seatPosition is set', async function() {
+    it('player[user].seatPosition is set incrementally', async function() {
 
     });
 
