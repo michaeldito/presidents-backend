@@ -180,11 +180,22 @@ const PresidentsGameSchema = new mongoose.Schema({
   }
 });
 
+// plugins
 PresidentsGameSchema.plugin(require('mongoose-autopopulate'));
+
+// conditionals
+PresidentsGameSchema.methods.areCardsValid = require('./conditionals/areCardsValid');
+PresidentsGameSchema.methods.shouldProcessTurn = require('./conditionals/shouldProcessTurn');
+
+// queries
+PresidentsGameSchema.methods.getNextPlayer = require('./queries/getNextPlayer');
+
+// updates
 PresidentsGameSchema.methods.join = require('./updates/join');
 PresidentsGameSchema.methods.initialize = require('./updates/initialize');
 PresidentsGameSchema.methods.initializeNextRound = require('./updates/initializeNextRound');
-PresidentsGameSchema.methods.getNextPlayer = require('./queries/getNextPlayer');
+PresidentsGameSchema.methods.processTurn = require('./updates/processTurn');
+PresidentsGameSchema.methods.processSkips = require('./updates/processSkips');
 
 const PresidentsGame = Game.discriminator('PresidentsGame', PresidentsGameSchema);
 

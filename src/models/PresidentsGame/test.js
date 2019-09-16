@@ -1,3 +1,8 @@
+const db = require('../../config/db');
+const expect = require('expect');
+const mongoose = require('mongoose');
+
+// inits
 const { init: initUsers, drop: dropUsers } = require('../User/test');
 const { init: initSuits, drop: dropSuits } = require('../Suit/test');
 const { init: initCardRanks, drop: dropCardRanks } = require('../CardRank/test');
@@ -6,23 +11,28 @@ const { init: initGameStatuses, drop: dropGameStatuses } = require('../GameStatu
 const { init: initGameConfigurations, drop: dropGameConfigurations } = require('../GameConfiguration/test');
 const { init: initPoliticalRanks, drop: dropPoliticalRanks } = require('../PoliticalRank/test');
 
+// updates
 const joinTest = require('./updates/join.test');
 const initializeTest = require('./updates/initialize.test');
 const initializeNextRoundTest = require('./updates/initializeNextRound.test');
-const takeTurnTest = require('./updates/takeTurn.test');
+const processSkipsTest = require('./updates/processSkips.test');
+const processTurnTest = require('./updates/processTurn.test');
+
+// conditionals
+const areCardsValidTest = require('./conditionals/areCardsValid.test');
+const shouldProcessTurnTest = require('./conditionals/shouldProcessTurn.test');
+
+// queries
 const getNextPlayerTest = require('./queries/getNextPlayer.test');
 
+// models
 const Card = require('../Card');
 const GameStatus = require('../GameStatus');
 const GameConfiguration = require('../GameConfiguration');
 const User = require('../User');
 const PoliticalRank = require('../PoliticalRank');
 const PresidentsGame = require('./');
-const Game = require('../Game');
 
-const db = require('../../config/db');
-const expect = require('expect');
-const mongoose = require('mongoose');
 
 const init = async () => {
   const count = await PresidentsGame.countDocuments({});
@@ -490,8 +500,11 @@ const test = async () => describe('PresidentsGame', async function() {
 	joinTest();
 	initializeTest();
 	initializeNextRoundTest();
-	takeTurnTest();
 	getNextPlayerTest();
+	areCardsValidTest();
+	shouldProcessTurnTest();
+	processTurnTest();
+	processSkipsTest();
 
 	describe('#drop()', async function() {    
 

@@ -1,25 +1,9 @@
-module.exports = async () => describe.skip('#takeTurn()', async function() {   
+module.exports = async () => describe.skip('#processTurn()', async function() {   
 
   before(async function() {
 
   })
 
-
-  describe('validations', async function () {
-
-    it('cards are different & invalid', async function() {  
-
-    });
-
-    it('not players turn', async function() {  
-
-    });
-
-    it('selected cards do not beat previous turn', async function() {  
-
-    });
-
-  });
 
   describe('successful', async function () {
   
