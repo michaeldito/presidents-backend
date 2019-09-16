@@ -118,7 +118,8 @@ const PresidentsPlayerSchema = new mongoose.Schema({
   },
   hand: {
     type: [mongoose.Schema.Types.ObjectId],
-    ref: 'Card'
+    ref: 'Card',
+    autopopulate: true
   },
   politicalRank: {
     type: mongoose.Schema.Types.ObjectId,
@@ -153,11 +154,17 @@ const PresidentsPlayerSchema = new mongoose.Schema({
     }
   }]
 });
+PresidentsPlayerSchema.plugin(require('mongoose-autopopulate'));
 
 const PresidentsGameSchema = new mongoose.Schema({
   winner: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User'
+  },
+  handToBeat: {
+    type: [mongoose.Schema.Types.ObjectId],
+    ref: 'Card',
+    autopopulate: true
   },
   rules: {
     type: PresidentsRulesSchema,
@@ -174,7 +181,10 @@ const PresidentsGameSchema = new mongoose.Schema({
 });
 
 PresidentsGameSchema.plugin(require('mongoose-autopopulate'));
-PresidentsGameSchema.method.join = require('./updates/join');
+PresidentsGameSchema.methods.join = require('./updates/join');
+PresidentsGameSchema.methods.initialize = require('./updates/initialize');
+PresidentsGameSchema.methods.initializeNextRound = require('./updates/initializeNextRound');
+PresidentsGameSchema.methods.getNextPlayer = require('./queries/getNextPlayer');
 
 const PresidentsGame = Game.discriminator('PresidentsGame', PresidentsGameSchema);
 

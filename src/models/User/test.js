@@ -160,7 +160,7 @@ const test = async () => describe('User', async function() {
       };
       try {
         await User.findByCredentials(user.username, user.password);
-      } catch (err){
+      } catch (err) {
         expect(err.message).toBe('invalid username and password combination.');
       }
     });

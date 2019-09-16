@@ -64,7 +64,8 @@ const GameConfigurationSchema = new mongoose.Schema({
         
       },
       message: 'A deck must be a non-empty array of Card ObjectIds.'
-    }
+    },
+    autopopulate: true
   },
   numDecks: {
     type: Number,
@@ -73,6 +74,7 @@ const GameConfigurationSchema = new mongoose.Schema({
 });
 
 GameConfigurationSchema.plugin(require('mongoose-unique-validator'));
+GameConfigurationSchema.plugin(require('mongoose-autopopulate'));
 
 const GameConfiguration = mongoose.model('GameConfiguration', GameConfigurationSchema);
 

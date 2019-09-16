@@ -26,6 +26,7 @@ const GameSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'GameStatus',
     required: [true, 'A status is required to create a game.'],
+    autopopulate: true
   },
   config: {
     type: mongoose.Schema.Types.ObjectId,
@@ -45,6 +46,7 @@ const GameSchema = new mongoose.Schema({
 }, options);
 
 GameSchema.plugin(require('mongoose-unique-validator'));
+GameSchema.plugin(require('mongoose-autopopulate'));
 
 const Game = mongoose.model('Game', GameSchema);
 

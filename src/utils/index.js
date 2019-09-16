@@ -1,7 +1,3 @@
-
-const ranks = ['2','3' ,'4' ,'5' ,'6' ,'7' ,'8' ,'9' ,'10' ,'J', 'Q', 'K', 'A'];
-const suites = ['H', 'D', 'S', 'C'];
-
 const create2DArray = rows => {
   let A = [];
   for (let i = 0; i < rows; i++)
@@ -18,15 +14,6 @@ const shiftRight = (arr, amount) => {
   return shiftedArr;
 }
 
-
-function createDeck() {
-  let deck = [];
-  for (let rank of ranks)
-    for (let suite of suites)
-      deck.push({rank, suite});
-  return deck;
-}
-
 function shuffle(arr) {
   const a = [...arr];
   for (let i = a.length - 1; i > 0; i--) {
@@ -37,13 +24,13 @@ function shuffle(arr) {
 };
 
 function deal(numPlayers, shuffled) {
-  let players = create2DArray(numPlayers);
+  let dealtCards = create2DArray(numPlayers);
   let i = 0;
   while (shuffled.length > 0) {
-    players[i].push(shuffled.pop());
+    dealtCards[i].push(shuffled.pop());
     i = (i + 1) % numPlayers;
   }
-  return players;
+  return dealtCards;
 }
 
 
@@ -56,7 +43,7 @@ function find3Clubs(allPlayerHands) {
   for (let player of allPlayerHands) {
     for (let card of player) {
       if (card.shortHand === '3Clubs')
-        return [p, c];
+        return p;
       c++;
     }
     p += 1;
@@ -67,9 +54,6 @@ function find3Clubs(allPlayerHands) {
   throw new Error('3 of Clubs was not in the deck.');
 }
 
-function isCurrentTurnBetter(lastTurn, currentTurn) {
-  return true
-}
 
 
 function calculateSkips(currentHand, previousHand) {
@@ -86,16 +70,12 @@ function areCardsOfSameRank(cards) {
 }
 
 module.exports = {
-  ranks,
-  suites,
   create2DArray,
   shiftRight,
-  createDeck,
   shuffle,
   deal,
   sortCards,
   find3Clubs,
-  isCurrentTurnBetter,
   calculateSkips,
   areCardsOfSameRank
 }

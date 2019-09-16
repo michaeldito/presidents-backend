@@ -1,29 +1,39 @@
+const Utils = require('../../../utils');
 
+/**
+ * This method will initialize a Presidents game.
+ * It assigns cards to each player based on seat position.
+ * It marks the player with the 3 Clubs as the current player.
+ * 
+ * Validations
+ * @throws {Error} Unable to start game. It is already in progress.
+ * @throws {Error} Unable to start game. It has already finished.
+ * @throws {Error} Unable to start game. Minimum number of players is 2.
+
+ * @returns {Promise} Save result.
+ * 
+ */
 module.exports = async function() {
-  // validations
-  // 1 - Unable to start game. It is already in progress.
-  if (0) {
+  if (this.status.value === 'IN_PROGRESS') {
     return Promise.reject(new Error('Unable to start game. It is already in progress.'));
   }
-  // 2 - Unable to start game. It has already finished.
-  if (0) {
+
+  if (this.status.value === 'FINALIZED') {
     return Promise.reject(new Error('Unable to start game. It has already finished.'));
   }
-  // 3 - Unable to start game. Minimum number of players is 2.
+
   if (this.players.length < 2) {
     return Promise.reject(new Error('Unable to start game. Minimum number of players is 2.'));
   }
 
-  // get deck
-  
-  // shuffle
+  let { deck } = this.config;
+  let shuffledDeck = Utils.shuffle(deck);
+  const numPlayers = this.players.length;
+  let dealtCards = Utils.deal(numPlayers, shuffledDeck);
+  this.players.forEach(player => player.hand = dealtCards[player.seatPosition]);
+  const seatPositionWith3Clubs = Utils.find3Clubs(dealtCards);
+  const playerWith3Clubs = this.players.find(player => player.seatPosition === seatPositionWith3Clubs);
+  this.currentPlayer = playerWith3Clubs.user;
 
-  // deal
-
-  // assign cards based on seat position
-  
-  // determine who has 3 clubs
-
-  // player with seat position == p will start the game
-
+  return this.save();
 }

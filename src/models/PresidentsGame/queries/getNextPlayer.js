@@ -1,7 +1,7 @@
 module.exports = async function() {
-  const currentPlayer = await this.players.find(player => player.user === this.currentPlayer);
+  const currentPlayer = this.players.find(player => player.user.toString() === this.currentPlayer.toString());
   const currentSeatPosition = currentPlayer.seatPosition;
-  const nextSeatPosition = (currentSeatPosition + 1) % (this.config.maxPlayers + 1);
-  const nextPlayer = await this.players.find(player => player.seatPosition === nextSeatPosition);
+  const nextSeatPosition = (currentSeatPosition + 1) % this.config.maxPlayers;
+  const nextPlayer = this.players.find(player => player.seatPosition === nextSeatPosition);
   return nextPlayer;
 }
