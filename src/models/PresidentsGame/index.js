@@ -185,8 +185,8 @@ PresidentsGameSchema.plugin(require('mongoose-autopopulate'));
 
 // conditionals
 PresidentsGameSchema.statics.areCardsValid = require('./conditionals/areCardsValid');
-PresidentsGameSchema.statics.isTurnValid = require('./conditionals/isTurnValid');
-PresidentsGameSchema.methods.isTurnBetter = require('./conditionals/isTurnBetter');
+PresidentsGameSchema.statics.areCardsBetter = require('./conditionals/areCardsBetter');
+PresidentsGameSchema.statics.shouldProcessTurn = require('./conditionals/shouldProcessTurn');
 
 // queries
 PresidentsGameSchema.methods.getNextPlayer = require('./queries/getNextPlayer');

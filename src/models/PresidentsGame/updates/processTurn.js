@@ -1,9 +1,7 @@
-const { 
-  PoliticalRank,
-  GameStatus
-} = require('../../');
+const { PoliticalRank, GameStatus } = require('../../') ;
 
 module.exports = async function(turn) {
+  
   // create turn in round for player
   this.rounds[this.rounds.length - 1].turns.push(turn);
 

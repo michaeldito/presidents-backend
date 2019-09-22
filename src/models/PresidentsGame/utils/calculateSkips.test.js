@@ -5,6 +5,7 @@ const expect = require('expect');
 module.exports = async () => describe.skip('#calculateSkips()', async function() {   
 
   before(async function() {
+    
   });
 
   describe('true', async function () {

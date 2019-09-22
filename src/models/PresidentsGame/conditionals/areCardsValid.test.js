@@ -14,10 +14,7 @@ module.exports = async () => describe('#areCardsValid()', async function() {
   
     it('cards are of the same rank', async function() {  
       const cards = [this.threeClubs, this.threeHearts];
-      let valid;
-      try {
-        valid = await PresidentsGame.areCardsValid(cards);
-      } catch (err) { }
+      let valid = PresidentsGame.areCardsValid(cards);
       expect(valid).toBeTruthy();
     });
 
@@ -27,12 +24,8 @@ module.exports = async () => describe('#areCardsValid()', async function() {
   
     it('cards are not of the same rank', async function() {  
       const cards = [this.threeClubs, this.fourHearts];
-      let valid;
-      try {
-        valid = await PresidentsGame.areCardsValid(cards);
-      } catch (err) { 
-        expect(err.message).toBe('cards are not valid');
-      }
+      let valid = PresidentsGame.areCardsValid(cards);
+      expect(valid).toBeFalsy();
     });
 
   });

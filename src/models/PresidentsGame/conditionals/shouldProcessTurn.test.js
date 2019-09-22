@@ -1,7 +1,7 @@
 const { GameStatus, GameConfiguration, User, Card } = require('../..');
 const expect = require('expect');
 
-module.exports = async () => describe.skip('#isTurnBetter()', async function() {   
+module.exports = async () => describe.skip('#shouldProcessTurn()', async function() {   
 
   before(async function() {
     const status = await GameStatus.findByValue('FINALIZED');

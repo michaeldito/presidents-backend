@@ -1,6 +1,7 @@
 /**
  *  Skip processing
  */
+
 module.exports = async function(skipsRemaining) {
   while (skipsRemaining) {
     const skipTurn = {
