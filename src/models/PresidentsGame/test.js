@@ -15,7 +15,6 @@ const { init: initPoliticalRanks, drop: dropPoliticalRanks } = require('../Polit
 const initializeTest = require('./updates/initialize.test');
 const initializeNextRoundTest = require('./updates/initializeNextRound.test');
 const joinTest = require('./updates/join.test');
-const processSkipsTest = require('./updates/processSkips.test');
 const processTurnTest = require('./updates/processTurn.test');
 
 // conditionals
@@ -510,7 +509,6 @@ const test = async () => describe('PresidentsGame', async function () {
 	shouldProcessTurnTest();
 	calculateSkipsTest();
 	processTurnTest();
-	processSkipsTest();
 
 	describe('#drop()', async function () {
 

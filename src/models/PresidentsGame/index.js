@@ -123,11 +123,13 @@ const PresidentsPlayerSchema = new mongoose.Schema({
   },
   politicalRank: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'PoliticalRank'
+    ref: 'PoliticalRank',
+    autopopulate: true
   },
   nextGameRank: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'PoliticalRank'
+    ref: 'PoliticalRank',
+    autopopulate: true
   },
   drinksDrunk: {
     type: Number
@@ -196,7 +198,6 @@ PresidentsGameSchema.methods.join = require('./updates/join');
 PresidentsGameSchema.methods.initialize = require('./updates/initialize');
 PresidentsGameSchema.methods.initializeNextRound = require('./updates/initializeNextRound');
 PresidentsGameSchema.methods.processTurn = require('./updates/processTurn');
-PresidentsGameSchema.methods.processSkips = require('./updates/processSkips');
 
 // utils
 PresidentsGameSchema.statics.calculateSkips = require('./utils/calculateSkips');
