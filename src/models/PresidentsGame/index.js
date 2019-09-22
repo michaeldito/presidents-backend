@@ -199,7 +199,7 @@ PresidentsGameSchema.methods.processTurn = require('./updates/processTurn');
 PresidentsGameSchema.methods.processSkips = require('./updates/processSkips');
 
 // utils
-PresidentsGameSchema.methods.calculateSkips = require('./utils/calculateSkips');
+PresidentsGameSchema.statics.calculateSkips = require('./utils/calculateSkips');
 
 const PresidentsGame = Game.discriminator('PresidentsGame', PresidentsGameSchema);
 

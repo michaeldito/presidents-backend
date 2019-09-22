@@ -1,24 +1,32 @@
-const Utils = require('../../../utils');
-const { Card } = require('../..');
 
-/**
- * 
- */
-module.exports = async function(turn) {
+module.exports = async function(currentPlayer, handToBeat, turn) {
+  // console.log(`currentPlayer: ${currentPlayer}`)
+  // console.log(`handToBeat: ${handToBeat}`)
+  // console.log(`turn: ${turn}`)
+
   // 1 - is it this players turn?
-  const isPlayersTurn = turn.user === this.currentPlayer;
+  const isPlayersTurn = turn.user === currentPlayer;
+  // console.log(`isPlayersTurn: ${isPlayersTurn}`)
   if (! isPlayersTurn)
-    return Promise.reject(new Error(`Unable to process turn. It is not ${turn.user}\'s turn.`));
+    return Promise.reject(new Error(`Unable to process turn. It is not your turn.`));
 
   // 2 - is the current hand valid (all ranks the same)?
-  const areCardsValid = await this.areCardsValid(turn.cardsPlayed);
+  const areCardsValid = this.areCardsValid(turn.cardsPlayed);
+  // console.log(`areCardsValid: ${areCardsValid}`)
   if (! areCardsValid)
     return Promise.reject(new Error(`Unable to process turn. The cards selected are invalid.`));
   
-  const shouldProcessTurn = await this.areCardsBetter(turn.cardsPlayed);
+  let shouldProcessTurn;
+  try {
+    shouldProcessTurn = await this.areCardsBetter(handToBeat, turn.cardsPlayed);
+  } catch (err) {
+    return Promise.reject(new Error(`Unable to process turn. The selected cards are not better. ${err.message}`));
+  }
+
+  // console.log(`shouldProcessTurn: ${shouldProcessTurn}`)
   if (shouldProcessTurn) {
     return Promise.resolve(true);
   }
 
-  return Promise.reject('Unable to process turn. The selected cards are not better.');
+  return Promise.reject(new Error('Unable to process turn. Not sure why.'));
 }
