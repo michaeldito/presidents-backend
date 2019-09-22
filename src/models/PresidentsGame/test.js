@@ -12,18 +12,22 @@ const { init: initGameConfigurations, drop: dropGameConfigurations } = require('
 const { init: initPoliticalRanks, drop: dropPoliticalRanks } = require('../PoliticalRank/test');
 
 // updates
-const joinTest = require('./updates/join.test');
 const initializeTest = require('./updates/initialize.test');
 const initializeNextRoundTest = require('./updates/initializeNextRound.test');
+const joinTest = require('./updates/join.test');
 const processSkipsTest = require('./updates/processSkips.test');
 const processTurnTest = require('./updates/processTurn.test');
 
 // conditionals
 const areCardsValidTest = require('./conditionals/areCardsValid.test');
-const shouldProcessTurnTest = require('./conditionals/shouldProcessTurn.test');
+const isTurnBetterTest = require('./conditionals/isTurnBetter.test');
+const isTurnValidTest = require('./conditionals/isTurnValid.test');
 
 // queries
 const getNextPlayerTest = require('./queries/getNextPlayer.test');
+
+// utils
+const calculateSkipsTest = require('./utils/calculateSkips.test');
 
 // models
 const Card = require('../Card');
@@ -502,7 +506,9 @@ const test = async () => describe('PresidentsGame', async function() {
 	initializeNextRoundTest();
 	getNextPlayerTest();
 	areCardsValidTest();
-	shouldProcessTurnTest();
+	isTurnBetterTest();
+	isTurnValidTest();
+	calculateSkipsTest();
 	processTurnTest();
 	processSkipsTest();
 

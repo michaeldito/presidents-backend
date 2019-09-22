@@ -1,5 +1,5 @@
 const Utils = require('../../../utils');
-const { Card } = require('../../');
+const { Card } = require('../..');
 
 /**
  * 
@@ -8,7 +8,7 @@ module.exports = async function(turn) {
   // 1 - is it this players turn?
   const isPlayersTurn = turn.user === this.currentPlayer;
   if (! isPlayersTurn)
-    return Promise.reject(new Error(`Unable to process turn. It is not player ${turn.user} turn. It is ${this.currentPlayer} turn.`));
+    return Promise.reject(new Error(`Unable to process turn. It is not ${turn.user}\'s turn.`));
 
   // 2 - is the current hand valid (all ranks the same)?
   if (! this.areCardsValid(turn.cardsPlayed))
@@ -25,15 +25,18 @@ module.exports = async function(turn) {
   }
 
   // case 2: current and previous hand have equal number of cards
-  else if (handToBeatCardRankValues.length === currentHandCardRankValues.length) {
+  const equalNumberOfCards = handToBeatCardRankValues.length === currentHandCardRankValues.length;
+  if (equalNumberOfCards) {
 
     // case2a: cards are of same rank
-    if (handToBeatCardRankValues[0] === currentHandCardRankValues[0]) {
+    const sameRank = handToBeatCardRankValues[0] === currentHandCardRankValues[0];
+    if (sameRank) {
       return Promise.resolve('equal cards : same rank');
     }
 
     // case2b: current hand's card rank beats previous turns card rank
-    else if (currentHandCardRankValues[0] > handToBeatCardRankValues[0]) {
+    const currentHandRankBeatsPrevious = currentHandCardRankValues[0] > handToBeatCardRankValues[0];
+    if (currentHandRankBeatsPrevious) {
       return Promise.resolve('equal cards : better rank');
     }
 
@@ -44,16 +47,13 @@ module.exports = async function(turn) {
   }
 
   // case 3: current hand has fewer cards than previous hand
-  else if (handToBeatCardRankValues.length > currentHandCardRankValues.length) {
+  // case 3a: if it contains a 2 it's a valid turn
+  if (! currentHandCardRankValues.find(value => value === 2)) {
+    return Promise.resolve('contains a 2');
+  }
 
-    // case 3a: if it doesn't contain a 2 it's not a valid turn
-    if (! currentHandCardRankValues.find(value => value === 2)) {
-      return Promise.reject(new Error(`Unable to process turn. Not enough cards have been selected to beat the previous hand.`));
-    }
-
-    // case 3b: if it does contain a 2
-    else {
-      return Promise.resolve('contains a 2');
-    }
+  // case 3b: if it does not contain a 2
+  else {
+    return Promise.reject(new Error(`Unable to process turn. Not enough cards have been selected to beat the previous hand.`));
   }
 }

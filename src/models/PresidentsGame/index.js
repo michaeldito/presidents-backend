@@ -184,8 +184,9 @@ const PresidentsGameSchema = new mongoose.Schema({
 PresidentsGameSchema.plugin(require('mongoose-autopopulate'));
 
 // conditionals
-PresidentsGameSchema.methods.areCardsValid = require('./conditionals/areCardsValid');
-PresidentsGameSchema.methods.shouldProcessTurn = require('./conditionals/shouldProcessTurn');
+PresidentsGameSchema.statics.areCardsValid = require('./conditionals/areCardsValid');
+PresidentsGameSchema.statics.isTurnValid = require('./conditionals/isTurnValid');
+PresidentsGameSchema.methods.isTurnBetter = require('./conditionals/isTurnBetter');
 
 // queries
 PresidentsGameSchema.methods.getNextPlayer = require('./queries/getNextPlayer');
@@ -196,6 +197,9 @@ PresidentsGameSchema.methods.initialize = require('./updates/initialize');
 PresidentsGameSchema.methods.initializeNextRound = require('./updates/initializeNextRound');
 PresidentsGameSchema.methods.processTurn = require('./updates/processTurn');
 PresidentsGameSchema.methods.processSkips = require('./updates/processSkips');
+
+// utils
+PresidentsGameSchema.methods.calculateSkips = require('./utils/calculateSkips');
 
 const PresidentsGame = Game.discriminator('PresidentsGame', PresidentsGameSchema);
 

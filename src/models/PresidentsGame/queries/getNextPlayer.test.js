@@ -77,14 +77,18 @@ module.exports = async () => describe('#getNextPlayer()', async function() {
       let doc = await PresidentsGame.findOne({name: 'get next player prez game'});
       let current = doc.currentPlayer.toString();
       let i = 8;
+      //console.log(`start ${current}`)
       while (i > 0) {
         let next = await doc.getNextPlayer();
         doc.currentPlayer = next.user;
-        console.log(`next ${doc.currentPlayer}`)
+        //console.log(`next ${doc.currentPlayer}`)
         await doc.save();
         i--;
       }
+      //console.log('done')
       let newCurrent = doc.currentPlayer.toString();
+      //console.log(`started with ${current}`)
+      //console.log(`finished with ${newCurrent}`)
       expect(current).toBe(newCurrent);
     });
 
