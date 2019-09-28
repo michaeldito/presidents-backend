@@ -8,10 +8,14 @@ module.exports = async function(turn) {
   // assume we should process this turn
   // assume it meets the turn schema criteria
   
-  console.dir(this.players.map(player => `${player.user} ${player.seatPosition}`));
+  console.log(`user | seat position`);
+  console.log(this.players.map(player => `${player.user} ${player.seatPosition}`));
   
   // create turn in round for player
   this.rounds[this.rounds.length - 1].turns.push(turn);
+  
+  // TODO:
+  // if a two was played then init next round
 
   // remove cards played from current players hand if they played any
   const didPlayerPlayCards = turn.cardsPlayed.length > 0;
@@ -68,6 +72,10 @@ module.exports = async function(turn) {
     console.log(`recurse!\n`)
     return this.processTurn(skipTurn);
   }
-  
+
+  // TODO:
+  // did current players last turn end the round?
+  // mark it as a round ender
+
   return this.save();
 }

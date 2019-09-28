@@ -116,8 +116,8 @@ module.exports = async () => describe('#processTurn()', async function() {
 
     it('if player has no more cards then it should assign rank for next round', async function() {  
       const doc = await PresidentsGame.findOne({name: 'process turn prez game'});
-      const lastPlayer = doc.players.find(player => player.user.toString() === this.user2._id.toString())
-      expect(lastPlayer.nextGameRank.name).toBe('President');
+      const firstPlayerDone = doc.players.find(player => player.user.toString() === this.user2._id.toString())
+      expect(firstPlayerDone.nextGameRank.name).toBe('President');
     });
 
     it('if only 1 other player has cards it finalizes the game and sets asshole', async function() {  
@@ -129,5 +129,49 @@ module.exports = async () => describe('#processTurn()', async function() {
 
   });
   
+  describe('skips successful', async function () {
+  
+    before(async function() {
+      // create a new game with 2 players
+      // give 1 player []
+      // give 1 player []
+    });
+    it('1 skip', async function() {  
+      // given current handToBeat is a 3
+      // when next player plays a 3
+      // then game.turns should contain a skip turn
+      // expect the skip turn to be for other player
+      // then game.currentPlayer should be the same player
+    });
 
+    it('2 skip', async function() {  
+      // given current handToBeat is a 3
+      // when next player plays two 3's
+      // then game.turns should contain two skip turns
+      // then game.currentPlayer should be the other player
+      // expect the 1 skip to be for player1 and 1 for player2
+    });
+
+    it('3 skip', async function() {  
+      // given current handToBeat is a 3
+      // when next player plays three 3's
+      // then game.turns should contain three skip turns
+      // then game.currentPlayer should be the other player
+      // expect 2 skips for player2 and 1 skip for player1
+    });
+
+  });
+
+  describe('players last turn ended the round', async function() {  
+    
+    it('3 skip', async function() {  
+      // given current handToBeat is a 3
+      // when next player plays three 3's
+      // then game.turns should contain three skip turns
+      // then game.currentPlayer should be the other player
+      // expect 2 skips for player2 and 1 skip for player1
+    });
+    
+  });
+  
 });
