@@ -35,7 +35,10 @@ module.exports = async () => describe('#getNextPlayer()', async function() {
     };
     const player = {
       user: user1, 
-      seatPosition: 0
+      seatPosition: 0,
+      drinksDrunk: 0,
+      drinksReceived: [],
+      drinksSent: []
     }
 
     const game = {

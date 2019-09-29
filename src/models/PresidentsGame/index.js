@@ -45,6 +45,8 @@ PresidentsGameSchema.methods.join = require('./updates/join');
 PresidentsGameSchema.methods.initialize = require('./updates/initialize');
 PresidentsGameSchema.methods.initializeNextRound = require('./updates/initializeNextRound');
 PresidentsGameSchema.methods.processTurn = require('./updates/processTurn');
+PresidentsGameSchema.methods.drinkDrink = require('./updates/drinkDrink');
+PresidentsGameSchema.methods.giveDrink = require('./updates/giveDrink');
 
 // utils
 PresidentsGameSchema.statics.calculateSkips = require('./utils/calculateSkips');

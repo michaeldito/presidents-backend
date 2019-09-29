@@ -1,5 +1,28 @@
 const mongoose = require('mongoose');
 
+const DrinkReceivedSchema = new mongoose.Schema({
+  createdAt: {
+    type: Date,
+    default: Date.now()
+  },
+  sentBy: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+    required: [true, 'A value for players[i].drinksReceived.sentBy is required.']
+  }
+});
+
+const DrinkSentSchema = new mongoose.Schema({
+  createdAt: {
+    type: Date
+  },
+  sentTo: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+    required: [true, 'A value for players[i].drinksSent.sentTo is required.']
+  }
+});
+
 const PlayerSchema = new mongoose.Schema({
   user: {
     type: mongoose.Schema.Types.ObjectId,
@@ -30,29 +53,17 @@ const PlayerSchema = new mongoose.Schema({
     autopopulate: true
   },
   drinksDrunk: {
-    type: Number
+    type: Number,
+    required: true
   },
-  drinksReceived: [{
-    createdAt: {
-      type: Date,
-      default: Date.now()
-    },
-    sentBy: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'User',
-      required: [true, 'A value for players[i].drinksReceived.sentBy is required.']
-    }
-  }],
-  drinksSent: [{
-    createdAt: {
-      type: Date
-    },
-    sentTo: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'User',
-      required: [true, 'A value for players[i].drinksSent.sentTo is required.']
-    }
-  }]
+  drinksReceived: {
+    type: [DrinkReceivedSchema],
+    required: true
+  },
+  drinksSent: {
+    type: [DrinkSentSchema],
+    required: true
+  },
 });
 
 PlayerSchema.plugin(require('mongoose-autopopulate'));

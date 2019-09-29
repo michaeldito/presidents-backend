@@ -37,7 +37,13 @@ module.exports = async function(user) {
   }
 
   const seatPosition = this.players.length;
-  this.players.push({ user, seatPosition });
+  this.players.push({ 
+    user, 
+    seatPosition,
+    drinksDrunk: 0,
+    drinksReceived: [],
+    drinksSent: []
+   });
 
   return this.save();
 }

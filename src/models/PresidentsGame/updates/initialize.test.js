@@ -156,13 +156,19 @@ module.exports = async () => describe('#initialize()', async function() {
         user,
         joinedAt: new Date(),
         seatPosition: 0,
-        politicalRank
+        politicalRank,
+        drinksDrunk: 0,
+        drinksReceived: [],
+        drinksSent: []
       };
       const player2 = {
         user: user2,
         joinedAt: new Date(),
         seatPosition: 1,
-        politicalRank
+        politicalRank,
+        drinksDrunk: 0,
+        drinksReceived: [],
+        drinksSent: []
       };
   
       const game = {

@@ -9,16 +9,22 @@ const {
 const expect = require('expect');
 
 
-module.exports = async () => describe.skip('#giveDrink()', async function() {   
+module.exports = async () => describe('#giveDrink()', async function() {   
   
   before(async function() {
-    const status = await GameStatus.findByValue('FINALIZED');
+    const status = await GameStatus.findByValue('IN_PROGRESS');
     const config = await GameConfiguration.findOne({name: 'Presidents'});
-    const currentPlayer = await User.findByUsername('tommypastrami');
+
+    this.user1 = await User.findByUsername('tommypastrami');
+    this.user2 = await User.findByUsername('bella');
+
+    const user1 = this.user1._id;
+    const user2 = this.user2._id;
+
+    const currentPlayer = user2;
     const createdBy = currentPlayer;
-    const hand = await Card.find({}).limit(5);
-    const user = currentPlayer;
-    const name = 'next round prez game';
+    const name = 'giveDrink prez game';
+
     const rules = {
       doubleSkips: false,
       scumStarts: false,
@@ -34,55 +40,117 @@ module.exports = async () => describe.skip('#giveDrink()', async function() {
       fourInARow: false,
       larryPresidents: true
     };
-    const winner = user;
-    const politicalRank = await PoliticalRank.findByName('President');
-    const nextGameRank = politicalRank;
-    const drinksDrunk = 0;
-    const drinksReceived = [{ createdAt: new Date(), sentBy: user }];
-    const drinksSent = [{ createdAt: new Date(), sentTo: user }];
-    const player = {
-      user,
+
+    const player1 = {
+      user: user1,
       joinedAt: new Date(),
-      seatPosition: 1,
-      hand,
-      politicalRank,
-      nextGameRank,
-      drinksDrunk,
-      drinksReceived,
-      drinksSent
+      seatPosition: 0,
+      hand: [],
+      drinksReceived: [],
+      drinksDrunk: 0,
+      drinksSent: [],
+      politicalRank: await PoliticalRank.findByValue(1)
     };
 
+    const player2 = {
+      user: user2,
+      joinedAt: new Date(),
+      seatPosition: 1,
+      hand: [],
+      drinksReceived: [],
+      drinksSent: [],
+      drinksDrunk: 0,
+      politicalRank: await PoliticalRank.findByValue(2)
+    };
+
+    this.player1 = player1;
+    this.player2 = player2;
+
     const game = {
-      winner,
       createdBy,
       name,
       status,
       config,
       rules,
       currentPlayer,
-      rounds: [],
-      players: [player,player]
+      handToBeat: [],
+      rounds: [{
+        turns: []
+      }],
+      players: [player1, player2]
     };
   
     await PresidentsGame.create(game);
+
+    let game2 = {
+      createdBy,
+      name: 'giveDrink2 prez game',
+      status,
+      config,
+      rules,
+      currentPlayer,
+      handToBeat: [],
+      rounds: [{
+        turns: []
+      }],
+      players: [player1, player2]
+    };
+
+    game2.name = 'giveDrink2 prez game';
+    delete game2.players[0].politicalRank;
+    delete game2.players[1].politicalRank;
+
+    await PresidentsGame.create(game2);
   });
 
   describe('validations', async function () {
 
-    it('player has a drink to drink from other player already', async function() {  
+    it('fromPlayer must out rank toPlayer', async function() {  
+      let doc = await PresidentsGame.findOne({name: 'giveDrink prez game'});
+      const message = 'fromPlayer must out rank toPlayer in order to give a drink';
+      const fromUser = this.user2._id;
+      const toUser = this.user1._id;
 
+      try {
+        await doc.giveDrink(fromUser, toUser);
+      } catch(err) {
+        expect(err.message).toBe(message);
+      }
+    });
+
+    it('must wait til players have ranks to give a drink', async function() {  
+      let doc = await PresidentsGame.findOne({name: 'giveDrink2 prez game'});
+      const message = 'you must wait til all players have ranks to give drinks out';
+      const fromUser = this.user2._id;
+      const toUser = this.user1._id;
+
+      try {  
+        await doc.giveDrink(fromUser, toUser);
+      } catch(err) {
+        expect(err.message).toBe(message);
+      }
     });
 
   });
-
+  
   describe('successful', async function () {
 
-    it('player now has a drink received from user', async function() {  
+    it('toPlayer has a drinkReceived & fromPlayer has a drinkSent', async function() {  
+      let doc = await PresidentsGame.findOne({name: 'giveDrink prez game'});
+      const fromUser = this.user1._id;
+      const toUser = this.user2._id;
 
-    });
+      try {
+        await doc.giveDrink(fromUser, toUser);
+      } catch(err) { 
+        console.log(err)
+      }
 
-    it('player who sent also has a drink sent', async function() {  
+      let toPlayer = doc.players.find(player => player.user.toString() === toUser.toString());
+      let fromPlayer = doc.players.find(player => player.user.toString() === fromUser.toString());
 
+      expect(toPlayer.drinksReceived.length).toBe(1);
+      expect(fromPlayer.drinksSent.length).toBe(1);
     });
 
   });

@@ -51,21 +51,30 @@ module.exports = async () => describe('#processTurn()', async function() {
       user: user1,
       joinedAt: new Date(),
       seatPosition: 0,
-      hand: [jackClubs]
+      hand: [jackClubs],
+      drinksDrunk: 0,
+      drinksReceived: [],
+      drinksSent: []
     };
 
     const player2 = {
       user: user2,
       joinedAt: new Date(),
       seatPosition: 1,
-      hand: [aceSpades]
+      hand: [aceSpades],
+      drinksDrunk: 0,
+      drinksReceived: [],
+      drinksSent: []
     };
 
     const player3 = {
       user: user3,
       joinedAt: new Date(),
       seatPosition: 2,
-      hand: [twoClubs]
+      hand: [twoClubs],
+      drinksDrunk: 0,
+      drinksReceived: [],
+      drinksSent: []
     };
 
     const game = {

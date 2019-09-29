@@ -57,21 +57,30 @@ module.exports = async () => describe('#didCurrentPlayersLastTurnEndTheRound()',
       user: user1,
       joinedAt: new Date(),
       seatPosition: 0,
-      hand: [threeClubs, fourClubs]
+      hand: [threeClubs, fourClubs],
+      drinksDrunk: 0,
+      drinksReceived: [],
+      drinksSent: []
     };
 
     const player2 = {
       user: user2,
       joinedAt: new Date(),
       seatPosition: 1,
-      hand: [fourDiamonds, jackDiamonds, jackClubs]
+      hand: [fourDiamonds, jackDiamonds, jackClubs],
+      drinksDrunk: 0,
+      drinksReceived: [],
+      drinksSent: []
     };
 
     const player3 = {
       user: user3,
       joinedAt: new Date(),
       seatPosition: 2,
-      hand: [aceSpades, aceHearts]
+      hand: [aceSpades, aceHearts],
+      drinksDrunk: 0,
+      drinksReceived: [],
+      drinksSent: []
     };
 
     const game = {
