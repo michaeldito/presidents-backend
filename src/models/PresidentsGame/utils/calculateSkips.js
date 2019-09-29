@@ -1,5 +1,3 @@
-
-
 module.exports = function(handToBeat, cards) {
 	// assume cards are valid and cards are better
 	const handToBeatCardRankValue = handToBeat[0].cardRank.value;

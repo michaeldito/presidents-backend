@@ -4,7 +4,7 @@ const expect = require('expect');
 module.exports = async () => describe('#processTurn()', async function() {   
 
   before(async function() {
-    const status = await GameStatus.findByValue('NOT_STARTED');
+    const status = await GameStatus.findByValue('IN_PROGRESS');
     const config = await GameConfiguration.findOne({name: 'Presidents'});
 
     this.user1 = await User.findByUsername('tommypastrami');
@@ -29,6 +29,7 @@ module.exports = async () => describe('#processTurn()', async function() {
     this.aceSpades = aceSpades;
     this.jackDiamonds = jackDiamonds;
     this.jackClubs = jackClubs;
+    this.twoClubs = twoClubs;
 
     const rules = {
       doubleSkips: false,
@@ -64,7 +65,7 @@ module.exports = async () => describe('#processTurn()', async function() {
       user: user3,
       joinedAt: new Date(),
       seatPosition: 2,
-      hand: []
+      hand: [twoClubs]
     };
 
     const game = {
@@ -78,7 +79,7 @@ module.exports = async () => describe('#processTurn()', async function() {
       rounds: [{
         turns: []
       }],
-      players: [player1,player2, player3]
+      players: [player1, player2, player3]
     };
   
     await PresidentsGame.create(game);
@@ -120,6 +121,24 @@ module.exports = async () => describe('#processTurn()', async function() {
       expect(firstPlayerDone.nextGameRank.name).toBe('President');
     });
 
+    it('if player plays a 2 it ends the round', async function() {  
+      let doc = await PresidentsGame.findOne({name: 'process turn prez game'});
+      const roundLengthBeforeTurn = doc.rounds.length;
+      const turn = {
+        user: this.user3._id,
+        cardsPlayed: [this.twoClubs],
+        wasPassed: false,
+        wasSkipped: false,
+        didCauseSkips: false,
+        skipsRemaining: false,
+        endedRound: true
+      }
+      await doc.processTurn(turn);
+      doc = await PresidentsGame.findOne({name: 'process turn prez game'});
+      const roundLengthAfterTurn = doc.rounds.length;
+      expect(roundLengthAfterTurn).toBe(roundLengthBeforeTurn + 1);
+    });
+
     it('if only 1 other player has cards it finalizes the game and sets asshole', async function() {  
       const doc = await PresidentsGame.findOne({name: 'process turn prez game'});
       expect(doc.status.value).toBe('FINALIZED');
@@ -129,7 +148,7 @@ module.exports = async () => describe('#processTurn()', async function() {
 
   });
   
-  describe('skips successful', async function () {
+  describe.skip('skips successful', async function () {
   
     before(async function() {
       // create a new game with 2 players
@@ -164,12 +183,12 @@ module.exports = async () => describe('#processTurn()', async function() {
 
   describe('players last turn ended the round', async function() {  
     
-    it('3 skip', async function() {  
-      // given current handToBeat is a 3
-      // when next player plays three 3's
-      // then game.turns should contain three skip turns
-      // then game.currentPlayer should be the other player
-      // expect 2 skips for player2 and 1 skip for player1
+    it('true', async function() {  
+
+    });
+
+    it('false', async function() {  
+
     });
     
   });

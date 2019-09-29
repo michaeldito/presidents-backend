@@ -56,8 +56,18 @@ function find3Clubs(allPlayerHands) {
 
 
 
-function calculateSkips(currentHand, previousHand) {
-  return 0
+function calculateSkips(handToBeat, cards) {
+  const handToBeatCardRankValue = handToBeat[0].cardRank.value;
+	const cardRankValue = cards[0].cardRank.value;
+	if (handToBeatCardRankValue === cardRankValue) {
+		if (handToBeat.length === cards.length) {
+			return 1;
+		}
+		else {
+			return 1 + cards.length - handToBeat.length;
+		}
+	}
+	return 0;
 }
 
 // the cards should all be of the same rank

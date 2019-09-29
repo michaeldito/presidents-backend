@@ -16,11 +16,14 @@ const initializeTest = require('./updates/initialize.test');
 const initializeNextRoundTest = require('./updates/initializeNextRound.test');
 const joinTest = require('./updates/join.test');
 const processTurnTest = require('./updates/processTurn.test');
+const drinkDrinkTest = require('./updates/drinkDrink.test');
+const giveDrinkTest = require('./updates/giveDrink.test');
 
 // conditionals
 const areCardsBetterTest = require('./conditionals/areCardsBetter.test');
 const areCardsValidTest = require('./conditionals/areCardsValid.test');
 const shouldProcessTurnTest = require('./conditionals/shouldProcessTurn.test');
+const didCurrentPlayersLastTurnEndTheRoundTest = require('./conditionals/didCurrentPlayersLastTurnEndTheRound.test');
 
 // queries
 const getNextPlayerTest = require('./queries/getNextPlayer.test');
@@ -501,14 +504,28 @@ const test = async () => describe('PresidentsGame', async function () {
 	});
 
 	joinTest();
+	
 	initializeTest();
+	
 	initializeNextRoundTest();
+	
 	getNextPlayerTest();
+	
 	areCardsBetterTest();
+	
 	areCardsValidTest();
+	
 	shouldProcessTurnTest();
+	
 	calculateSkipsTest();
+		
 	processTurnTest();
+	
+	didCurrentPlayersLastTurnEndTheRoundTest();
+	
+	drinkDrinkTest();
+	
+	giveDrinkTest();
 
 	describe('#drop()', async function () {
 

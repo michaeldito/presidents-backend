@@ -9,7 +9,7 @@ const {
 const expect = require('expect');
 
 
-module.exports = async () => describe('#giveDrink()', async function() {   
+module.exports = async () => describe.skip('#giveDrink()', async function() {   
   
   before(async function() {
     const status = await GameStatus.findByValue('FINALIZED');
