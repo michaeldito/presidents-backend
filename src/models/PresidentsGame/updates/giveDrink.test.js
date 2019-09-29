@@ -131,6 +131,23 @@ module.exports = async () => describe('#giveDrink()', async function() {
       }
     });
 
+    it('toPlayer has a drink from fromPlayer to drink already', async function() {  
+      let doc = await PresidentsGame.findOne({name: 'giveDrink2 prez game'});
+      doc.players[0].politicalRank = await PoliticalRank.findByValue(1);
+      doc.players[1].politicalRank = await PoliticalRank.findByValue(2);
+      await doc.save();
+
+      const fromUser = this.user1._id;
+      const toUser = this.user2._id;
+      const message = 'toPlayer already has a drink to drink from fromPlayer. you can\'t give another';
+
+      try {  
+        await doc.giveDrink(fromUser, toUser);
+        await doc.giveDrink(fromUser, toUser);
+      } catch(err) {
+        expect(err.message).toBe(message);
+      }
+    });
   });
   
   describe('successful', async function () {

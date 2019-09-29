@@ -1,15 +1,19 @@
 const Utils = require('../../../utils');
 
 /**
+ * Preconditions: The userIds for fromUser and toUser are associated with players in the game.
  * 
- * 
+ * Algorithm:
+ *  1. Get the two players in the game.
+ *  2. If either of them doesn't have the politicalRank property, it's the first round and no one has a rank
+ *     so don't allow a drink to be given.
+ *  3. Otherwise check if the drink giver has a better rank than the drink receiver. 
+ *  4. If they do, check if the receiver has a drink to drink from the giver.
+ *  5. If they have a drink to drink then reject, because you can't stack drinks.
+ *  6. If they don't update fromPlayer.drinksSent and toPlayer.drinksReceived.
+ *  7. Save and return.
  */
 module.exports = async function(fromUser, toUser) {
-  // given that fromUser out ranks toUser
-  // and toUser does not already have a drink to drink from fromUser
-  // then a drinkReceived will be added to toUser
-  // and a drinkSent will be added to fromUser
-
   let fromPlayer = this.players.find(player => player.user.toString() === fromUser.toString());
   let toPlayer = this.players.find(player => player.user.toString() === toUser.toString());
   
@@ -23,6 +27,17 @@ module.exports = async function(fromUser, toUser) {
   if (! doesGiverOutRankReceiver) {
     return Promise.reject(new Error('fromPlayer must out rank toPlayer in order to give a drink'));
   }
+
+  const { drinksDrunk } = toPlayer;
+  const doesReceiverHaveDrinksToDrink = toPlayer.drinksReceived.length - drinksDrunk;
+  if (doesReceiverHaveDrinksToDrink) {
+    let drinksToDrink = toPlayer.drinksReceived.slice(drinksDrunk);
+    const doesReceiverAlreadyHaveADrinkFromGiver = drinksToDrink.find(drink => drink.sentBy.toString() === fromUser.toString());
+    if (doesReceiverAlreadyHaveADrinkFromGiver) {
+      return Promise.reject(new Error('toPlayer already has a drink to drink from fromPlayer. you can\'t give another'));
+    }
+  }
+  
 
   fromPlayer.drinksSent.push({sentTo: toUser});
   toPlayer.drinksReceived.push({sentBy: fromUser});
