@@ -79,29 +79,29 @@ const test = async () => describe('User', async function() {
         const user = {
           username: 'username',
           password: 'password',
-          tokens: [{
+          token: {
             value: 'tokenvalue'
-          }]
+          }
         };
         const instance = new User(user);
         const error = instance.validateSync();
         const message = 'An access is required for every user\'s token.';
-        expect(error.errors['tokens.0.access'].message).toBe(message);
+        expect(error.errors['token.access'].message).toBe(message);
       });
       
       it('value is required', async function() {    
         const user = {
           username: 'username',
           password: 'password',
-          tokens: [{
+          token: {
             access: 'access'
-          }]
+          }
         };
         const instance = new User(user);
         const error = instance.validateSync();
         const message = 'A value is required for every user\'s token.';
         
-        expect(error.errors['tokens.0.value'].message).toBe(message);
+        expect(error.errors['token.value'].message).toBe(message);
       });
       
     });
@@ -143,12 +143,12 @@ const test = async () => describe('User', async function() {
   describe('findByCredentials(username, password)', async function() {    
   
     it('should return instance if successful', async function() {    
-      const user = {
+      const credentials = {
         username: 'mcdito13',
         password: '1234',
         email: 'mcdito13@gmail.com'
       };
-      const doc = await User.findByCredentials(user.username, user.password);
+      const doc = await User.findByCredentials(credentials);
       expect(doc).toBeTruthy();
     });
 
@@ -161,7 +161,7 @@ const test = async () => describe('User', async function() {
       try {
         await User.findByCredentials(user.username, user.password);
       } catch (err) {
-        expect(err.message).toBe('invalid username and password combination.');
+        expect(err.message).toBe('username doesn\'t exist.');
       }
     });
 

@@ -1,5 +1,17 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
+
+const TokenSchema = new mongoose.Schema({
+  access: {
+    type: String,
+    required: [true, 'An access is required for every user\'s token.'],
+  },
+  value: {
+    type: String,
+    required: [true, 'A value is required for every user\'s token.'],
+  }
+});
 
 const UserSchema = new mongoose.Schema({
   username: {
@@ -22,19 +34,12 @@ const UserSchema = new mongoose.Schema({
     minlength: 1
   },
   gamesPlayed: {
-    type: mongoose.Schema.Types.ObjectId,
+    type: [mongoose.Schema.Types.ObjectId],
     ref: 'Game'
   },
-  tokens: [{
-    access: {
-      type: String,
-      required: [true, 'An access is required for every user\'s token.'],
-    },
-    value: {
-      type: String,
-      required: [true, 'A value is required for every user\'s token.'],
-    }
-  }]
+  token: {
+    type: TokenSchema
+  }
 });
 
 
@@ -52,12 +57,21 @@ UserSchema.statics.register = async function(user) {
   user.password = hash;
   const instance = new User(user);
   await instance.save();
+  return instance;
 }
 
-UserSchema.statics.findByCredentials = async function (username, password) {
+UserSchema.methods.generateAuthToken = async function (options) {
+  const token = jwt.sign(options, process.env.JWT_SECRET).toString();
+  this.token = { access: options.access, value: token };
+  await this.save();
+  return token;
+}
+
+UserSchema.statics.findByCredentials = async function ({username, password}) {
   const user = await this.findOne({username});
+
   if (! user)
-    return Promise.reject(new Error('username doesn\t exist.'));
+    return Promise.reject(new Error('username doesn\'t exist.'));
   
   return new Promise((resolve, reject) => {
     bcrypt.compare(password, user.password, (err, res) => {
@@ -67,24 +81,7 @@ UserSchema.statics.findByCredentials = async function (username, password) {
         reject();
     });
   });
-};
-
-UserSchema.methods.generateAuthToken = async function (type) {
-  const access = type === 'admin' ? 'admin' : 'user';
-  const token = jwt.sign({_id: user._id.toHexString(), access}, process.env.JWT_SECRET).toString();
-
-  this.tokens = this.tokens.concat([{access, token}]);
-  await this.save();
-  return token;
-};
-
-UserSchema.methods.removeToken = function (token) {
-  return this.update({
-    $pull: {
-      tokens: {token}
-    }
-  });
-};
+}
 
 UserSchema.statics.findByToken = function (token) {
   let decoded;
@@ -98,24 +95,9 @@ UserSchema.statics.findByToken = function (token) {
   // query a nested doc
   return this.findOne({
     '_id': decoded._id,
-    'tokens.token': token
+    'token': token
   });
-};
-
-
-UserSchema.statics.findByCredentials = async function (username, password) {
-  const user = await this.findOne({username});
-  return new Promise((resolve, reject) => {
-    bcrypt.compare(password, user.password, (err, res) => {
-      if (res) {
-        resolve(user);
-      }
-      else {
-        reject(new Error('invalid username and password combination.'));
-      }
-    });
-  });
-};
+}
 
 UserSchema.plugin(require('mongoose-unique-validator'));
 

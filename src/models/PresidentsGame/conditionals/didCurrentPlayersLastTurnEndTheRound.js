@@ -34,13 +34,12 @@ module.exports = function() {
   }
   // console.log(`playersLastTurnIdx: ${playersLastTurnIdx}`);
 
-  let turns = latestRound.turns.slice(playersLastTurnIdx);
-
   if (! foundLastTurn) {
     // console.log(`foundLastTurn: ${foundLastTurn}`);
     return false;
   }
 
+  let turns = latestRound.turns.slice(playersLastTurnIdx);
   let playersLastTurn = turns[0];
   if (playersLastTurn.wasSkipped || playersLastTurn.wasPassed) {
     // console.log(`wasSkipped ${playersLastTurn.wasSkipped} | wasPassed ${playersLastTurn.wasPassed}`);
@@ -73,6 +72,6 @@ module.exports = function() {
     }
   }
 
-  // console.log('all turns were passes after maybe a skip')
+  // console.log('all turns were passes after maybe skip(s)')
   return true;
 }

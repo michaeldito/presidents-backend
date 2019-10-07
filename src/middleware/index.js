@@ -14,10 +14,10 @@ const errorHandler = async (ctx, next) => {
 };
 
 const middleware = [
+  errorHandler,
   bodyParser(), 
- // logger(), 
+  logger(), 
   cors(),
-  errorHandler
 ];
 
 
