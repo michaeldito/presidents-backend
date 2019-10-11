@@ -11,15 +11,22 @@ const GameStatus = require('../../GameStatus')
  * 
  */
 module.exports = async function() {
-  if (this.status.value === 'FINALIZED')
+  console.log('[PresidentsGame@initializeNextRound()]');
+  
+  if (this.status.value === 'FINALIZED') {
+    console.log('[PresidentsGame@initializeNextRound()] unable to init next round bc game is FINALIZED');
     return Promise.reject(new Error('Unable to start next round. The game is finalized.'));
-
+  }
   if (this.status.value === 'NOT_STARTED') {
+    console.log(`[PresidentsGame@initializeNextRound()] this is the first round of the game`);
+    console.log(`[PresidentsGame@initializeNextRound()] setting startedAt and updating status to IN_PROGRESS`);
+
     this.startedAt = new Date();
     this.status = await GameStatus.findOne({value: 'IN_PROGRESS'});
   }
-  
-  this.rounds.push({});
+
+  console.log('[PresidentsGame@initializeNextRound()] adding a round');
+  this.rounds = this.rounds.concat([{}]);
 
   return this.save();
 }

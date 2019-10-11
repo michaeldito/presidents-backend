@@ -1,0 +1,24 @@
+2019-10-10 13:36:49 info: Hello world
+2019-10-10 13:36:49 warn: Warning message
+2019-10-10 13:36:49 debug: Debugging info
+2019-10-10 13:36:51 info: Hello world
+2019-10-10 13:36:51 warn: Warning message
+2019-10-10 13:36:51 debug: Debugging info
+2019-10-10 13:39:51 info: [fn] data
+2019-10-10 13:39:51 warn: [fn] data
+2019-10-10 13:39:51 debug: [fn] data
+2019-10-10 13:43:52 info: [fn] [32mdata[39m
+2019-10-10 13:43:52 warn: [fn] [32mdata[39m
+2019-10-10 13:43:52 debug: [fn] [32mdata[39m
+2019-10-10 13:45:14 info: [fn] [object Object]
+2019-10-10 13:45:14 warn: [fn] [object Object]
+2019-10-10 13:45:14 debug: [fn] [object Object]
+2019-10-10 13:45:15 info: [fn] [object Object]
+2019-10-10 13:45:15 warn: [fn] [object Object]
+2019-10-10 13:45:15 debug: [fn] [object Object]
+2019-10-10 13:45:43 info: Hello world
+2019-10-10 13:45:43 warn: Warning message
+2019-10-10 13:45:43 debug: Debugging info
+2019-10-10 13:45:44 info: Hello world
+2019-10-10 13:45:44 warn: Warning message
+2019-10-10 13:45:44 debug: Debugging info

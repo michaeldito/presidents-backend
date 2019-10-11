@@ -14,17 +14,24 @@ const Utils = require('../../../utils');
  * 
  */
 module.exports = async function() {
+  console.log('[PresidentsGame@initialize()]');
+  
   if (this.status.value === 'IN_PROGRESS') {
+    console.log('[PresidentsGame@initialize()] cannot initialize an in progress game');
     return Promise.reject(new Error('Unable to start game. It is already in progress.'));
   }
 
   if (this.status.value === 'FINALIZED') {
+    console.log('[PresidentsGame@initialize()] cannot initialize a finalized game');
     return Promise.reject(new Error('Unable to start game. It has already finished.'));
   }
 
   if (this.players.length < 2) {
+    console.log('[PresidentsGame@initialize()] cannot initialize a game with less than 2 players');
     return Promise.reject(new Error('Unable to start game. Minimum number of players is 2.'));
   }
+
+  console.log('[PresidentsGame@initialize()] shuffling, dealing, and assigning current player');
 
   let { deck } = this.config;
   let shuffledDeck = Utils.shuffle(deck);

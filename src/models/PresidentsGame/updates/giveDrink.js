@@ -14,33 +14,38 @@ const Utils = require('../../../utils');
  *  7. Save and return.
  */
 module.exports = async function(fromUser, toUser) {
+  console.log('[PresidentsGame@giveDrink()]');
+
   let fromPlayer = this.players.find(player => player.user.toString() === fromUser.toString());
   let toPlayer = this.players.find(player => player.user.toString() === toUser.toString());
-  
+
   if (! fromPlayer.toObject().hasOwnProperty('politicalRank') || ! toPlayer.toObject().hasOwnProperty('politicalRank')) {
     return Promise.reject(new Error('you must wait til all players have ranks to give drinks out'));
   }
 
   // President is #1, Vice President #2, etc. so rank is actually reversed
   const doesGiverOutRankReceiver = fromPlayer.politicalRank.value < toPlayer.politicalRank.value;
-  
+  console.log(`[PresidentsGame@giveDrink()] doesGiverOutRankReceiver ${doesGiverOutRankReceiver}`);
+
   if (! doesGiverOutRankReceiver) {
     return Promise.reject(new Error('fromPlayer must out rank toPlayer in order to give a drink'));
   }
 
   const { drinksDrunk } = toPlayer;
   const doesReceiverHaveDrinksToDrink = toPlayer.drinksReceived.length - drinksDrunk;
+  console.log(`[PresidentsGame@giveDrink()] doesReceiverHaveDrinksToDrink ${doesReceiverHaveDrinksToDrink}`);
   if (doesReceiverHaveDrinksToDrink) {
     let drinksToDrink = toPlayer.drinksReceived.slice(drinksDrunk);
     const doesReceiverAlreadyHaveADrinkFromGiver = drinksToDrink.find(drink => drink.sentBy.toString() === fromUser.toString());
+    console.log(`[PresidentsGame@giveDrink()] doesReceiverAlreadyHaveADrinkFromGiver ${doesReceiverAlreadyHaveADrinkFromGiver}`);
     if (doesReceiverAlreadyHaveADrinkFromGiver) {
       return Promise.reject(new Error('toPlayer already has a drink to drink from fromPlayer. you can\'t give another'));
     }
   }
   
 
-  fromPlayer.drinksSent.push({sentTo: toUser});
-  toPlayer.drinksReceived.push({sentBy: fromUser});
+  fromPlayer.drinksSent = fromPlayer.drinksSent.concat([{sentTo: toUser}]);
+  toPlayer.drinksReceived = toPlayer.drinksReceived.concat([{sentBy: fromUser}]);
 
   return this.save();
 }
