@@ -1,6 +1,7 @@
 const {User, PresidentsGame} = require('../models');
 
 module.exports.register = async (ctx) => {
+  console.log(`[koa@POST('users/register')]`);
   const { username, email, password } = ctx.request.body;
   let user = { username, email, password };
 
@@ -34,6 +35,7 @@ module.exports.register = async (ctx) => {
 
 
 module.exports.login = async (ctx) => {
+  console.log(`[koa@PUT('users/login')]`);
   const { username, password } = ctx.request.body;
   const credentials = { username, password };
 
@@ -56,6 +58,7 @@ module.exports.login = async (ctx) => {
   
     const body = { ...user.toObject(), loggedIn: true };
     
+    console.log(body)
     ctx.status = 200;
     ctx.body = body;
 

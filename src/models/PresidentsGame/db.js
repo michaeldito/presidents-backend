@@ -44,6 +44,7 @@ async function dbDrop() {
     dropPoliticalRanks(),
     dropPresidentsGames()
   ]);
+  await db.close();
   console.log('[Database] done');
 };
 

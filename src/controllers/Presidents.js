@@ -28,15 +28,38 @@ module.exports.briefDetails = async (ctx) => {
 
 module.exports.create = async (ctx) => {
   console.log(`[koa@POST('/presidents')]`);
-  
-  let { name, createdBy, rules } = ctx.request.body;
+  console.log(ctx.request.body)
+  let { name, createdBy } = ctx.request.body;
+
+  let rules = {
+		doubleSkips: false,
+		scumStarts: false,
+		scumHandsTwo: false,
+		oneEyedJacksAndKingOfHearts: false,
+		reversePresidentScumTrade: false,
+		presidentDeals: false,
+		goLow: false,
+		equalNumber: false,
+		noEndOnBomb: false,
+		tripleSixes: false,
+		passOut: false,
+		fourInARow: false,
+		larryPresidents: true
+	};
 
   try {
+    console.log(`[koa@POST('/presidents')] 1`);
+
     let config = await GameConfiguration.findOne({ name: 'Presidents' });
     config = config.id;
+    console.log(`[koa@POST('/presidents')] 2`);
+
     let status = await GameStatus.findByValue('NOT_STARTED');
     status = status._id;
+    console.log(`[koa@POST('/presidents')]3`);
+
     let user = await User.findById(createdBy);
+    console.log(`user: ${user}`)
     user = user._id;
     const game = { name, status, createdBy: user, rules, config };
 

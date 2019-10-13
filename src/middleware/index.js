@@ -17,7 +17,10 @@ const middleware = [
   errorHandler,
   bodyParser(), 
   logger(), 
-  cors(),
+  cors({
+    credentials: true,
+    exposeHeaders: ['Access-Token', 'Cookie']
+  }),
 ];
 
 
