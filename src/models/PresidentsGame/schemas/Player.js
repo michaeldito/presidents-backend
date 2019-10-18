@@ -27,7 +27,8 @@ const PlayerSchema = new mongoose.Schema({
   user: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
-    required: [true, 'A value for players[i].user is required.']
+    required: [true, 'A value for players[i].user is required.'],
+    autopopulate: true
   },
   joinedAt: {
     type: Date,

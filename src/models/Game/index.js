@@ -37,7 +37,8 @@ const GameSchema = new mongoose.Schema({
   createdBy: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
-    required: [true, 'A createdBy is required to create a game.']
+    required: [true, 'A createdBy is required to create a game.'],
+    autopopulate: true
   },
   currentPlayer: {
     type: mongoose.Schema.Types.ObjectId,

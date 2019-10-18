@@ -12,7 +12,9 @@ const PresidentsGameSchema = new mongoose.Schema({
   handToBeat: {
     type: [mongoose.Schema.Types.ObjectId],
     ref: 'Card',
-    autopopulate: true
+    autopopulate: true,
+    required: true,
+    default: []
   },
   rules: {
     type: RulesSchema,

@@ -9,13 +9,17 @@ module.exports.briefDetails = async (ctx) => {
     let docs = await PresidentsGame.find({});
 
     docs = docs.map(doc => {
-      let { name, createdAt, startedAt, finishedAt, status, createdBy, winner } = doc;
-      return { name, createdAt, startedAt, finishedAt, status, createdBy, winner };
+      let { id, name, createdAt, startedAt, finishedAt, status, createdBy, winner } = doc;
+      let type = doc.config.name;
+      if (! winner) {
+        winner = '-';
+      }
+      return { id, name, type, createdAt, startedAt, finishedAt, status, createdBy, winner };
     });
 
     console.log(`[koa@GET('/presidents/briefDetails')] found ${docs.length} docs`);
 
-    let body = docs.toObject();
+    let body = docs;
 
     ctx.status = 200;
     ctx.body = body;
@@ -27,9 +31,10 @@ module.exports.briefDetails = async (ctx) => {
 
 
 module.exports.create = async (ctx) => {
-  console.log(`[koa@POST('/presidents')]`);
+  console.log(`[koa@POST('/presidents/create')]`);
   console.log(ctx.request.body)
-  let { name, createdBy } = ctx.request.body;
+  let { name, createdBy, gameType } = ctx.request.body;
+  console.log({ name, createdBy, gameType })
 
   let rules = {
 		doubleSkips: false,
@@ -50,8 +55,8 @@ module.exports.create = async (ctx) => {
   try {
     console.log(`[koa@POST('/presidents')] 1`);
 
-    let config = await GameConfiguration.findOne({ name: 'Presidents' });
-    config = config.id;
+    let config = await GameConfiguration.findOne({ name: gameType });
+    config = config._id;
     console.log(`[koa@POST('/presidents')] 2`);
 
     let status = await GameStatus.findByValue('NOT_STARTED');
@@ -66,8 +71,17 @@ module.exports.create = async (ctx) => {
     console.log(`[koa@POST('/presidents')] creating the game`);
     console.log(`[koa@POST('/presidents')] ${game}`);
     let doc = await PresidentsGame.create(game);
+
     console.log(`[koa@POST('/presidents')] adding creator to the game`);
     doc = await doc.join(user);
+
+    console.log(`[koa@POST('/presidents')] adding game to creators gamesPlayed`);
+    user = await User.findOne(user);
+    user.gamesPlayed = user.gamesPlayed.concat([doc._id]);
+    await user.save();
+
+    doc = await PresidentsGame.findOne({_id: doc._id});
+
     const body = doc.toObject();
 
     ctx.status = 200;
@@ -104,12 +118,20 @@ module.exports.join = async (ctx) => {
 
   const { id } = ctx.params;
   let { userId } = ctx.request.body;
+  console.log(`[koa@PUT('/presidents/join')] user: ${userId}`);
 
   try {
 
+    console.log(`[koa@POST('/presidents/join')] adding user to game`);
     let user = await User.findById(userId);
+    console.log(`[koa@PUT('/presidents/join')] ${user}`);
     let doc = await PresidentsGame.findById(id);
     doc = await doc.join(user)
+
+    console.log(`[koa@POST('/presidents/join')] adding game to creators gamesPlayed`);
+    user.gamesPlayed.push(doc._id);
+    user = await user.save();
+
     const body = doc.toObject();
 
     ctx.status = 200;

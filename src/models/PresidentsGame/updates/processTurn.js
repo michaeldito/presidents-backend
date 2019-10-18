@@ -58,8 +58,8 @@ module.exports = async function(turn) {
   const didPlayerPlayCards = turn.cardsPlayed.length > 0;
   console.log(`[PresidentsGame@processTurn()] didPlayerPlayCards: ${didPlayerPlayCards}`)
   let currentPlayer = this.players.find(player => {
-    let res = player.user.toString() === turn.user.toString();
-    console.log(`${player.user} === ${turn.user}: ${res}`);
+    let res = player.user._id.toString() === turn.user.toString();
+    console.log(`${player.user._id.toString()} === ${turn.user.toString()}: ${res}`);
     return res;
   });
   console.log(`[PresidentsGame@processTurn()] currentPlayer: ${currentPlayer}`)

@@ -1,7 +1,7 @@
 module.exports = async function() {
   console.log('[PresidentsGame@getNextPlayer()]');
   
-  const currentPlayer = this.players.find(player => player.user.toString() === this.currentPlayer.toString());
+  const currentPlayer = this.players.find(player => player.user._id.toString() === this.currentPlayer.toString());
   const currentSeatPosition = currentPlayer.seatPosition;
   console.log(`[PresidentsGame@getNextPlayer()] current seat position: ${currentSeatPosition}`);
 

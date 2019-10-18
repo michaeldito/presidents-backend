@@ -3,7 +3,7 @@ const {User, PresidentsGame} = require('../models');
 module.exports.register = async (ctx) => {
   console.log(`[koa@POST('users/register')]`);
   const { username, email, password } = ctx.request.body;
-  let user = { username, email, password };
+  let user = { username, email, password, gamesPlayed: [] };
 
   try {
 
@@ -23,7 +23,7 @@ module.exports.register = async (ctx) => {
       expires: new Date(cookieExpiration),
     });
   
-    const body = { ...user.toObject(), loggedIn: true };
+    const body = { ...user.toObject(), loggedIn: true, registered: true };
     
     ctx.status = 200;
     ctx.body = body;
