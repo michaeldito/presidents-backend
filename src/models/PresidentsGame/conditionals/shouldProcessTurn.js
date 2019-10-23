@@ -7,7 +7,7 @@ module.exports = async function(turn) {
   console.log(`[PresidentsGame@shouldProcessTurn()] turn: ${JSON.stringify(turn)}`)
 
   // 1 - is it this players turn?
-  const isPlayersTurn = turn.user.toString() === this.currentPlayer.toString();
+  const isPlayersTurn = turn.user === this.currentPlayer.toString();
   console.log(`[PresidentsGame@shouldProcessTurn()] isPlayersTurn: ${isPlayersTurn}`)
   if (! isPlayersTurn)
     return Promise.reject(new Error(`Unable to process turn. It is not your turn.`));

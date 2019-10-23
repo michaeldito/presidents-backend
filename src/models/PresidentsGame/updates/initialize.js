@@ -37,7 +37,7 @@ module.exports = async function() {
   let shuffledDeck = Utils.shuffle(deck);
   const numPlayers = this.players.length;
   let dealtCards = Utils.deal(numPlayers, shuffledDeck);
-  this.players.forEach(player => player.hand = dealtCards[player.seatPosition]);
+  this.players.forEach(player => player.hand = Utils.sortCards(dealtCards[player.seatPosition]));
   const seatPositionWith3Clubs = Utils.find3Clubs(dealtCards);
   const playerWith3Clubs = this.players.find(player => player.seatPosition === seatPositionWith3Clubs);
   this.currentPlayer = playerWith3Clubs.user;

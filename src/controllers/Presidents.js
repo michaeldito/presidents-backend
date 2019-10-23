@@ -177,8 +177,12 @@ module.exports.processTurn = async (ctx) => {
     let doc = await PresidentsGame.findById(id);
     let { handToBeat } = doc;
 
+    if (doc.status.value !== 'IN_PROGRESS') {
+      ctx.throw(400, 'cannot process turn - game is not in progress');
+    }
+
     // user is passing
-    if (wasPassed && user === doc.currentPlayer.toString()) {
+    if (wasPassed && user._id === doc.currentPlayer.toString()) {
       console.log(`[koa@PUT('presidents/processTurn')] turn was a pass`);
 
       if (cardsPlayed.length > 0) {
@@ -186,7 +190,7 @@ module.exports.processTurn = async (ctx) => {
       }
 
       let turn = {
-        user, 
+        user: user._id, 
         cardsPlayed,
         wasPassed,
         wasSkipped: false,
@@ -197,11 +201,12 @@ module.exports.processTurn = async (ctx) => {
 
       doc = await doc.processTurn(turn);
       body = doc.toObject();
+
     } else {
 
       // user is not passing
       console.log(`[koa@PUT('presidents/processTurn')] turn is not a pass`);
-      let turn = { user, cardsPlayed, wasPassed };
+      let turn = { user: user._id, cardsPlayed, wasPassed };
       
       console.log(`[koa@PUT('presidents/processTurn')] should we process this turn?`);
       let shouldProcessTurn = await doc.shouldProcessTurn(turn);
@@ -238,18 +243,23 @@ module.exports.processTurn = async (ctx) => {
       }
     }
 
-    console.log(`[koa@PUT('presidents/processTurn')] did the next player's last turn end the round?`);
-    let didCurrentPlayersLastTurnEndTheRound = doc.didCurrentPlayersLastTurnEndTheRound();
-    console.log(`[koa@PUT('presidents/processTurn')] didCurrentPlayersLastTurnEndTheRound ${didCurrentPlayersLastTurnEndTheRound}`);
-    if (didCurrentPlayersLastTurnEndTheRound) {
+    if (doc.status.value === 'IN_PROGRESS') {
 
-      // mark as round ender
-      // init next round
-      // reset hand to beat for next round
-      console.log(`[koa@PUT('presidents/processTurn')] let's initialize the next round & reset the hand to beat`);
-      doc = await doc.initializeNextRound();
-      doc.handToBeat = [];
-      doc = await doc.save();
+      console.log(`[koa@PUT('presidents/processTurn')] did the next player's last turn end the round?`);
+      let didCurrentPlayersLastTurnEndTheRound = doc.didCurrentPlayersLastTurnEndTheRound();
+      console.log(`[koa@PUT('presidents/processTurn')] didCurrentPlayersLastTurnEndTheRound ${didCurrentPlayersLastTurnEndTheRound}`);
+
+      if (didCurrentPlayersLastTurnEndTheRound) {
+  
+        // mark as round ender
+        // init next round
+        // reset hand to beat for next round
+        console.log(`[koa@PUT('presidents/processTurn')] let's initialize the next round & reset the hand to beat`);
+        doc = await doc.initializeNextRound();
+        doc.handToBeat = [];
+        doc = await doc.save();
+      }
+
     }
 
 

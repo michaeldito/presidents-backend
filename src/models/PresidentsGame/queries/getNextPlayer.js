@@ -27,5 +27,5 @@ module.exports = async function() {
     }
   }
 
-  return nextPlayer.user;
+  return nextPlayer.user._id;
 }

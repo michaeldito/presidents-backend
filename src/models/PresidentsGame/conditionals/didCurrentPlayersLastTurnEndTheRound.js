@@ -35,13 +35,16 @@ module.exports = function() {
   while (searchingForLastTurn) {
     i--;
     let turn = latestRound.turns[i];
-    if (turn.user.toString() === this.currentPlayer.toString()) {
+    if (this.currentPlayer.equals(turn.user)) {
       playersLastTurnIdx = i;
       searchingForLastTurn = false;
       foundLastTurn = true;
     }
   }
   console.log(`[PresidentsGame@didCurrentPlayersLastTurnEndTheRound()] playersLastTurnIdx: ${playersLastTurnIdx}`);
+
+  // TODO:
+  // if it was a two then yes it did, regardless of if all players have played
 
   if (! foundLastTurn) {
     console.log(`[PresidentsGame@didCurrentPlayersLastTurnEndTheRound()] foundLastTurn: ${foundLastTurn}`);
