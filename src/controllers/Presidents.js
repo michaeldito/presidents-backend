@@ -132,7 +132,13 @@ module.exports.join = async (ctx) => {
     user.gamesPlayed.push(doc._id);
     user = await user.save();
 
+    doc = await PresidentsGame.findOne({_id: doc._id});
+
     const body = doc.toObject();
+
+    ctx.request.app.io.emit('game join', {
+      game: body
+    });
 
     ctx.status = 200;
     ctx.body = body;
@@ -153,7 +159,14 @@ module.exports.initialize = async (ctx) => {
     let doc = await PresidentsGame.findById(id);
     await doc.initialize();
     await doc.initializeNextRound();
+
+    doc = await PresidentsGame.findOne({_id: doc._id});
+
     const body = doc.toObject();
+
+    ctx.request.app.io.emit('game refresh', {
+      game: body
+    });
 
     ctx.status = 200;
     ctx.body = body;
@@ -166,6 +179,8 @@ module.exports.initialize = async (ctx) => {
 
 module.exports.processTurn = async (ctx) => {
   console.log(`[koa@PUT('/presidents/processTurn')]`);
+  console.log('ctx');
+  console.dir(ctx.request.app)
 
   const { id } = ctx.params;
   let { user, cardsPlayed, wasPassed } = ctx.request.body;
@@ -262,8 +277,13 @@ module.exports.processTurn = async (ctx) => {
 
     }
 
+    doc = await PresidentsGame.findOne({_id: doc._id});
 
     body = doc.toObject();
+
+    ctx.request.app.io.emit('game refresh', {
+      game: body
+    });
     
     ctx.status = 200;
     ctx.body = body;
@@ -284,7 +304,15 @@ module.exports.giveDrink = async (ctx) => {
 
     let doc = await PresidentsGame.findById(id);
     doc = await doc.giveDrink(fromUser, toUser);
+
+    doc = await PresidentsGame.findOne({_id: doc._id});
+
     const body = doc.toObject();
+
+
+    ctx.request.app.io.emit('drink given', {
+      game: body
+    });
 
     ctx.status = 200;
     ctx.body = body;
@@ -305,8 +333,16 @@ module.exports.drinkDrink = async (ctx) => {
 
     let doc = await PresidentsGame.findById(id);
     doc = await doc.drinkDrink(user);
+    
+    doc = await PresidentsGame.findOne({_id: doc._id});
+
     const body = doc.toObject();
     
+
+    ctx.request.app.io.emit('drink drunk', {
+      game: body
+    });
+
     ctx.status = 200;
     ctx.body = body;
 
@@ -351,7 +387,14 @@ module.exports.rematch = async (ctx) => {
     console.log(`[koa@POST('/presidents/rematch')] initializing the game`);
     doc = await doc.initialize();
     doc = await doc.initializeNextRound();
+
+    doc = await PresidentsGame.findOne({_id: doc._id});
+
     const body = doc.toObject();
+
+    ctx.request.app.io.emit('rematch started', {
+      game: body
+    });
     
     ctx.status = 200;
     ctx.body = body;
