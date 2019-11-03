@@ -9,6 +9,7 @@
     "test:system": "export NODE_ENV=dev && mocha --timeout 15000 --exit src/tests/system*",
     "count:src": "find src -name '*.js' | xargs wc -l",
     "start": "export NODE_ENV=dev && nodemon src/server/index.js",
+    "start:local": "export NODE_ENV=dev && export PORT=8080 && nodemon src/server/index.js",
     "db:init": "export DB_ACTION=init && export NODE_ENV=dev && node src/models/PresidentsGame/db.js",
     "db:drop": "export DB_ACTION=drop && export NODE_ENV=dev && node src/models/PresidentsGame/db.js"
   },

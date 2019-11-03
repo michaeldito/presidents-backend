@@ -24,6 +24,6 @@ app.io.on("connection", client => {
   client.on("disconnect", () => console.log("[Socket] client disconnected"));
 });
 
-server.listen(process.env.PORT, () => console.log(`[Server] listening on http port ${process.env.PORT}`));
+server.listen(process.env.PORT || 8080, () => console.log(`[Server] listening on http port ${process.env.PORT}`));
 
 db.connect();
