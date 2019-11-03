@@ -27,6 +27,7 @@ router.get('/logging', (ctx) => {
 const userRouter = new Router({ prefix: '/users' });
 userRouter.post('/register', UserController.register);
 userRouter.put('/login', UserController.login);
+userRouter.get('/:id', UserController.get);
 userRouter.get('/:id/profile', UserController.profile);
 
 const presidentsRouter = new Router({ prefix: '/presidents' });

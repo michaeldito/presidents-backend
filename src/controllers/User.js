@@ -67,6 +67,25 @@ module.exports.login = async (ctx) => {
   }  
 }
 
+module.exports.get = async (ctx) => {
+  console.log(`[koa@PUT('users/get')]`);
+  const { id } = ctx.params;
+
+  try {
+    const user = await User.findById(id);
+
+    const body = { ...user.toObject(), loggedIn: true };
+    
+    console.log(body);
+    
+    ctx.status = 200;
+    ctx.body = body;
+
+  } catch (err) {
+    ctx.throw(400, err);
+  }  
+}
+
 
 module.exports.profile = async (ctx) => {
   const { id } = ctx.params;

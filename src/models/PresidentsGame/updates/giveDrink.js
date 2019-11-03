@@ -16,8 +16,8 @@ const Utils = require('../../../utils');
 module.exports = async function(fromUser, toUser) {
   console.log('[PresidentsGame@giveDrink()]');
 
-  let fromPlayer = this.players.find(player => player.user.toString() === fromUser.toString());
-  let toPlayer = this.players.find(player => player.user.toString() === toUser.toString());
+  let fromPlayer = this.players.find(player => player.user._id.equals(fromUser._id));
+  let toPlayer = this.players.find(player => player.user._id.equals(toUser._id));
 
   if (! fromPlayer.toObject().hasOwnProperty('politicalRank') || ! toPlayer.toObject().hasOwnProperty('politicalRank')) {
     return Promise.reject(new Error('you must wait til all players have ranks to give drinks out'));

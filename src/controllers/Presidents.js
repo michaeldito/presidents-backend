@@ -303,6 +303,8 @@ module.exports.giveDrink = async (ctx) => {
   try {
 
     let doc = await PresidentsGame.findById(id);
+    fromUser = await User.findById(fromUser);
+    toUser = await User.findById(toUser);
     doc = await doc.giveDrink(fromUser, toUser);
 
     doc = await PresidentsGame.findOne({_id: doc._id});
