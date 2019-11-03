@@ -1,6 +1,10 @@
 {
   "dev": {
-    "PORT": 8080,
+    "MONGODB_URI": "mongodb+srv://root:root@cluster0-3p4qe.mongodb.net/test?retryWrites=true",
+    "MONGODB_URI_TEST": "mongodb+srv://root:root@cluster0-3p4qe.mongodb.net/db-tests?retryWrites=true",
+    "JWT_SECRET": "1234"
+  },
+  "production": {
     "MONGODB_URI": "mongodb+srv://root:root@cluster0-3p4qe.mongodb.net/test?retryWrites=true",
     "MONGODB_URI_TEST": "mongodb+srv://root:root@cluster0-3p4qe.mongodb.net/db-tests?retryWrites=true",
     "JWT_SECRET": "1234"
