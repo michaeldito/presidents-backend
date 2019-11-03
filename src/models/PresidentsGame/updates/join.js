@@ -52,8 +52,8 @@ module.exports = async function(user) {
     drinksReceived: [],
     drinksSent: [],
    };
-   if (user.nextRoundRank) {
-     player.politicalRank = user.nextRoundRank;
+   if (user.nextGameRank) {
+     player.politicalRank = user.nextGameRank;
    }
   
   console.log(`[PresidentsGame@join()] adding player ${player}`);

@@ -329,13 +329,14 @@ module.exports.drinkDrink = async (ctx) => {
   console.log(`[koa@PUT('/presidents/drinkDrink')]`);
 
   const { id } = ctx.params;
-  const { user } = ctx.request.body;
+  const { userId } = ctx.request.body;
 
   try {
 
     let doc = await PresidentsGame.findById(id);
+    let user = await User.findById(userId);
+
     doc = await doc.drinkDrink(user);
-    
     doc = await PresidentsGame.findOne({_id: doc._id});
 
     const body = doc.toObject();
@@ -370,8 +371,7 @@ module.exports.rematch = async (ctx) => {
     console.log(`[koa@POST('/presidents/rematch')] grabbing their userId and nextGameRanks`);
     for (let player of players) {
       let { user, nextGameRank } = player;
-      user = await User.findById(user);
-      usersToAdd.push({ _id: user._id, nextGameRank });
+      usersToAdd.push({_id: user._id, nextGameRank});
     }
 
     let { rules, createdBy, config } = doc;
@@ -384,6 +384,9 @@ module.exports.rematch = async (ctx) => {
     for (let user of usersToAdd) {
       console.log(`[koa@POST('/presidents/rematch')] adding user ${user._id}`);
       doc = await doc.join(user);
+      let userDoc = await User.findById(user._id);
+      userDoc.gamesPlayed.push(doc._id);
+      await userDoc.save();
     }
 
     console.log(`[koa@POST('/presidents/rematch')] initializing the game`);

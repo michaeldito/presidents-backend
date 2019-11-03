@@ -10,7 +10,7 @@ module.exports = async function(user) {
   // given player does have drinks to drink when they try to drink
   // then drinksDrunk is incremented
 
-  let player = this.players.find(player => player.user.toString() === user.toString());
+  let player = this.players.find(player => player.user._id.toString() === user._id.toString());
   const { drinksReceived, drinksDrunk } = player;
 
   const hasDrinksToDrink = drinksReceived.length - drinksDrunk  === 0;

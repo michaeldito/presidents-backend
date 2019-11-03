@@ -95,6 +95,9 @@ module.exports = async function(turn) {
   if (isGameOver) {
     this.status = await GameStatus.findOne({value: 'FINALIZED'});
     playersWithCards[0].nextGameRank = await PoliticalRank.findByName('Asshole');
+    let winner = this.players.find(player => player.nextGameRank.name === 'President');
+    this.winner = winner.user.username;
+
     return this.save();
   }
 
