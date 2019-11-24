@@ -3,14 +3,14 @@ const Koa = require('koa');
 const router = require('../routes');
 const middleware = require('../middleware');
 const db = require('../config/db');
-const socket = require('socket.io');
+const IO = require('socket.io');
 const http = require("http");
 
 const app = new Koa();
 
 const server = http.createServer(app.callback());
 
-app.io = new socket(server);
+app.io = new IO(server);
 
 app.use(middleware)
 app.use(router.routes(), router.allowedMethods());

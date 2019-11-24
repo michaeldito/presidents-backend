@@ -1,9 +1,11 @@
 const Utils = require('../../../utils');
+const Card = require('../../Card');
+
 
 module.exports = async function(turn) {
   console.log('[PresidentsGame@shouldProcessTurn()]');
   console.log(`[PresidentsGame@shouldProcessTurn()] currentPlayer: ${this.currentPlayer}`)
-  console.log(`[PresidentsGame@shouldProcessTurn()] handToBeat: ${this.handToBeat.map(card => card.shortHand)}`)
+  console.log(`[PresidentsGame@shouldProcessTurn()] turnToBeat: ${JSON.stringify(this.turnToBeat)}`);
   console.log(`[PresidentsGame@shouldProcessTurn()] turn: ${JSON.stringify(turn)}`)
 
   // 1 - is it this players turn?
@@ -19,8 +21,8 @@ module.exports = async function(turn) {
     return Promise.reject(new Error(`Unable to process turn. The cards selected are invalid.`));
   
   // first turn of the game must contain 3 clubs
-  if (! this.rounds.length === 1 && this.rounds[0].length === 0) {
-    const contains3Clubs = turn.cardsPlayed.find(card => card.cardRank.shortHand === '3Clubs');
+  if (this.rounds.length === 1 && this.rounds[0].turns.length === 0) {
+    const contains3Clubs = turn.cardsPlayed.find(card => card.shortHand === '3Clubs');
     if (contains3Clubs) {
       console.log('[PresidentsGame@shouldProcessTurn()] found 3 clubs on first hand of game')
       return Promise.resolve(true);
@@ -38,7 +40,12 @@ module.exports = async function(turn) {
   // it's a turn in the middle of the round, see if it's better than the lastx
   let areCardsBetter;
   try {
-    areCardsBetter = await Utils.areCardsBetter(this.handToBeat, turn.cardsPlayed);
+    if (this.turnToBeat == undefined) {
+      return Promise.resolve(true);
+    }
+    console.log(`[PresidentsGame@shouldProcessTurn()] cardsPlayed: ${JSON.stringify(this.turnToBeat.cardsPlayed)}`)
+    let cardsToBeat = await Card.find({_id: {$in: this.turnToBeat.cardsPlayed}});
+    areCardsBetter = await Utils.areCardsBetter(cardsToBeat, turn.cardsPlayed);
     console.log(`[PresidentsGame@shouldProcessTurn()] areCardsBetter: ${areCardsBetter}`)
 
   } catch (err) {

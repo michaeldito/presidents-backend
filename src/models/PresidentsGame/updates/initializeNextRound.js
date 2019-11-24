@@ -26,7 +26,7 @@ module.exports = async function() {
   }
 
   console.log('[PresidentsGame@initializeNextRound()] adding a round');
-  this.rounds = this.rounds.concat([{}]);
+  this.rounds.push({turns: []});
 
   return this.save();
 }

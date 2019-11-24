@@ -15,7 +15,8 @@ module.exports.briefDetails = async (ctx) => {
         winner = '-';
       }
       return { id, name, type, createdAt, startedAt, finishedAt, status, createdBy, winner };
-    });
+    }).sort((a,b) => new Date(b.createdAt) - new Date(a.createdAt));
+    
 
     console.log(`[koa@GET('/presidents/briefDetails')] found ${docs.length} docs`);
 
@@ -179,18 +180,21 @@ module.exports.initialize = async (ctx) => {
 
 module.exports.processTurn = async (ctx) => {
   console.log(`[koa@PUT('/presidents/processTurn')]`);
-  console.log('ctx');
-  console.dir(ctx.request.app)
 
   const { id } = ctx.params;
   let { user, cardsPlayed, wasPassed } = ctx.request.body;
+  let turn;
+  console.log(`[koa@PUT('/presidents/processTurn')] cardsPlayed: ${JSON.stringify(cardsPlayed)}`);
 
   try {
 
     let body;
 
     let doc = await PresidentsGame.findById(id);
-    let { handToBeat } = doc;
+    cardsPlayed = await Card.find({ _id :{$in: cardsPlayed} });
+    
+    let { turnToBeat } = doc;
+    let turnToBeatCards = await Card.find({_id: {$in: turnToBeat.cardsPlayed}});
 
     if (doc.status.value !== 'IN_PROGRESS') {
       ctx.throw(400, 'cannot process turn - game is not in progress');
@@ -204,7 +208,7 @@ module.exports.processTurn = async (ctx) => {
         ctx.throw(400, 'cannot pass and submit cards');
       }
 
-      let turn = {
+      turn = {
         user: user._id, 
         cardsPlayed,
         wasPassed,
@@ -221,7 +225,7 @@ module.exports.processTurn = async (ctx) => {
 
       // user is not passing
       console.log(`[koa@PUT('presidents/processTurn')] turn is not a pass`);
-      let turn = { user: user._id, cardsPlayed, wasPassed };
+      turn = { user: user._id, cardsPlayed, wasPassed };
       
       console.log(`[koa@PUT('presidents/processTurn')] should we process this turn?`);
       let shouldProcessTurn = await doc.shouldProcessTurn(turn);
@@ -230,7 +234,7 @@ module.exports.processTurn = async (ctx) => {
       if (shouldProcessTurn) {
         console.log(`[koa@PUT('presidents/processTurn')] we need to process this turn`);
         console.log(`[koa@PUT('presidents/processTurn')] will it cause any skips?`);
-        turn.skipsRemaining = PresidentsGame.calculateSkips(handToBeat, turn.cardsPlayed);
+        turn.skipsRemaining = PresidentsGame.calculateSkips(turnToBeatCards, cardsPlayed);
         turn.didCauseSkips = turn.skipsRemaining > 0;
         turn.wasSkipped = false;
         turn.endedRound = false;
@@ -271,7 +275,7 @@ module.exports.processTurn = async (ctx) => {
         // reset hand to beat for next round
         console.log(`[koa@PUT('presidents/processTurn')] let's initialize the next round & reset the hand to beat`);
         doc = await doc.initializeNextRound();
-        doc.handToBeat = [];
+        delete doc.turnToBeat;
         doc = await doc.save();
       }
 
@@ -284,7 +288,7 @@ module.exports.processTurn = async (ctx) => {
     ctx.request.app.io.emit('game refresh', {
       game: body
     });
-    
+
     ctx.status = 200;
     ctx.body = body;
 

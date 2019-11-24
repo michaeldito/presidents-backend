@@ -1,5 +1,7 @@
 module.exports = function(handToBeat, cards) {
 	console.log('[PresidentsGame@calculateSkips()]');
+	console.log(`[PresidentsGame@calculateSkips()] handToBeat: ${JSON.stringify(handToBeat)}`);
+	console.log(`[PresidentsGame@calculateSkips()] cards: ${JSON.stringify(cards)}`);
 
 	// first hand of the game there will be no handToBeat
 	if (handToBeat.length === 0) {

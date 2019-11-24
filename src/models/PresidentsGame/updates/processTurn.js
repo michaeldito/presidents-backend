@@ -3,7 +3,7 @@ const GameStatus = require('../../GameStatus') ;
 
 /**
  * Preconditions:
- *  1. turn.cardsPlayed are valid and better than handToBeat
+ *  1. turn.cardsPlayed are valid and better than turnToBeat
  *  2. shouldProcessTurn has returned true
  *  3. turn meets it's schemas criteria
  * 
@@ -41,7 +41,7 @@ module.exports = async function(turn) {
 
   // Add the turn to the current round
   let latestRound = this.rounds[this.rounds.length - 1];
-  latestRound.turns = latestRound.turns.concat([turn]);
+  latestRound.turns.push(turn);
   console.log(`[PresidentsGame@processTurn()] skipTurn: ${turn.wasSkipped}`);
 
   // If turn.endedRound than initialize the next round.
@@ -65,7 +65,7 @@ module.exports = async function(turn) {
   console.log(`[PresidentsGame@processTurn()] currentPlayer: ${currentPlayer}`)
 
   if (didPlayerPlayCards) {
-    this.handToBeat = turn.cardsPlayed;
+    this.turnToBeat = latestRound.turns[latestRound.turns.length-1];
 
     let cardsToKeep = currentPlayer.hand
       .filter(card => {
@@ -95,16 +95,13 @@ module.exports = async function(turn) {
   if (isGameOver) {
     this.status = await GameStatus.findOne({value: 'FINALIZED'});
     playersWithCards[0].nextGameRank = await PoliticalRank.findByName('Asshole');
-    let winner = this.players.find(player => player.nextGameRank.name === 'President');
-    this.winner = winner.user.username;
-
     return this.save();
   }
 
   // if they played a 2 and have more cards don't update current player
   if (turn.cardsPlayed.length > 0 && turn.cardsPlayed[0].cardRank.value === 2 && currentPlayer.hand.length > 0) {
     console.log(`[PresidentsGame@processTurn()] played a 2 and has more`)
-    this.handToBeat = [];
+    delete this.turnToBeat;
     return this.initializeNextRound();
   }
 
@@ -112,7 +109,7 @@ module.exports = async function(turn) {
   if (turn.cardsPlayed.length > 0 && turn.cardsPlayed[0].cardRank.value !== 2 && currentPlayer.hand.length === 0) {
     console.log(`[PresidentsGame@processTurn()] played a 2 and is now out!`)
     this.currentPlayer = await this.getNextPlayer();
-    this.handToBeat = [];
+    delete this.turnToBeat;
     return this.initializeNextRound();
   }
 

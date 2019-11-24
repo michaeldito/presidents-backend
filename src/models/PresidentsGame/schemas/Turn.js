@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-module.exports = new mongoose.Schema({
+const TurnSchema = new mongoose.Schema({
   user: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
@@ -12,7 +12,8 @@ module.exports = new mongoose.Schema({
   },
   cardsPlayed: {
     type: [mongoose.Schema.Types.ObjectId],
-    ref: 'Card'
+    ref: 'Card',
+    autopopulate: true
   },
   wasPassed: {
     type: Boolean,
@@ -35,3 +36,7 @@ module.exports = new mongoose.Schema({
     required: [true, 'A value for rounds[i].turns[i].endedRound is required.']
   }
 });
+
+TurnSchema.plugin(require('mongoose-autopopulate'));
+
+module.exports = TurnSchema;

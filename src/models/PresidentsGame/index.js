@@ -3,18 +3,15 @@ const Game = require('../Game');
 const RulesSchema = require('./schemas/Rules');
 const PlayerSchema = require('./schemas/Player');
 const RoundSchema = require('./schemas/Round');
+const TurnSchema = require('./schemas/Turn');
 
 const PresidentsGameSchema = new mongoose.Schema({
   winner: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User'
   },
-  handToBeat: {
-    type: [mongoose.Schema.Types.ObjectId],
-    ref: 'Card',
-    autopopulate: true,
-    required: true,
-    default: []
+  turnToBeat: {
+    type: TurnSchema,
   },
   rules: {
     type: RulesSchema,
