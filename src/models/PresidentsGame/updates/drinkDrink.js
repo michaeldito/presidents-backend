@@ -21,5 +21,10 @@ module.exports = async function(user) {
 
   player.drinksDrunk += 1;
 
+  this.drinks.push({
+    type: 'drink drunk',
+    user
+  });
+
   return this.save();
 }

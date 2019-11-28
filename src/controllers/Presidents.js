@@ -194,7 +194,13 @@ module.exports.processTurn = async (ctx) => {
     cardsPlayed = await Card.find({ _id :{$in: cardsPlayed} });
     
     let { turnToBeat } = doc;
-    let turnToBeatCards = await Card.find({_id: {$in: turnToBeat.cardsPlayed}});
+    let turnToBeatCards = [];
+    // we don't have tturn to beat when we start -> undefined
+    // when the round is ended we clear turn to beat -> null
+    // this verifies that we do have cards to lookup from the last turn to beat
+    if (turnToBeat !== undefined && turnToBeat !== null) {
+      turnToBeatCards = await Card.find({_id: {$in: turnToBeat.cardsPlayed}});
+    }
 
     if (doc.status.value !== 'IN_PROGRESS') {
       ctx.throw(400, 'cannot process turn - game is not in progress');
@@ -275,7 +281,7 @@ module.exports.processTurn = async (ctx) => {
         // reset hand to beat for next round
         console.log(`[koa@PUT('presidents/processTurn')] let's initialize the next round & reset the hand to beat`);
         doc = await doc.initializeNextRound();
-        delete doc.turnToBeat;
+        doc.turnToBeat.remove();
         doc = await doc.save();
       }
 

@@ -2,6 +2,7 @@ const Router = require('koa-router');
 const UserController = require('../controllers/User');
 const PresidentsController = require('../controllers/Presidents');
 const { VerifyJWT, Authenticate } = require('../middleware/')
+const { chatToken, videoToken } = require('../config/tokens');
 
 
 // Public base api
@@ -22,6 +23,24 @@ router.get('/poop', (ctx) => {
 
 router.get('/logging', (ctx) => {
   ctx.body = require('../../debug.log')
+});
+
+router.post('/chat/token', (ctx) => {
+  console.log(`POST@[api/v1/chat/token] ctx.body`)
+  console.log(ctx.request.body)
+  const {identity} = ctx.request.body;
+  const token = chatToken(identity);
+  ctx.body = JSON.stringify(token);
+  console.log(`POST@[api/v1/chat/token] body: ${ctx.body}`);
+});
+
+router.post('/video/token', (ctx) => {
+  console.log(`POST@[api/v1/video/token] ctx.body`)
+  console.log(ctx.request.body)
+  const {identity} = ctx.request.body;
+  const token = videoToken(identity);
+  ctx.body = JSON.stringify(token);
+  console.log(`POST@[api/v1/chat/token] body: ${ctx.body}`);
 });
 
 const userRouter = new Router({ prefix: '/users' });

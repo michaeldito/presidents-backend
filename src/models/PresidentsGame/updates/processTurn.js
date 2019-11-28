@@ -101,7 +101,7 @@ module.exports = async function(turn) {
   // if they played a 2 and have more cards don't update current player
   if (turn.cardsPlayed.length > 0 && turn.cardsPlayed[0].cardRank.value === 2 && currentPlayer.hand.length > 0) {
     console.log(`[PresidentsGame@processTurn()] played a 2 and has more`)
-    delete this.turnToBeat;
+    this.turnToBeat.remove();
     return this.initializeNextRound();
   }
 
@@ -109,7 +109,7 @@ module.exports = async function(turn) {
   if (turn.cardsPlayed.length > 0 && turn.cardsPlayed[0].cardRank.value !== 2 && currentPlayer.hand.length === 0) {
     console.log(`[PresidentsGame@processTurn()] played a 2 and is now out!`)
     this.currentPlayer = await this.getNextPlayer();
-    delete this.turnToBeat;
+    this.turnToBeat.remove();
     return this.initializeNextRound();
   }
 

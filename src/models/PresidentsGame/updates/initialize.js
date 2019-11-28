@@ -41,6 +41,7 @@ module.exports = async function() {
   const seatPositionWith3Clubs = Utils.find3Clubs(dealtCards);
   const playerWith3Clubs = this.players.find(player => player.seatPosition === seatPositionWith3Clubs);
   this.currentPlayer = playerWith3Clubs.user;
+  this.drinks = [];
 
   return this.save();
 }

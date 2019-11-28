@@ -53,8 +53,26 @@ module.exports = function() {
 
   let turns = latestRound.turns.slice(playersLastTurnIdx);
   let playersLastTurn = turns[0];
-  if (playersLastTurn.wasSkipped || playersLastTurn.wasPassed) {
-    console.log(`[PresidentsGame@didCurrentPlayersLastTurnEndTheRound()] wasSkipped ${playersLastTurn.wasSkipped} | wasPassed ${playersLastTurn.wasPassed}`);
+  if (playersLastTurn.wasSkipped) {
+    console.log(`[PresidentsGame@didCurrentPlayersLastTurnEndTheRound()] did they skip themself and it's still there turn?`);
+    let searchingForWhoCausedSkip = true;
+    while (searchingForWhoCausedSkip) {
+      i--;
+      let turn = latestRound.turns[i];
+      if (turn.didCauseSkips) {
+        if (this.currentPlayer.equals(turn.user)) {
+          console.log(`[PresidentsGame@didCurrentPlayersLastTurnEndTheRound()] yes`);
+          return true;
+        }
+        console.log(`[PresidentsGame@didCurrentPlayersLastTurnEndTheRound()] no`);
+        return false;
+      }
+    }
+    
+    return false;
+  }
+  if (playersLastTurn.wasPassed) {
+    console.log(`[PresidentsGame@didCurrentPlayersLastTurnEndTheRound()] wasPassed ${playersLastTurn.wasPassed}`);
     return false;
   }
 

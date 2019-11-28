@@ -36,7 +36,9 @@ module.exports = async function(fromUser, toUser) {
   console.log(`[PresidentsGame@giveDrink()] doesReceiverHaveDrinksToDrink ${doesReceiverHaveDrinksToDrink}`);
   if (doesReceiverHaveDrinksToDrink) {
     let drinksToDrink = toPlayer.drinksReceived.slice(drinksDrunk);
-    const doesReceiverAlreadyHaveADrinkFromGiver = drinksToDrink.find(drink => drink.sentBy.toString() === fromUser.toString());
+    console.log(drinksToDrink)
+    console.log(fromUser)
+    const doesReceiverAlreadyHaveADrinkFromGiver = drinksToDrink.find(drink => drink.sentBy.toString() === fromUser._id.toString());
     console.log(`[PresidentsGame@giveDrink()] doesReceiverAlreadyHaveADrinkFromGiver ${doesReceiverAlreadyHaveADrinkFromGiver}`);
     if (doesReceiverAlreadyHaveADrinkFromGiver) {
       return Promise.reject(new Error('toPlayer already has a drink to drink from fromPlayer. you can\'t give another'));
@@ -46,6 +48,15 @@ module.exports = async function(fromUser, toUser) {
 
   fromPlayer.drinksSent = fromPlayer.drinksSent.concat([{sentTo: toUser}]);
   toPlayer.drinksReceived = toPlayer.drinksReceived.concat([{sentBy: fromUser}]);
+
+  
+  this.drinks.push({
+    type: 'drink given',
+    from: fromUser ,
+    to: toUser
+  });
+
+  console.log(this)
 
   return this.save();
 }
