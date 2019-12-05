@@ -8,10 +8,12 @@
     "test:unit": "export NODE_ENV=dev && mocha --timeout 15000 --exit src/tests/unit* -- $*",
     "test:system": "export NODE_ENV=dev && mocha --timeout 15000 --exit src/tests/system*",
     "count:src": "find src -name '*.js' | xargs wc -l",
-    "start": "nodemon src/server/index.js",
-    "start:local": "export NODE_ENV=dev && export PORT=8080 && nodemon src/server/index.js",
-    "db:init": "export DB_ACTION=init && export NODE_ENV=dev && node src/models/PresidentsGame/db.js",
-    "db:drop": "export DB_ACTION=drop && export NODE_ENV=dev && node src/models/PresidentsGame/db.js"
+    "start": "export NODE_ENV=prod && nodemon src/server/index.js",
+    "start:dev": "export NODE_ENV=dev && export PORT=8080 && nodemon src/server/index.js",
+    "db:init-prod": "export DB_ACTION=init && export NODE_ENV=prod && node src/models/PresidentsGame/db.js",
+    "db:init-dev": "export DB_ACTION=init && export NODE_ENV=dev && node src/models/PresidentsGame/db.js",
+    "db:drop-prod": "export DB_ACTION=drop && export NODE_ENV=prod && node src/models/PresidentsGame/db.js",
+    "db:drop-dev": "export DB_ACTION=drop && export NODE_ENV=dev && node src/models/PresidentsGame/db.js"
   },
   "author": "",
   "license": "ISC",

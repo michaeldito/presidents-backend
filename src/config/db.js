@@ -5,7 +5,7 @@ module.exports.connect = async () => {
   const options = { useNewUrlParser: true, useCreateIndex: true, useFindAndModify: false };
   mongoose.Promise = global.Promise;
   try {
-    await mongoose.connect(process.env.MONGODB_URI_TEST, options);
+    await mongoose.connect(process.env.MONGODB_URI, options);
     console.log('[Database] connected to mongodb');
   } catch (err) {
     console.log('[Database] failed to connect to mongodb');
