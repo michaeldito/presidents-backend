@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-require('dotenv').config();
+require('./config')
 
 module.exports.connect = async () => {
   const options = { useNewUrlParser: true, useCreateIndex: true, useFindAndModify: false };
