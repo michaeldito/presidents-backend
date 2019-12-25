@@ -13,7 +13,8 @@
     "db:init-prod": "export DB_ACTION=init && export NODE_ENV=prod && node src/models/PresidentsGame/db.js",
     "db:init-dev": "export DB_ACTION=init && export NODE_ENV=dev && node src/models/PresidentsGame/db.js",
     "db:drop-prod": "export DB_ACTION=drop && export NODE_ENV=prod && node src/models/PresidentsGame/db.js",
-    "db:drop-dev": "export DB_ACTION=drop && export NODE_ENV=dev && node src/models/PresidentsGame/db.js"
+    "db:drop-dev": "export DB_ACTION=drop && export NODE_ENV=dev && node src/models/PresidentsGame/db.js",
+    "db:command": "export DB_ACTION=command && export NODE_ENV=dev && node src/tests/db.js"
   },
   "author": "",
   "license": "ISC",

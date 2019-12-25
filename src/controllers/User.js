@@ -1,9 +1,43 @@
-const {User, PresidentsGame} = require('../models');
+const { User, PresidentsGame } = require('../models');
 
-module.exports.register = async (ctx) => {
+module.exports.getUsers = async ctx => {
+  console.log(`[koa@GET('users/')]`);
+  try {
+    const docs = await User.find({});
+    const body = { total: docs.length, data: docs };
+    ctx.status = 200;
+    ctx.body = body;
+
+  } catch (err) {
+    ctx.throw(400, err);
+  }  
+}
+
+module.exports.getUser = async ctx => {
+  console.log(`[koa@GET('users/:id')]`);
+  const { id } = ctx.params;
+  try {
+    const docs = await User.findById(id);
+    const body = { ...docs.toObject() };
+    ctx.status = 200;
+    ctx.body = body;
+
+  } catch (err) {
+    ctx.throw(400, err);
+  }  
+}
+
+module.exports.register = async ctx => {
   console.log(`[koa@POST('users/register')]`);
   const { username, email, password } = ctx.request.body;
-  let user = { username, email, password, gamesPlayed: [] };
+  const role = username === 'god' ? 'Admin' : 'Player';
+  let user = { 
+    username, 
+    email, 
+    password, 
+    gamesPlayed: [],
+    role
+  };
 
   try {
 
@@ -14,7 +48,6 @@ module.exports.register = async (ctx) => {
       type: 'web',
       exp: Math.floor(cookieExpiration / 1000 + (60 * 1)), // expire the access_token 1m after the cookie
       _id: user._id.toHexString(),
-      access: 'user'
     };
     const token = await user.generateAuthToken(options)
   
@@ -34,7 +67,7 @@ module.exports.register = async (ctx) => {
 }
 
 
-module.exports.login = async (ctx) => {
+module.exports.login = async ctx => {
   console.log(`[koa@PUT('users/login')]`);
   const { username, password } = ctx.request.body;
   const credentials = { username, password };
@@ -67,27 +100,7 @@ module.exports.login = async (ctx) => {
   }  
 }
 
-module.exports.get = async (ctx) => {
-  console.log(`[koa@PUT('users/get')]`);
-  const { id } = ctx.params;
-
-  try {
-    const user = await User.findById(id);
-
-    const body = { ...user.toObject(), loggedIn: true };
-    
-    console.log(body);
-    
-    ctx.status = 200;
-    ctx.body = body;
-
-  } catch (err) {
-    ctx.throw(400, err);
-  }  
-}
-
-
-module.exports.profile = async (ctx) => {
+module.exports.profile = async ctx => {
   const { id } = ctx.params;
 
   try {

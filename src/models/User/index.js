@@ -2,16 +2,6 @@ const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
-const TokenSchema = new mongoose.Schema({
-  access: {
-    type: String,
-    required: [true, 'An access is required for every user\'s token.'],
-  },
-  value: {
-    type: String,
-    required: [true, 'A value is required for every user\'s token.'],
-  }
-});
 
 const UserSchema = new mongoose.Schema({
   username: {
@@ -38,7 +28,10 @@ const UserSchema = new mongoose.Schema({
     ref: 'Game'
   },
   token: {
-    type: TokenSchema
+    type: String
+  },
+  role: {
+    type: String
   }
 });
 
@@ -62,7 +55,7 @@ UserSchema.statics.register = async function(user) {
 
 UserSchema.methods.generateAuthToken = async function (options) {
   const token = jwt.sign(options, process.env.JWT_SECRET).toString();
-  this.token = { access: options.access, value: token };
+  this.token = token;
   await this.save();
   return token;
 }
@@ -84,19 +77,18 @@ UserSchema.statics.findByCredentials = async function ({username, password}) {
 }
 
 UserSchema.statics.findByToken = function (token) {
+  console.log(`token passed to userschema ${token}`)
   let decoded;
 
   try {
     decoded = jwt.verify(token, process.env.JWT_SECRET);
+    console.log(`decoded ${decoded}`)
   }
   catch (err) {
     return Promise.reject('invalid token');
   }
   // query a nested doc
-  return this.findOne({
-    '_id': decoded._id,
-    'token': token
-  });
+  return this.findOne({token});
 }
 
 UserSchema.plugin(require('mongoose-unique-validator'));

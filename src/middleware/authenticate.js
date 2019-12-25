@@ -1,13 +1,22 @@
-const {User} = require('../models');
+const { User } = require('../models');
 
-module.exports = async (ctx, next) => {
-  const { token }  = ctx.state.jwtdata.token;
-  const doc = await User.findByToken(token);
+const Authenticate = allowedRoles => {
+  return async (ctx, next) => {
+    const token  = ctx.cookies.get('access_token');
+    const doc = await User.findByToken(token);
 
-  console.log(`[Authentication] found user: ${!!doc}`);
-  console.log(`[Authentication] ${doc}`);
+    if (! doc)  {
+      console.log(`[Authentication] no user found for token`);
+      return false;
+    }
+    if (! allowedRoles.find(role => role === doc.role)) {
+      console.log(`[Authentication] DENIED - user does not have security clearance of ${allowedRoles}`);
+      return false;
+    }
+    
+    console.log(`[Authentication] APPROVED - user has security clearance of ${allowedRoles}`);
+    return next();
+  };
+}
 
-  if (! doc) 
-    return false;
-  return next();
-};
+module.exports = Authenticate;

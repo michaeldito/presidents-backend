@@ -1,6 +1,20 @@
 const {PresidentsGame, User, GameConfiguration, GameStatus, Card} = require('../models');
 const mongoose = require('mongoose');
 
+module.exports.getGames = async (ctx) => {
+  console.log(`[koa@GET('/presidents/getGames')]`);
+
+  try {
+    let docs = await PresidentsGame.find({});
+    console.log(`[koa@GET('/presidents/getGames')] found ${docs.length} docs`);
+    const body = { total: docs.length, data: docs };
+    ctx.status = 200;
+    ctx.body = body;
+  } catch (err) {
+    ctx.throw(400, err);
+  }  
+};
+
 module.exports.briefDetails = async (ctx) => {
   console.log(`[koa@GET('/presidents/briefDetails')]`);
 
