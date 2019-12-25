@@ -24,6 +24,11 @@ CardSchema.statics.getDeck = function() {
   return this.find({});
 }
 
+CardSchema.virtual('type').get(function() {
+  return 'Card';
+});
+CardSchema.set('toObject', { virtuals: true });
+CardSchema.set('toJSON', { virtuals: true });
 CardSchema.plugin(require('mongoose-autopopulate'));
 CardSchema.plugin(require('mongoose-unique-validator'));
 

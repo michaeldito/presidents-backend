@@ -32,6 +32,13 @@ SuitSchema.statics.findByName = function(name) {
 
 SuitSchema.plugin(require('mongoose-unique-validator'));
 
+SuitSchema.virtual('kind').get(function() {
+  return 'Suit';
+});
+SuitSchema.set('toObject', { virtuals: true });
+SuitSchema.set('toJSON', { virtuals: true });
+
+
 const Suit = mongoose.model('Suit', SuitSchema);
 
 module.exports = Suit;

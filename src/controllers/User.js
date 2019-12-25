@@ -30,7 +30,8 @@ module.exports.getUser = async ctx => {
 module.exports.register = async ctx => {
   console.log(`[koa@POST('users/register')]`);
   const { username, email, password } = ctx.request.body;
-  const role = username === 'god' ? 'Admin' : 'Player';
+  console.log(`username: ${username}`)
+  const role = username === 'jack' ? 'Admin' : 'Player';
   let user = { 
     username, 
     email, 

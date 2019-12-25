@@ -93,6 +93,13 @@ UserSchema.statics.findByToken = function (token) {
 
 UserSchema.plugin(require('mongoose-unique-validator'));
 
+UserSchema.virtual('kind').get(function() {
+  return 'User';
+});
+
+UserSchema.set('toObject', { virtuals: true });
+UserSchema.set('toJSON', { virtuals: true });
+
 const User = mongoose.model('User', UserSchema);
 
 module.exports = User;

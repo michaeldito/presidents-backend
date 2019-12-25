@@ -76,6 +76,12 @@ const GameConfigurationSchema = new mongoose.Schema({
 GameConfigurationSchema.plugin(require('mongoose-unique-validator'));
 GameConfigurationSchema.plugin(require('mongoose-autopopulate'));
 
+GameConfigurationSchema.virtual('kind').get(function() {
+  return 'GameConfiguration';
+});
+GameConfigurationSchema.set('toObject', { virtuals: true });
+GameConfigurationSchema.set('toJSON', { virtuals: true });
+
 const GameConfiguration = mongoose.model('GameConfiguration', GameConfigurationSchema);
 
 module.exports = GameConfiguration;

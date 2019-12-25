@@ -16,6 +16,12 @@ const InboxItemSchema = new mongoose.Schema({
   }
 }, options);
 
+InboxItemSchema.virtual('kind').get(function() {
+  return 'InboxItem';
+});
+InboxItemSchema.set('toObject', { virtuals: true });
+InboxItemSchema.set('toJSON', { virtuals: true });
+
 const InboxItem = mongoose.model('InboxItem', InboxItemSchema);
 
 module.exports = InboxItem;

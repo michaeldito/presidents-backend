@@ -27,6 +27,12 @@ PoliticalRankSchema.statics.getRanks = function(howMany) {
 
 PoliticalRankSchema.plugin(require('mongoose-unique-validator'));
 
+PoliticalRankSchema.virtual('kind').get(function() {
+  return 'PoliticalRank';
+});
+PoliticalRankSchema.set('toObject', { virtuals: true });
+PoliticalRankSchema.set('toJSON', { virtuals: true });
+
 const PoliticalRank = mongoose.model('PoliticalRank', PoliticalRankSchema);
 
 module.exports = PoliticalRank;

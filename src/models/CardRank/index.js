@@ -25,7 +25,11 @@ CardRankSchema.statics.getAll = function() {
 CardRankSchema.statics.findByChar = function(character) {
   return this.findOne({character});
 }
-
+CardRankSchema.virtual('kind').get(function() {
+  return 'CardRank';
+});
+CardRankSchema.set('toObject', { virtuals: true });
+CardRankSchema.set('toJSON', { virtuals: true });
 CardRankSchema.plugin(require('mongoose-unique-validator'));
 
 const CardRank = mongoose.model('CardRank', CardRankSchema);
