@@ -1,4 +1,4 @@
-const { PresidentsGame, Card } = require('../..');
+const { Presidents, Card } = require('../..');
 const expect = require('expect');
 
 module.exports = async () => describe('#areCardsBetter()', async function() {   
@@ -14,7 +14,7 @@ module.exports = async () => describe('#areCardsBetter()', async function() {
       let isTurnBetter;
 
       try {
-        isTurnBetter = await PresidentsGame.areCardsBetter(handToBeat, cards);
+        isTurnBetter = await Presidents.areCardsBetter(handToBeat, cards);
       } catch (err) { }
 
       expect(isTurnBetter).toBeTruthy();
@@ -27,7 +27,7 @@ module.exports = async () => describe('#areCardsBetter()', async function() {
       let isTurnBetter;
 
       try {
-        isTurnBetter = await PresidentsGame.areCardsBetter(handToBeat, cards);
+        isTurnBetter = await Presidents.areCardsBetter(handToBeat, cards);
       } catch (err) { }
 
       expect(isTurnBetter).toBeTruthy();
@@ -40,7 +40,7 @@ module.exports = async () => describe('#areCardsBetter()', async function() {
       let isTurnBetter;
 
       try {
-        isTurnBetter = await PresidentsGame.areCardsBetter(handToBeat, cards);
+        isTurnBetter = await Presidents.areCardsBetter(handToBeat, cards);
       } catch (err) { }
 
       expect(isTurnBetter).toBeTruthy();
@@ -55,7 +55,7 @@ module.exports = async () => describe('#areCardsBetter()', async function() {
       let isTurnBetter;
 
       try {
-        isTurnBetter = await PresidentsGame.areCardsBetter(handToBeat, cards);
+        isTurnBetter = await Presidents.areCardsBetter(handToBeat, cards);
       } catch (err) { }
 
       expect(isTurnBetter).toBeTruthy();
@@ -72,7 +72,7 @@ module.exports = async () => describe('#areCardsBetter()', async function() {
       let isTurnBetter;
 
       try {
-        isTurnBetter = await PresidentsGame.areCardsBetter(handToBeat, cards);
+        isTurnBetter = await Presidents.areCardsBetter(handToBeat, cards);
       } catch (err) { 
         expect(err.message).toBe(`The rank of the selected cards does not beat the previous turns.`);
       }
@@ -87,7 +87,7 @@ module.exports = async () => describe('#areCardsBetter()', async function() {
       let isTurnBetter;
 
       try {
-        isTurnBetter = await PresidentsGame.areCardsBetter(handToBeat, cards);
+        isTurnBetter = await Presidents.areCardsBetter(handToBeat, cards);
       } catch (err) { 
         expect(err.message).toBe(`The selected cards contain fewer cards than the previous turn, and does not contain a two.`);
       }

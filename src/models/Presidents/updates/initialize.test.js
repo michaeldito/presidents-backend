@@ -1,11 +1,11 @@
 const { 
   GameStatus,
-  PresidentsGame,
+  Presidents,
   GameConfiguration,
   User,
   Card,
   PoliticalRank
-} = require('../../');
+} = require('../..');
 const mongoose = require('mongoose');
 const expect = require('expect');
 
@@ -78,13 +78,13 @@ module.exports = async () => describe('#initialize()', async function() {
       players: [player]
     };
   
-    await PresidentsGame.create(game);
+    await Presidents.create(game);
   });
 
   describe('validations', async function () {
 
     it('cannot start a game that is in progress', async function() {  
-      let doc = await PresidentsGame.findOne({name: 'initialize prez game'});
+      let doc = await Presidents.findOne({name: 'initialize prez game'});
       const message = 'Unable to start game. It is already in progress.';	
 
       try {
@@ -95,11 +95,11 @@ module.exports = async () => describe('#initialize()', async function() {
     });
   
     it('cannot start a game that has finished', async function() {  
-      let doc = await PresidentsGame.findOne({name: 'initialize prez game'});
+      let doc = await Presidents.findOne({name: 'initialize prez game'});
       doc.status = await GameStatus.findByValue('FINALIZED');
       await doc.save();
 
-      doc = await PresidentsGame.findOne({name: 'initialize prez game'});
+      doc = await Presidents.findOne({name: 'initialize prez game'});
       const message = 'Unable to start game. It has already finished.';	
 
       try {
@@ -110,11 +110,11 @@ module.exports = async () => describe('#initialize()', async function() {
     });
 
     it('cannot start a game that does not have minimum number of players', async function() {  
-      let doc = await PresidentsGame.findOne({name: 'initialize prez game'});
+      let doc = await Presidents.findOne({name: 'initialize prez game'});
       doc.status = await GameStatus.findByValue('NOT_STARTED');
       await doc.save();
       
-      doc = await PresidentsGame.findOne({name: 'initialize prez game'});
+      doc = await Presidents.findOne({name: 'initialize prez game'});
       const message = 'Unable to start game. Minimum number of players is 2.';	
 
       try {
@@ -180,12 +180,12 @@ module.exports = async () => describe('#initialize()', async function() {
         players: [player1, player2]
       };
     
-      await PresidentsGame.create(game);
+      await Presidents.create(game);
 
     });
 
     it('game with 2 players means players should have been dealt 26 cards each', async function() { 
-      let doc = await PresidentsGame.findOne({name: 'successful initialize prez game'});
+      let doc = await Presidents.findOne({name: 'successful initialize prez game'});
       try {
         await doc.initialize();
         expect(doc.players[0].hand.length).toBe(26);
@@ -196,7 +196,7 @@ module.exports = async () => describe('#initialize()', async function() {
     });
 
     it('game.currentPlayer should have 3 ♣', async function() {
-      let doc = await PresidentsGame.findOne({name: 'successful initialize prez game'});
+      let doc = await Presidents.findOne({name: 'successful initialize prez game'});
       let players = doc.players;
       let currentPlayer = players.find(player => player.user.toString() === doc.currentPlayer.toString());
       expect(currentPlayer.hand.find(card => card.shortHand === '3Clubs')).toBeTruthy();

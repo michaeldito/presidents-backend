@@ -5,7 +5,7 @@ const Utils = require('../../../utils');
  * 
  */
 module.exports = async function(user) {
-  console.log('[PresidentsGame@drinkDrink()]');
+  console.log('[Presidents@drinkDrink()]');
   // given that user has no drinks when they try to drink then bail out
   // given player does have drinks to drink when they try to drink
   // then drinksDrunk is incremented
@@ -14,7 +14,7 @@ module.exports = async function(user) {
   const { drinksReceived, drinksDrunk } = player;
 
   const hasDrinksToDrink = drinksReceived.length - drinksDrunk  === 0;
-  console.log(`[PresidentsGame@drinkDrink()] hasDrinksToDrink ${hasDrinksToDrink}`);
+  console.log(`[Presidents@drinkDrink()] hasDrinksToDrink ${hasDrinksToDrink}`);
   if (hasDrinksToDrink) {
     return Promise.reject(new Error('Unable to drink any drinks. User has none to drink.'));
   }

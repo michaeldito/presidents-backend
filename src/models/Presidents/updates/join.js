@@ -15,32 +15,32 @@
  * 
  */
 module.exports = async function(user) {
-  console.log('[PresidentsGame@join()]');
-  console.log(`[PresidentsGame@join()] user: ${user}`);
+  console.log('[Presidents@join()]');
+  console.log(`[Presidents@join()] user: ${user}`);
 
   if (! user) {
-    console.log(`[PresidentsGame@join()] missing arg user is required`);
+    console.log(`[Presidents@join()] missing arg user is required`);
     return Promise.reject(new Error('Missing argument, user is required.'));
   }
 
   if (this.status.value === 'IN_PROGRESS') {
-    console.log(`[PresidentsGame@join()] cannot join game in progress`);
+    console.log(`[Presidents@join()] cannot join game in progress`);
     return Promise.reject(new Error('Cannot join game. It\`s in progress.'));
   }
   
   if (this.status.value === 'FINALIZED') {
-    console.log(`[PresidentsGame@join()] cannot join a finalized game`);
+    console.log(`[Presidents@join()] cannot join a finalized game`);
     return Promise.reject(new Error('Cannot join game. It\`s finished.'));
   }
 
   if (this.players.length === this.config.maxPlayers) {
-    console.log(`[PresidentsGame@join()] cannot join a full game`);
+    console.log(`[Presidents@join()] cannot join a full game`);
     return Promise.reject(new Error('Cannot join game. It is already full.'));
   }
 
   const hasUserJoined = this.players.find(player => player.user._id.equals(user._id));
   if (hasUserJoined) {
-    console.log(`[PresidentsGame@join()] user already joined`);
+    console.log(`[Presidents@join()] user already joined`);
     return Promise.reject(new Error('User has already joined game.'));
   }
 
@@ -56,7 +56,7 @@ module.exports = async function(user) {
      player.politicalRank = user.nextGameRank;
    }
   
-  console.log(`[PresidentsGame@join()] adding player ${player}`);
+  console.log(`[Presidents@join()] adding player ${player}`);
   this.players = this.players.concat([player]);
 
   return this.save();

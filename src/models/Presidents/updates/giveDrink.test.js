@@ -1,11 +1,11 @@
 const { 
   GameStatus,
-  PresidentsGame,
+  Presidents,
   GameConfiguration,
   User,
   Card,
   PoliticalRank
-} = require('../../');
+} = require('../..');
 const expect = require('expect');
 
 
@@ -80,7 +80,7 @@ module.exports = async () => describe('#giveDrink()', async function() {
       players: [player1, player2]
     };
   
-    await PresidentsGame.create(game);
+    await Presidents.create(game);
 
     let game2 = {
       createdBy,
@@ -100,13 +100,13 @@ module.exports = async () => describe('#giveDrink()', async function() {
     delete game2.players[0].politicalRank;
     delete game2.players[1].politicalRank;
 
-    await PresidentsGame.create(game2);
+    await Presidents.create(game2);
   });
 
   describe('validations', async function () {
 
     it('fromPlayer must out rank toPlayer', async function() {  
-      let doc = await PresidentsGame.findOne({name: 'giveDrink prez game'});
+      let doc = await Presidents.findOne({name: 'giveDrink prez game'});
       const message = 'fromPlayer must out rank toPlayer in order to give a drink';
       const fromUser = this.user2._id;
       const toUser = this.user1._id;
@@ -119,7 +119,7 @@ module.exports = async () => describe('#giveDrink()', async function() {
     });
 
     it('must wait til players have ranks to give a drink', async function() {  
-      let doc = await PresidentsGame.findOne({name: 'giveDrink2 prez game'});
+      let doc = await Presidents.findOne({name: 'giveDrink2 prez game'});
       const message = 'you must wait til all players have ranks to give drinks out';
       const fromUser = this.user2._id;
       const toUser = this.user1._id;
@@ -132,7 +132,7 @@ module.exports = async () => describe('#giveDrink()', async function() {
     });
 
     it('toPlayer has a drink from fromPlayer to drink already', async function() {  
-      let doc = await PresidentsGame.findOne({name: 'giveDrink2 prez game'});
+      let doc = await Presidents.findOne({name: 'giveDrink2 prez game'});
       doc.players[0].politicalRank = await PoliticalRank.findByValue(1);
       doc.players[1].politicalRank = await PoliticalRank.findByValue(2);
       await doc.save();
@@ -153,7 +153,7 @@ module.exports = async () => describe('#giveDrink()', async function() {
   describe('successful', async function () {
 
     it('toPlayer has a drinkReceived & fromPlayer has a drinkSent', async function() {  
-      let doc = await PresidentsGame.findOne({name: 'giveDrink prez game'});
+      let doc = await Presidents.findOne({name: 'giveDrink prez game'});
       const fromUser = this.user1._id;
       const toUser = this.user2._id;
 

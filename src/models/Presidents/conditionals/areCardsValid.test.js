@@ -1,5 +1,5 @@
 const Card = require('../../Card');
-const PresidentsGame = require('../');
+const Presidents = require('..');
 const expect = require('expect');
 
 module.exports = async () => describe('#areCardsValid()', async function() {   
@@ -14,7 +14,7 @@ module.exports = async () => describe('#areCardsValid()', async function() {
   
     it('cards are of the same rank', async function() {  
       const cards = [this.threeClubs, this.threeHearts];
-      let valid = PresidentsGame.areCardsValid(cards);
+      let valid = Presidents.areCardsValid(cards);
       expect(valid).toBeTruthy();
     });
 
@@ -24,7 +24,7 @@ module.exports = async () => describe('#areCardsValid()', async function() {
   
     it('cards are not of the same rank', async function() {  
       const cards = [this.threeClubs, this.fourHearts];
-      let valid = PresidentsGame.areCardsValid(cards);
+      let valid = Presidents.areCardsValid(cards);
       expect(valid).toBeFalsy();
     });
 

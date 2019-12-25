@@ -1,4 +1,4 @@
-const { PresidentsGame, GameConfiguration, User, Card, GameStatus, PoliticalRank } = require('../../') ;
+const { Presidents, GameConfiguration, User, Card, GameStatus, PoliticalRank } = require('../..') ;
 const expect = require('expect');
 
 module.exports = async () => describe('#processTurn()', async function() {   
@@ -91,13 +91,13 @@ module.exports = async () => describe('#processTurn()', async function() {
       players: [player1, player2, player3]
     };
   
-    await PresidentsGame.create(game);
+    await Presidents.create(game);
   });
 
   describe('successful', async function () {
   
     it('adds a turn to last round', async function() {  
-      const doc = await PresidentsGame.findOne({name: 'process turn prez game'});
+      const doc = await Presidents.findOne({name: 'process turn prez game'});
       const aceSpades = await Card.findOne({shortHand: 'ASpades'});
 
       const turn = {
@@ -114,24 +114,24 @@ module.exports = async () => describe('#processTurn()', async function() {
     });
     
     it('if turn contained cards they are removed from players hand', async function() {  
-      const doc = await PresidentsGame.findOne({name: 'process turn prez game'});
+      const doc = await Presidents.findOne({name: 'process turn prez game'});
       const lastPlayer = doc.players.find(player => player.user.toString() === this.user2._id.toString())
       expect(lastPlayer.hand.length).toBe(0);
     });
   
     it('should set next player correctly', async function() {  
-      const doc = await PresidentsGame.findOne({name: 'process turn prez game'});
+      const doc = await Presidents.findOne({name: 'process turn prez game'});
       expect(doc.currentPlayer.toString()).toBe(this.user3._id.toString());
     });
 
     it('if player has no more cards then it should assign rank for next round', async function() {  
-      const doc = await PresidentsGame.findOne({name: 'process turn prez game'});
+      const doc = await Presidents.findOne({name: 'process turn prez game'});
       const firstPlayerDone = doc.players.find(player => player.user.toString() === this.user2._id.toString())
       expect(firstPlayerDone.nextGameRank.name).toBe('President');
     });
 
     it('if player plays a 2 it ends the round', async function() {  
-      let doc = await PresidentsGame.findOne({name: 'process turn prez game'});
+      let doc = await Presidents.findOne({name: 'process turn prez game'});
       const roundLengthBeforeTurn = doc.rounds.length;
       const turn = {
         user: this.user3._id,
@@ -143,13 +143,13 @@ module.exports = async () => describe('#processTurn()', async function() {
         endedRound: true
       }
       await doc.processTurn(turn);
-      doc = await PresidentsGame.findOne({name: 'process turn prez game'});
+      doc = await Presidents.findOne({name: 'process turn prez game'});
       const roundLengthAfterTurn = doc.rounds.length;
       expect(roundLengthAfterTurn).toBe(roundLengthBeforeTurn + 1);
     });
 
     it('if only 1 other player has cards it finalizes the game and sets asshole', async function() {  
-      const doc = await PresidentsGame.findOne({name: 'process turn prez game'});
+      const doc = await Presidents.findOne({name: 'process turn prez game'});
       expect(doc.status.value).toBe('FINALIZED');
       const lastPlacePlayer = doc.players.find(player => player.user.toString() === this.user1._id.toString());
       expect(lastPlacePlayer.nextGameRank.name).toBe('Asshole');

@@ -37,11 +37,11 @@ const GameStatus = require('../GameStatus');
 const GameConfiguration = require('../GameConfiguration');
 const User = require('../User');
 const PoliticalRank = require('../PoliticalRank');
-const PresidentsGame = require('./');
+const Presidents = require('.');
 
 
 const init = async () => {
-	const count = await PresidentsGame.countDocuments({});
+	const count = await Presidents.countDocuments({});
 	if (count === 1)
 		return Promise.resolve();
 
@@ -109,14 +109,14 @@ const init = async () => {
 		}]
 	};
 
-	await PresidentsGame.create(game);
+	await Presidents.create(game);
 }
 
 const drop = async () => {
-	await PresidentsGame.deleteMany({});
+	await Presidents.deleteMany({});
 }
 
-const test = async () => describe('PresidentsGame', async function () {
+const test = async () => describe('Presidents', async function () {
 
 	before(async function () {
 		this.timeout(20000);
@@ -151,7 +151,7 @@ const test = async () => describe('PresidentsGame', async function () {
 
 		it('verify it creates 1 presidents game document', async function () {
 			await init();
-			const docs = await PresidentsGame.find({});
+			const docs = await Presidents.find({});
 			// docs[0].config.deck=[]
 			// console.log(JSON.stringify(docs[0], null, 2))
 			expect(docs.length).toBe(1);
@@ -223,7 +223,7 @@ const test = async () => describe('PresidentsGame', async function () {
 				it('rules are required', async function () {
 					const { rules, ...rest } = this.game;
 					const g1 = { ...rest };
-					const instance = new PresidentsGame(g1);
+					const instance = new Presidents(g1);
 					const message = 'A value for rules is required to create a Presidents game.';
 					const error = instance.validateSync();
 
@@ -232,7 +232,7 @@ const test = async () => describe('PresidentsGame', async function () {
 
 				it('rules.doubleSkips is required', async function () {
 					delete this.game.rules.doubleSkips;
-					const instance = new PresidentsGame(this.game);
+					const instance = new Presidents(this.game);
 					const message = 'A value for rules.doubleSkips is required to create a Presidents game.';
 					const error = instance.validateSync();
 
@@ -241,7 +241,7 @@ const test = async () => describe('PresidentsGame', async function () {
 
 				it('rules.scumStarts is required', async function () {
 					delete this.game.rules.scumStarts;
-					const instance = new PresidentsGame(this.game);
+					const instance = new Presidents(this.game);
 					const message = 'A value for rules.scumStarts is required to create a Presidents game.';
 					const error = instance.validateSync();
 
@@ -250,7 +250,7 @@ const test = async () => describe('PresidentsGame', async function () {
 
 				it('rules.scumHandsTwo is required', async function () {
 					delete this.game.rules.scumHandsTwo;
-					const instance = new PresidentsGame(this.game);
+					const instance = new Presidents(this.game);
 					const message = 'A value for rules.scumHandsTwo is required to create a Presidents game.';
 					const error = instance.validateSync();
 
@@ -259,7 +259,7 @@ const test = async () => describe('PresidentsGame', async function () {
 
 				it('rules.oneEyedJacksAndKingOfHearts is required', async function () {
 					delete this.game.rules.oneEyedJacksAndKingOfHearts;
-					const instance = new PresidentsGame(this.game);
+					const instance = new Presidents(this.game);
 					const message = 'A value for rules.oneEyedJacksAndKingOfHearts is required to create a Presidents game.';
 					const error = instance.validateSync();
 
@@ -268,7 +268,7 @@ const test = async () => describe('PresidentsGame', async function () {
 
 				it('rules.reversePresidentScumTrade is required', async function () {
 					delete this.game.rules.reversePresidentScumTrade;
-					const instance = new PresidentsGame(this.game);
+					const instance = new Presidents(this.game);
 					const message = 'A value for rules.reversePresidentScumTrade is required to create a Presidents game.';
 					const error = instance.validateSync();
 
@@ -277,7 +277,7 @@ const test = async () => describe('PresidentsGame', async function () {
 
 				it('rules.presidentDeals is required', async function () {
 					delete this.game.rules.presidentDeals;
-					const instance = new PresidentsGame(this.game);
+					const instance = new Presidents(this.game);
 					const message = 'A value for rules.presidentDeals is required to create a Presidents game.';
 					const error = instance.validateSync();
 
@@ -286,7 +286,7 @@ const test = async () => describe('PresidentsGame', async function () {
 
 				it('rules.goLow is required', async function () {
 					delete this.game.rules.goLow;
-					const instance = new PresidentsGame(this.game);
+					const instance = new Presidents(this.game);
 					const message = 'A value for rules.goLow is required to create a Presidents game.';
 					const error = instance.validateSync();
 
@@ -295,7 +295,7 @@ const test = async () => describe('PresidentsGame', async function () {
 
 				it('rules.equalNumber is required', async function () {
 					delete this.game.rules.equalNumber;
-					const instance = new PresidentsGame(this.game);
+					const instance = new Presidents(this.game);
 					const message = 'A value for rules.equalNumber is required to create a Presidents game.';
 					const error = instance.validateSync();
 
@@ -304,7 +304,7 @@ const test = async () => describe('PresidentsGame', async function () {
 
 				it('rules.noEndOnBomb is required', async function () {
 					delete this.game.rules.noEndOnBomb;
-					const instance = new PresidentsGame(this.game);
+					const instance = new Presidents(this.game);
 					const message = 'A value for rules.noEndOnBomb is required to create a Presidents game.';
 					const error = instance.validateSync();
 
@@ -313,7 +313,7 @@ const test = async () => describe('PresidentsGame', async function () {
 
 				it('rules.tripleSixes is required', async function () {
 					delete this.game.rules.tripleSixes;
-					const instance = new PresidentsGame(this.game);
+					const instance = new Presidents(this.game);
 					const message = 'A value for rules.tripleSixes is required to create a Presidents game.';
 					const error = instance.validateSync();
 
@@ -322,7 +322,7 @@ const test = async () => describe('PresidentsGame', async function () {
 
 				it('rules.passOut is required', async function () {
 					delete this.game.rules.passOut;
-					const instance = new PresidentsGame(this.game);
+					const instance = new Presidents(this.game);
 					const message = 'A value for rules.passOut is required to create a Presidents game.';
 					const error = instance.validateSync();
 
@@ -331,7 +331,7 @@ const test = async () => describe('PresidentsGame', async function () {
 
 				it('rules.fourInARow is required', async function () {
 					delete this.game.rules.fourInARow;
-					const instance = new PresidentsGame(this.game);
+					const instance = new Presidents(this.game);
 					const message = 'A value for rules.fourInARow is required to create a Presidents game.';
 					const error = instance.validateSync();
 
@@ -340,7 +340,7 @@ const test = async () => describe('PresidentsGame', async function () {
 
 				it('rules.larryPresidents is required', async function () {
 					delete this.game.rules.larryPresidents;
-					const instance = new PresidentsGame(this.game);
+					const instance = new Presidents(this.game);
 					const message = 'A value for rules.larryPresidents is required to create a Presidents game.';
 					const error = instance.validateSync();
 
@@ -361,7 +361,7 @@ const test = async () => describe('PresidentsGame', async function () {
 							skipsRemaining: 0,
 							endedRound: false
 						};
-						const doc = await PresidentsGame.findOne({});
+						const doc = await Presidents.findOne({});
 						doc.rounds[0].turns.push(turn);
 						doc.save(error => {
 							const message = 'A value for rounds[i].turns[i].user is required.';
@@ -377,7 +377,7 @@ const test = async () => describe('PresidentsGame', async function () {
 							skipsRemaining: 0,
 							endedRound: false
 						};
-						const doc = await PresidentsGame.findOne({});
+						const doc = await Presidents.findOne({});
 						doc.rounds[0].turns.push(turn);
 						doc.save(error => {
 							const message = 'A value for rounds[i].turns[i].wasPassed is required.';
@@ -393,7 +393,7 @@ const test = async () => describe('PresidentsGame', async function () {
 							skipsRemaining: 0,
 							endedRound: false
 						};
-						const doc = await PresidentsGame.findOne({});
+						const doc = await Presidents.findOne({});
 						doc.rounds[0].turns.push(turn);
 						doc.save(error => {
 							const message = 'A value for rounds[i].turns[i].wasSkipped is required.';
@@ -409,7 +409,7 @@ const test = async () => describe('PresidentsGame', async function () {
 							skipsRemaining: 0,
 							endedRound: false
 						};
-						const doc = await PresidentsGame.findOne({});
+						const doc = await Presidents.findOne({});
 						doc.rounds[0].turns.push(turn);
 						doc.save(error => {
 							const message = 'A value for rounds[i].turns[i].didCauseSkips is required.';
@@ -425,7 +425,7 @@ const test = async () => describe('PresidentsGame', async function () {
 							didCauseSkips: false,
 							endedRound: false
 						};
-						const doc = await PresidentsGame.findOne({});
+						const doc = await Presidents.findOne({});
 						doc.rounds[0].turns.push(turn);
 						doc.save(error => {
 							const message = 'A value for rounds[i].turns[i].skipsRemaining is required.';
@@ -441,7 +441,7 @@ const test = async () => describe('PresidentsGame', async function () {
 							didCauseSkips: false,
 							skipsRemaining: 0,
 						};
-						const doc = await PresidentsGame.findOne({});
+						const doc = await Presidents.findOne({});
 						doc.rounds[0].turns.push(turn);
 						doc.save(error => {
 							const message = 'A value for rounds[i].turns[i].endedRound is required.';
@@ -459,7 +459,7 @@ const test = async () => describe('PresidentsGame', async function () {
 					const player = {
 						seatPosition: 0
 					}
-					const doc = await PresidentsGame.findOne({});
+					const doc = await Presidents.findOne({});
 					doc.players.push(player);
 					doc.save(error => {
 						const message = 'A value for players[i].user is required.';
@@ -471,7 +471,7 @@ const test = async () => describe('PresidentsGame', async function () {
 					const player = {
 						user: mongoose.Types.ObjectId()
 					}
-					const doc = await PresidentsGame.findOne({});
+					const doc = await Presidents.findOne({});
 					doc.players.push(player);
 					doc.save(error => {
 						const message = 'A value for players[i].seatPosition is required.';
@@ -480,7 +480,7 @@ const test = async () => describe('PresidentsGame', async function () {
 				});
 
 				it('drinksReceived.sentBy is required', async function () {
-					const doc = await PresidentsGame.findOne({});
+					const doc = await Presidents.findOne({});
 					doc.players[0].drinksReceived.push({});
 					doc.save(error => {
 						const message = 'A value for players[i].drinksReceived.sentBy is required.';
@@ -489,7 +489,7 @@ const test = async () => describe('PresidentsGame', async function () {
 				});
 
 				it('drinksSent.sentTo is required', async function () {
-					const doc = await PresidentsGame.findOne({});
+					const doc = await Presidents.findOne({});
 					doc.players[0].drinksSent.push({});
 					doc.save(error => {
 						const message = 'A value for players[i].drinksSent.sentTo is required.';
@@ -531,7 +531,7 @@ const test = async () => describe('PresidentsGame', async function () {
 
 		it('verify drop() deletes all presidents game documents', async function () {
 			await drop();
-			const docs = await PresidentsGame.find({});
+			const docs = await Presidents.find({});
 			expect(docs.length).toBe(0);
 		});
 

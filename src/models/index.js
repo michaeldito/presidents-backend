@@ -7,7 +7,7 @@ const InboxItem = require('./InboxItem');
 const Invite = require('./Invite');
 const InviteStatus = require('./InviteStatus');
 const PoliticalRank = require('./PoliticalRank');
-const PresidentsGame = require('./PresidentsGame');
+const Presidents = require('./Presidents');
 const Status = require('./Status');
 const Suit = require('./Suit');
 const User = require('./User');
@@ -23,7 +23,7 @@ module.exports = {
   Invite,
   InviteStatus,
   PoliticalRank,
-  PresidentsGame,
+  Presidents,
   Status,
   Suit,
   User,

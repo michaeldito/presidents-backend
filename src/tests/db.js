@@ -10,7 +10,7 @@ const { init: initCards, drop: dropCards } = require('../models/Card/test');
 const { init: initGameStatuses, drop: dropGameStatuses } = require('../models/GameStatus/test');
 const { init: initGameConfigurations, drop: dropGameConfigurations } = require('../models/GameConfiguration/test');
 const { init: initPoliticalRanks, drop: dropPoliticalRanks } = require('../models/PoliticalRank/test');
-const { drop: dropPresidentsGames } = require('../models/PoliticalRank/test');
+const { drop: dropPresidentsGames } = require('../models/Presidents/test');
 
 
 async function dbInit() {

@@ -14,7 +14,7 @@ const Utils = require('../../../utils');
  *  7. Save and return.
  */
 module.exports = async function(fromUser, toUser) {
-  console.log('[PresidentsGame@giveDrink()]');
+  console.log('[Presidents@giveDrink()]');
 
   let fromPlayer = this.players.find(player => player.user._id.equals(fromUser._id));
   let toPlayer = this.players.find(player => player.user._id.equals(toUser._id));
@@ -25,7 +25,7 @@ module.exports = async function(fromUser, toUser) {
 
   // President is #1, Vice President #2, etc. so rank is actually reversed
   const doesGiverOutRankReceiver = fromPlayer.politicalRank.value < toPlayer.politicalRank.value;
-  console.log(`[PresidentsGame@giveDrink()] doesGiverOutRankReceiver ${doesGiverOutRankReceiver}`);
+  console.log(`[Presidents@giveDrink()] doesGiverOutRankReceiver ${doesGiverOutRankReceiver}`);
 
   if (! doesGiverOutRankReceiver) {
     return Promise.reject(new Error('fromPlayer must out rank toPlayer in order to give a drink'));
@@ -33,13 +33,13 @@ module.exports = async function(fromUser, toUser) {
 
   const { drinksDrunk } = toPlayer;
   const doesReceiverHaveDrinksToDrink = toPlayer.drinksReceived.length - drinksDrunk;
-  console.log(`[PresidentsGame@giveDrink()] doesReceiverHaveDrinksToDrink ${doesReceiverHaveDrinksToDrink}`);
+  console.log(`[Presidents@giveDrink()] doesReceiverHaveDrinksToDrink ${doesReceiverHaveDrinksToDrink}`);
   if (doesReceiverHaveDrinksToDrink) {
     let drinksToDrink = toPlayer.drinksReceived.slice(drinksDrunk);
     console.log(drinksToDrink)
     console.log(fromUser)
     const doesReceiverAlreadyHaveADrinkFromGiver = drinksToDrink.find(drink => drink.sentBy.toString() === fromUser._id.toString());
-    console.log(`[PresidentsGame@giveDrink()] doesReceiverAlreadyHaveADrinkFromGiver ${doesReceiverAlreadyHaveADrinkFromGiver}`);
+    console.log(`[Presidents@giveDrink()] doesReceiverAlreadyHaveADrinkFromGiver ${doesReceiverAlreadyHaveADrinkFromGiver}`);
     if (doesReceiverAlreadyHaveADrinkFromGiver) {
       return Promise.reject(new Error('toPlayer already has a drink to drink from fromPlayer. you can\'t give another'));
     }

@@ -1,11 +1,11 @@
 const { 
   GameStatus,
-  PresidentsGame,
+  Presidents,
   GameConfiguration,
   User,
   Card,
   PoliticalRank
-} = require('../../');
+} = require('../..');
 const expect = require('expect');
 
 
@@ -130,13 +130,13 @@ module.exports = async () => describe('#drinkDrink()', async function() {
       players: [player1, player2, player3]
     };
   
-    await PresidentsGame.create(game);
+    await Presidents.create(game);
   });
 
   describe('validations', async function () {
 
     it('player must have a drink to drink', async function() {  
-      let doc = await PresidentsGame.findOne({name: 'drinkDrink prez game'});
+      let doc = await Presidents.findOne({name: 'drinkDrink prez game'});
       const message = 'Unable to drink any drinks. User has none to drink.';
       try {
         await doc.drinkDrink(doc.currentPlayer);
@@ -150,7 +150,7 @@ module.exports = async () => describe('#drinkDrink()', async function() {
   describe('successful', async function () {
 
     it('players drinksDrunk count has increased', async function() {  
-      let doc = await PresidentsGame.findOne({name: 'drinkDrink prez game'});
+      let doc = await Presidents.findOne({name: 'drinkDrink prez game'});
       try {
         await doc.drinkDrink(this.user2);
       } catch(err) { }

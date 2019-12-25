@@ -1,11 +1,11 @@
 const { 
   GameStatus,
-  PresidentsGame,
+  Presidents,
   GameConfiguration,
   User,
   Card,
   PoliticalRank
-} = require('../../');
+} = require('../..');
 const mongoose = require('mongoose');
 const expect = require('expect');
 
@@ -66,13 +66,13 @@ module.exports = async () => describe('#initializeNextRound()', async function()
       players: [player,player]
     };
   
-    await PresidentsGame.create(game);
+    await Presidents.create(game);
   });
 
   describe('validations', async function () {
 
     it('cannot start next round if game status is finalized', async function() {  
-      let doc = await PresidentsGame.findOne({name: 'next round prez game'});
+      let doc = await Presidents.findOne({name: 'next round prez game'});
       const message = 'Unable to start next round. The game is finalized.';
 
       try {
@@ -87,14 +87,14 @@ module.exports = async () => describe('#initializeNextRound()', async function()
   describe('successful', async function () {
 
     it('should have added a new round and with a startedAt date', async function() { 
-      let doc = await PresidentsGame.findOne({name: 'next round prez game'});
+      let doc = await Presidents.findOne({name: 'next round prez game'});
       doc.status = await GameStatus.findByValue('NOT_STARTED');
       await doc.save();
 
       try {
-        doc = await PresidentsGame.findOne({name: 'next round prez game'});
+        doc = await Presidents.findOne({name: 'next round prez game'});
         await doc.initializeNextRound();
-        doc = await PresidentsGame.findOne({name: 'next round prez game'});
+        doc = await Presidents.findOne({name: 'next round prez game'});
         expect(doc.rounds.length).toBe(1);
         expect(doc.rounds[0].startedAt).toBeTruthy();
       } catch(err) { 
@@ -104,7 +104,7 @@ module.exports = async () => describe('#initializeNextRound()', async function()
     });
 
     it('should set game status to in progress if this is round one', async function() { 
-      let doc = await PresidentsGame.findOne({name: 'next round prez game'});
+      let doc = await Presidents.findOne({name: 'next round prez game'});
       expect(doc.status.value).toBe('IN_PROGRESS');
     });
 

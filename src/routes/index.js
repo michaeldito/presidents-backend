@@ -1,5 +1,5 @@
 const Router = require('koa-router');
-
+const ServiceController = require('../controllers/Service');
 const UserController = require('../controllers/User');
 const PresidentsController = require('../controllers/Presidents');
 const CardController = require('../controllers/Card');
@@ -16,39 +16,17 @@ const SuitController = require('../controllers/Suit');
 
 const Authenticate = require('../middleware/Authenticate')
 const GameMembership = require('../middleware/GameMembership')
-const { chatToken, videoToken } = require('../config/tokens');
 
 
 const router = new Router({ prefix: '/api/v1' });
-
-router.get('/', (ctx) => {
-  ctx.body = {data: '/api/v1'};
-  ctx.status = 200;
-});
-router.get('/error', (ctx) => {
-  ctx.throw(400, 'Error Message');
-});
+router.get('/', ServiceController.description);
+router.post('/chat/token', Authenticate(['Admin', 'Player']), ServiceController.chatToken);
+router.post('/video/token', Authenticate(['Admin', 'Player']), ServiceController.videoToken);
 router.get('/poop', (ctx) => {
   ctx.app.emit('logging', 'poop', ctx);
 });
 router.get('/logging', (ctx) => {
   ctx.body = require('../../debug.log')
-});
-router.post('/chat/token', Authenticate(['Admin', 'Player']), ctx => {
-  console.log(`POST@[api/v1/chat/token] ctx.body`)
-  console.log(ctx.request.body)
-  const {identity } = ctx.request.body;
-  const token = chatToken(identity);
-  ctx.body = JSON.stringify(token);
-  console.log(`POST@[api/v1/chat/token] body: ${ctx.body}`);
-});
-router.post('/video/token', Authenticate(['Admin', 'Player']), ctx => {
-  console.log(`POST@[api/v1/video/token] ctx.body`)
-  console.log(ctx.request.body)
-  const { identity } = ctx.request.body;
-  const token = videoToken(identity);
-  ctx.body = JSON.stringify(token);
-  console.log(`POST@[api/v1/chat/token] body: ${ctx.body}`);
 });
 
 const userRouter = new Router({ prefix: '/users' });

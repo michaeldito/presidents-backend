@@ -1,11 +1,11 @@
-const {PresidentsGame, User, GameConfiguration, GameStatus, Card} = require('../models');
+const {Presidents, User, GameConfiguration, GameStatus, Card} = require('../models');
 const mongoose = require('mongoose');
 
 module.exports.getGames = async (ctx) => {
   console.log(`[koa@GET('/presidents/getGames')]`);
 
   try {
-    let docs = await PresidentsGame.find({});
+    let docs = await Presidents.find({});
     console.log(`[koa@GET('/presidents/getGames')] found ${docs.length} docs`);
     const body = { total: docs.length, data: docs };
     ctx.status = 200;
@@ -20,7 +20,7 @@ module.exports.briefDetails = async (ctx) => {
 
   try {
 
-    let docs = await PresidentsGame.find({});
+    let docs = await Presidents.find({});
 
     docs = docs.map(doc => {
       let { id, name, createdAt, startedAt, finishedAt, status, createdBy, winner } = doc;
@@ -85,7 +85,7 @@ module.exports.create = async (ctx) => {
 
     console.log(`[koa@POST('/presidents')] creating the game`);
     console.log(`[koa@POST('/presidents')] ${game}`);
-    let doc = await PresidentsGame.create(game);
+    let doc = await Presidents.create(game);
 
     console.log(`[koa@POST('/presidents')] adding creator to the game`);
     doc = await doc.join(user);
@@ -95,7 +95,7 @@ module.exports.create = async (ctx) => {
     user.gamesPlayed = user.gamesPlayed.concat([doc._id]);
     await user.save();
 
-    doc = await PresidentsGame.findOne({_id: doc._id});
+    doc = await Presidents.findOne({_id: doc._id});
 
     const body = doc.toObject();
 
@@ -115,7 +115,7 @@ module.exports.gameDetails = async (ctx) => {
 
   try {
 
-    const doc = await PresidentsGame.findById(id);
+    const doc = await Presidents.findById(id);
     console.log(`[koa@GET('/presidents/gameDetails')] game: ${doc}`);
     const body = doc.toObject();
 
@@ -140,14 +140,14 @@ module.exports.join = async (ctx) => {
     console.log(`[koa@POST('/presidents/join')] adding user to game`);
     let user = await User.findById(userId);
     console.log(`[koa@PUT('/presidents/join')] ${user}`);
-    let doc = await PresidentsGame.findById(id);
+    let doc = await Presidents.findById(id);
     doc = await doc.join(user)
 
     console.log(`[koa@POST('/presidents/join')] adding game to creators gamesPlayed`);
     user.gamesPlayed.push(doc._id);
     user = await user.save();
 
-    doc = await PresidentsGame.findOne({_id: doc._id});
+    doc = await Presidents.findOne({_id: doc._id});
 
     const body = doc.toObject();
 
@@ -171,11 +171,11 @@ module.exports.initialize = async (ctx) => {
 
   try {
 
-    let doc = await PresidentsGame.findById(id);
+    let doc = await Presidents.findById(id);
     await doc.initialize();
     await doc.initializeNextRound();
 
-    doc = await PresidentsGame.findOne({_id: doc._id});
+    doc = await Presidents.findOne({_id: doc._id});
 
     const body = doc.toObject();
 
@@ -204,7 +204,7 @@ module.exports.processTurn = async (ctx) => {
 
     let body;
 
-    let doc = await PresidentsGame.findById(id);
+    let doc = await Presidents.findById(id);
     cardsPlayed = await Card.find({ _id :{$in: cardsPlayed} });
     
     let { turnToBeat } = doc;
@@ -254,7 +254,7 @@ module.exports.processTurn = async (ctx) => {
       if (shouldProcessTurn) {
         console.log(`[koa@PUT('presidents/processTurn')] we need to process this turn`);
         console.log(`[koa@PUT('presidents/processTurn')] will it cause any skips?`);
-        turn.skipsRemaining = PresidentsGame.calculateSkips(turnToBeatCards, cardsPlayed);
+        turn.skipsRemaining = Presidents.calculateSkips(turnToBeatCards, cardsPlayed);
         turn.didCauseSkips = turn.skipsRemaining > 0;
         turn.wasSkipped = false;
         turn.endedRound = false;
@@ -301,7 +301,7 @@ module.exports.processTurn = async (ctx) => {
 
     }
 
-    doc = await PresidentsGame.findOne({_id: doc._id});
+    doc = await Presidents.findOne({_id: doc._id});
 
     body = doc.toObject();
 
@@ -326,12 +326,12 @@ module.exports.giveDrink = async (ctx) => {
 
   try {
 
-    let doc = await PresidentsGame.findById(id);
+    let doc = await Presidents.findById(id);
     fromUser = await User.findById(fromUser);
     toUser = await User.findById(toUser);
     doc = await doc.giveDrink(fromUser, toUser);
 
-    doc = await PresidentsGame.findOne({_id: doc._id});
+    doc = await Presidents.findOne({_id: doc._id});
 
     const body = doc.toObject();
 
@@ -357,11 +357,11 @@ module.exports.drinkDrink = async (ctx) => {
 
   try {
 
-    let doc = await PresidentsGame.findById(id);
+    let doc = await Presidents.findById(id);
     let user = await User.findById(userId);
 
     doc = await doc.drinkDrink(user);
-    doc = await PresidentsGame.findOne({_id: doc._id});
+    doc = await Presidents.findOne({_id: doc._id});
 
     const body = doc.toObject();
     
@@ -386,7 +386,7 @@ module.exports.rematch = async (ctx) => {
 
   try {
 
-    let doc = await PresidentsGame.findById(id);
+    let doc = await Presidents.findById(id);
     
     console.log(`[koa@POST('/presidents/rematch')] sorting players by seat position`);
     let players = doc.players.sort((a, b) => (a.seatPosition < b.seatPosition) ? 1 : -1);
@@ -403,7 +403,7 @@ module.exports.rematch = async (ctx) => {
     let status = await GameStatus.findByValue('NOT_STARTED');
 
     console.log(`[koa@POST('/presidents/rematch')] creating a rematch game with same configs`);
-    doc = await PresidentsGame.create({name, status, rules, createdBy, config});
+    doc = await Presidents.create({name, status, rules, createdBy, config});
 
     for (let user of usersToAdd) {
       console.log(`[koa@POST('/presidents/rematch')] adding user ${user._id}`);
@@ -417,7 +417,7 @@ module.exports.rematch = async (ctx) => {
     doc = await doc.initialize();
     doc = await doc.initializeNextRound();
 
-    doc = await PresidentsGame.findOne({_id: doc._id});
+    doc = await Presidents.findOne({_id: doc._id});
 
     const body = doc.toObject();
 

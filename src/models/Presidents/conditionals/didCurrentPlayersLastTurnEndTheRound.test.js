@@ -1,4 +1,4 @@
-const { PresidentsGame, GameConfiguration, User, Card, GameStatus, PoliticalRank } = require('../../') ;
+const { Presidents, GameConfiguration, User, Card, GameStatus, PoliticalRank } = require('../..') ;
 const expect = require('expect');
 
 module.exports = async () => describe('#didCurrentPlayersLastTurnEndTheRound()', async function() {   
@@ -123,19 +123,19 @@ module.exports = async () => describe('#didCurrentPlayersLastTurnEndTheRound()',
       players: [player1, player2, player3]
     };
   
-    await PresidentsGame.create(game);
+    await Presidents.create(game);
   });
   
   it('true', async function() {  
     // it's user2 turn
-    let doc = await PresidentsGame.findOne({name: 'did current players last turn end the round prez game'});
+    let doc = await Presidents.findOne({name: 'did current players last turn end the round prez game'});
     const didPlayRoundEndingTurn = doc.didCurrentPlayersLastTurnEndTheRound();
     expect(didPlayRoundEndingTurn).toBe(true);
   });
     
   it('false - they skipped', async function() {  
     // it's user2 turn
-    let doc = await PresidentsGame.findOne({name: 'did current players last turn end the round prez game'});
+    let doc = await Presidents.findOne({name: 'did current players last turn end the round prez game'});
     const turn = {
       user: doc.currentPlayer,
       cardsPlayed: [],
@@ -154,7 +154,7 @@ module.exports = async () => describe('#didCurrentPlayersLastTurnEndTheRound()',
 
   it('false - they passed', async function() { 
     // it's now user3 turn 
-    let doc = await PresidentsGame.findOne({name: 'did current players last turn end the round prez game'});
+    let doc = await Presidents.findOne({name: 'did current players last turn end the round prez game'});
     const turn = {
       user: doc.currentPlayer,
       cardsPlayed: [],
@@ -173,7 +173,7 @@ module.exports = async () => describe('#didCurrentPlayersLastTurnEndTheRound()',
 
   it('false - someone played a better hand', async function() {  
     // it's user1 turn
-    let doc = await PresidentsGame.findOne({name: 'did current players last turn end the round prez game'});
+    let doc = await Presidents.findOne({name: 'did current players last turn end the round prez game'});
     let turn = {
       user: doc.currentPlayer,
       cardsPlayed: [this.fourClubs],

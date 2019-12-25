@@ -1,5 +1,5 @@
 module.exports = function(cards) {
-  console.log('[PresidentsGame@areCardsValid()]');
+  console.log('[Presidents@areCardsValid()]');
 
   // is the current hand valid (all ranks the same)?
   const currentHandCardRankValues = cards.map(card => card.cardRank.value)
@@ -7,7 +7,7 @@ module.exports = function(cards) {
   const areCardsValid = currentHandCardRankValues.every(cardRankValue => cardRankValue === rankValue);
 
   let result = areCardsValid ? true : false;
-  console.log(`[PresidentsGame@areCardsValid()] ${result}`);
+  console.log(`[Presidents@areCardsValid()] ${result}`);
 
   return result;
 }

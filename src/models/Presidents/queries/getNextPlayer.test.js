@@ -1,11 +1,11 @@
 const { 
   GameStatus,
-  PresidentsGame,
+  Presidents,
   GameConfiguration,
   User,
   Card,
   PoliticalRank
-} = require('../../');
+} = require('../..');
 const mongoose = require('mongoose');
 const expect = require('expect');
 
@@ -50,7 +50,7 @@ module.exports = async () => describe('#getNextPlayer()', async function() {
       players: [player]
     };
   
-    await PresidentsGame.create(game);
+    await Presidents.create(game);
   });
 
   describe('successful', async function () {
@@ -64,7 +64,7 @@ module.exports = async () => describe('#getNextPlayer()', async function() {
       const user7 = mongoose.Types.ObjectId();
       const user8 = mongoose.Types.ObjectId();
       const users = [user2, user3, user4, user5, user6, user7, user8];
-      let doc = await PresidentsGame.findOne({name: 'get next player prez game'});
+      let doc = await Presidents.findOne({name: 'get next player prez game'});
       try {
         for (let user of users) {
           await doc.join(user);
@@ -77,7 +77,7 @@ module.exports = async () => describe('#getNextPlayer()', async function() {
     })
   
     it('when called 8 times it `wraps around` the players array (length 8)', async function() {  
-      let doc = await PresidentsGame.findOne({name: 'get next player prez game'});
+      let doc = await Presidents.findOne({name: 'get next player prez game'});
       let current = doc.currentPlayer.toString();
       let i = 8;
       //console.log(`start ${current}`)

@@ -1,6 +1,5 @@
 const { Card } = require('../models');
 
-
 module.exports.getCards = async ctx => {
   console.log(`[koa@GET('cards/')]`);
 

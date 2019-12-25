@@ -18,7 +18,7 @@ const Utils = require('../../../utils');
  *     and therefore the current player's turn ended the round, so return true.
  */
 module.exports = function() {
-  console.log('[PresidentsGame@didCurrentPlayersLastTurnEndTheRound()]');
+  console.log('[Presidents@didCurrentPlayersLastTurnEndTheRound()]');
   let latestRound = this.rounds[this.rounds.length - 1];
   console.log(`latestRound ${latestRound}`)
   let playersLastTurnIdx;
@@ -28,7 +28,7 @@ module.exports = function() {
   console.log(`i ${i}`)
 
   if (i < this.players.length) {
-    console.log(`[PresidentsGame@didCurrentPlayersLastTurnEndTheRound()] not all players have played a turn yet so no`);
+    console.log(`[Presidents@didCurrentPlayersLastTurnEndTheRound()] not all players have played a turn yet so no`);
     return false;
   }
 
@@ -41,30 +41,30 @@ module.exports = function() {
       foundLastTurn = true;
     }
   }
-  console.log(`[PresidentsGame@didCurrentPlayersLastTurnEndTheRound()] playersLastTurnIdx: ${playersLastTurnIdx}`);
+  console.log(`[Presidents@didCurrentPlayersLastTurnEndTheRound()] playersLastTurnIdx: ${playersLastTurnIdx}`);
 
   // TODO:
   // if it was a two then yes it did, regardless of if all players have played
 
   if (! foundLastTurn) {
-    console.log(`[PresidentsGame@didCurrentPlayersLastTurnEndTheRound()] foundLastTurn: ${foundLastTurn}`);
+    console.log(`[Presidents@didCurrentPlayersLastTurnEndTheRound()] foundLastTurn: ${foundLastTurn}`);
     return false;
   }
 
   let turns = latestRound.turns.slice(playersLastTurnIdx);
   let playersLastTurn = turns[0];
   if (playersLastTurn.wasSkipped) {
-    console.log(`[PresidentsGame@didCurrentPlayersLastTurnEndTheRound()] did they skip themself and it's still there turn?`);
+    console.log(`[Presidents@didCurrentPlayersLastTurnEndTheRound()] did they skip themself and it's still there turn?`);
     let searchingForWhoCausedSkip = true;
     while (searchingForWhoCausedSkip) {
       i--;
       let turn = latestRound.turns[i];
       if (turn.didCauseSkips) {
         if (this.currentPlayer.equals(turn.user)) {
-          console.log(`[PresidentsGame@didCurrentPlayersLastTurnEndTheRound()] yes`);
+          console.log(`[Presidents@didCurrentPlayersLastTurnEndTheRound()] yes`);
           return true;
         }
-        console.log(`[PresidentsGame@didCurrentPlayersLastTurnEndTheRound()] no`);
+        console.log(`[Presidents@didCurrentPlayersLastTurnEndTheRound()] no`);
         return false;
       }
     }
@@ -72,38 +72,38 @@ module.exports = function() {
     return false;
   }
   if (playersLastTurn.wasPassed) {
-    console.log(`[PresidentsGame@didCurrentPlayersLastTurnEndTheRound()] wasPassed ${playersLastTurn.wasPassed}`);
+    console.log(`[Presidents@didCurrentPlayersLastTurnEndTheRound()] wasPassed ${playersLastTurn.wasPassed}`);
     return false;
   }
 
   i = 1;
   let checkingForSkips = true;
-  console.log(`[PresidentsGame@didCurrentPlayersLastTurnEndTheRound()] checkingForSkips`);
+  console.log(`[Presidents@didCurrentPlayersLastTurnEndTheRound()] checkingForSkips`);
 
   while (checkingForSkips && i < turns.length) {
     let turn = turns[i];
-    console.log(`[PresidentsGame@didCurrentPlayersLastTurnEndTheRound()] turn: ${turn.user} ${turn.wasSkipped}`);
+    console.log(`[Presidents@didCurrentPlayersLastTurnEndTheRound()] turn: ${turn.user} ${turn.wasSkipped}`);
     if (! turn.wasSkipped) {
       checkingForSkips = false;
     } else {
-      console.log(`[PresidentsGame@didCurrentPlayersLastTurnEndTheRound()] skip found by: ${turn.user}`);
+      console.log(`[Presidents@didCurrentPlayersLastTurnEndTheRound()] skip found by: ${turn.user}`);
       i++;
     }
   }
 
   let checkingForPasses = true;
-  console.log(`[PresidentsGame@didCurrentPlayersLastTurnEndTheRound()] checkingForPasses`);
+  console.log(`[Presidents@didCurrentPlayersLastTurnEndTheRound()] checkingForPasses`);
   while (checkingForPasses && i < turns.length) {
     let turn = turns[i];
     if (! turn.wasPassed) {
-      console.log(`[PresidentsGame@didCurrentPlayersLastTurnEndTheRound()] user ${turn.user} played a better hand: ${turn.cardsPlayed.map(c=>c.shortHand)}`);
+      console.log(`[Presidents@didCurrentPlayersLastTurnEndTheRound()] user ${turn.user} played a better hand: ${turn.cardsPlayed.map(c=>c.shortHand)}`);
       return false;
     } else {
-      console.log(`[PresidentsGame@didCurrentPlayersLastTurnEndTheRound()] turn for user: ${turn.user} was passed`);
+      console.log(`[Presidents@didCurrentPlayersLastTurnEndTheRound()] turn for user: ${turn.user} was passed`);
       i++;
     }
   }
 
-  console.log('[PresidentsGame@didCurrentPlayersLastTurnEndTheRound()] yes it ended the round')
+  console.log('[Presidents@didCurrentPlayersLastTurnEndTheRound()] yes it ended the round')
   return true;
 }

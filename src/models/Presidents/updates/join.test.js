@@ -1,11 +1,11 @@
 const { 
   GameStatus,
-  PresidentsGame,
+  Presidents,
   GameConfiguration,
   User,
   Card,
   PoliticalRank
-} = require('../../');
+} = require('../..');
 const mongoose = require('mongoose');
 const expect = require('expect');
 
@@ -86,13 +86,13 @@ module.exports = async () => describe('#join()', async function() {
       ]
     };
   
-    await PresidentsGame.create(game);
+    await Presidents.create(game);
   });
 
   describe('validations', async function() {    
 
     it('game is in progress', async function() {
-      let doc = await PresidentsGame.findOne({name: 'validation prez game'});
+      let doc = await Presidents.findOne({name: 'validation prez game'});
       const message = 'Cannot join game. It\`s in progress.';	
       const user = mongoose.Types.ObjectId();
 
@@ -104,11 +104,11 @@ module.exports = async () => describe('#join()', async function() {
     });
 
     it('game is finished', async function() {
-      let doc = await PresidentsGame.findOne({name: 'validation prez game'});
+      let doc = await Presidents.findOne({name: 'validation prez game'});
       doc.status = await GameStatus.findByValue('FINALIZED');
       await doc.save();
 
-      doc = await PresidentsGame.findOne({name: 'validation prez game'});
+      doc = await Presidents.findOne({name: 'validation prez game'});
       const message = 'Cannot join game. It\`s finished.';	
       const user = mongoose.Types.ObjectId();
 
@@ -120,11 +120,11 @@ module.exports = async () => describe('#join()', async function() {
     });
 
     it('game is full', async function() {
-      let doc = await PresidentsGame.findOne({name: 'validation prez game'});
+      let doc = await Presidents.findOne({name: 'validation prez game'});
       doc.status = await GameStatus.findByValue('NOT_STARTED');
       await doc.save();
 
-      doc = await PresidentsGame.findOne({name: 'validation prez game'});
+      doc = await Presidents.findOne({name: 'validation prez game'});
       const message = 'Cannot join game. It is already full.';	
       const user = mongoose.Types.ObjectId();
 
@@ -136,14 +136,14 @@ module.exports = async () => describe('#join()', async function() {
     });
 
     it('user has already joined', async function() {
-      await PresidentsGame.updateOne(
+      await Presidents.updateOne(
         { name: 'validation prez game' },
         { $pop: { players: 1 } }
       );
       const message = 'User has already joined game.';	
 
       try {
-        let doc = await PresidentsGame.findOne({name: 'validation prez game'});
+        let doc = await Presidents.findOne({name: 'validation prez game'});
         const user = await User.findByUsername('tommypastrami');
         await doc.join(user);
         
@@ -154,7 +154,7 @@ module.exports = async () => describe('#join()', async function() {
 
 
     it('user is required', async function() {
-      let doc = await PresidentsGame.findOne({name: 'validation prez game'});
+      let doc = await Presidents.findOne({name: 'validation prez game'});
       const message = 'Missing argument, user is required.';	
 
       try {
@@ -169,17 +169,17 @@ module.exports = async () => describe('#join()', async function() {
   describe('successful', async function() {    
 
     it('user is added to the game', async function() {
-      let doc = await PresidentsGame.findOne({name: 'validation prez game'});
+      let doc = await Presidents.findOne({name: 'validation prez game'});
       const user = mongoose.Types.ObjectId()
       try {
         await doc.join(user);
-        doc = await PresidentsGame.findOne({name: 'validation prez game'});
+        doc = await Presidents.findOne({name: 'validation prez game'});
         expect(doc.players.length).toBe(8);
       } catch(err) { }
     });
 
     it('player[user].joinedAt has a timestamp', async function() {
-      let doc = await PresidentsGame.findOne({name: 'validation prez game'});
+      let doc = await Presidents.findOne({name: 'validation prez game'});
       try {
         expect(doc.players[7].joinedAt).toBeTruthy();
       } catch(err) { }
