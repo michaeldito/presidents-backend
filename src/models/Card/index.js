@@ -24,8 +24,15 @@ CardSchema.statics.getDeck = function() {
   return this.find({});
 }
 
-CardSchema.virtual('type').get(function() {
+CardSchema.virtual('kind').get(function() {
   return 'Card';
+});
+CardSchema.virtual('displayId').get(function() {
+  const rankName = this.cardRank.name;
+  const suitName = this.suit.name;
+  const character = this.suit.character;
+  const color = this.suit.color;
+  return `${rankName} - ${suitName} - ${character} - ${color}`
 });
 CardSchema.set('toObject', { virtuals: true });
 CardSchema.set('toJSON', { virtuals: true });

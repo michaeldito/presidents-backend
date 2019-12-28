@@ -28,8 +28,6 @@ const PresidentsSchema = new mongoose.Schema({
   drinks: []
 });
 
-// plugins
-PresidentsSchema.plugin(require('mongoose-autopopulate'));
 
 // conditionals
 PresidentsSchema.statics.areCardsValid = require('./conditionals/areCardsValid');
@@ -50,6 +48,9 @@ PresidentsSchema.methods.giveDrink = require('./updates/giveDrink');
 
 // utils
 PresidentsSchema.statics.calculateSkips = require('./utils/calculateSkips');
+
+// plugins
+PresidentsSchema.plugin(require('mongoose-autopopulate'));
 
 const Presidents = Game.discriminator('Presidents', PresidentsSchema);
 

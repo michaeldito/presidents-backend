@@ -19,6 +19,11 @@ const InboxItemSchema = new mongoose.Schema({
 InboxItemSchema.virtual('kind').get(function() {
   return 'InboxItem';
 });
+InboxItemSchema.virtual('displayId').get(function() {
+  const username = this.forUser.username;
+  const seenByUser = this.seenByUser;
+  return `${username} - ${seenByUser}`
+});
 InboxItemSchema.set('toObject', { virtuals: true });
 InboxItemSchema.set('toJSON', { virtuals: true });
 

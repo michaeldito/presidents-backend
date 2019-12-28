@@ -11,7 +11,6 @@ const Presidents = require('./Presidents');
 const Status = require('./Status');
 const Suit = require('./Suit');
 const User = require('./User');
-const WarGame = require('./WarGame');
 
 module.exports = {
   Card,
@@ -26,6 +25,5 @@ module.exports = {
   Presidents,
   Status,
   Suit,
-  User,
-  WarGame
+  User
 }

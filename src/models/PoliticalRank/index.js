@@ -30,6 +30,10 @@ PoliticalRankSchema.plugin(require('mongoose-unique-validator'));
 PoliticalRankSchema.virtual('kind').get(function() {
   return 'PoliticalRank';
 });
+PoliticalRankSchema.virtual('displayId').get(function() {
+  const { name, value } = this;
+  return `${name} - ${value}`;
+});
 PoliticalRankSchema.set('toObject', { virtuals: true });
 PoliticalRankSchema.set('toJSON', { virtuals: true });
 

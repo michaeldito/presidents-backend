@@ -35,6 +35,11 @@ SuitSchema.plugin(require('mongoose-unique-validator'));
 SuitSchema.virtual('kind').get(function() {
   return 'Suit';
 });
+SuitSchema.virtual('displayId').get(function() {
+  const { name, color, character } = this;
+  return `${name} - ${character} - ${color}`;
+});
+
 SuitSchema.set('toObject', { virtuals: true });
 SuitSchema.set('toJSON', { virtuals: true });
 

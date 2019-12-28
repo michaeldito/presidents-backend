@@ -1,7 +1,9 @@
 const mongoose = require('mongoose');
 
 const options = { 
-  discriminatorKey: 'kind'
+  discriminatorKey: 'kind',
+  toObject: { virtuals: true },
+  toJSON: { virtuals: true }
 };
 
 const StatusSchema = new mongoose.Schema({
@@ -16,6 +18,11 @@ const StatusSchema = new mongoose.Schema({
 StatusSchema.statics.findByValue = function(value) {
   return this.findOne({value});
 }
+
+StatusSchema.virtual('displayId').get(function() {
+  const { value, kind } = this;
+  return `${kind} - ${value}`
+});
 
 StatusSchema.plugin(require('mongoose-unique-validator'));
 

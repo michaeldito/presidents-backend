@@ -97,6 +97,9 @@ UserSchema.virtual('kind').get(function() {
   return 'User';
 });
 
+UserSchema.virtual('displayId').get(function() {
+  return this.username + ' - ' + this.role;
+});
 UserSchema.set('toObject', { virtuals: true });
 UserSchema.set('toJSON', { virtuals: true });
 

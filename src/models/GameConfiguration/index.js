@@ -13,12 +13,9 @@ const GameConfigurationSchema = new mongoose.Schema({
     required: [true, 'A maxPlayers field is required for every game configuration.'],
     validate: {
       validator: async function(maxPlayers) {
-
         if(maxPlayers < this.minPlayers)
           return Promise.reject();
-
         return Promise.resolve();
-        
       },
       message: 'A value for maxPlayers must be greater than or equal to minPlayers.'
     }
@@ -28,12 +25,9 @@ const GameConfigurationSchema = new mongoose.Schema({
     required: [true, 'A maxPlayers field is required for every game configuration.'],
     validate: {
       validator: async function(minPlayers) {
-
         if(minPlayers > this.maxPlayers)
           return Promise.reject();
-
         return Promise.resolve();
-        
       },
       message: 'A value for minPlayers must be less than or equal to maxPlayers.'
     }
@@ -44,7 +38,6 @@ const GameConfigurationSchema = new mongoose.Schema({
     required: true, // mongoose will make empty array by default if required is true
     validate: {
       validator: async function(deck) {
-
         // deck must not be empty
         if(deck.length === 0)
           return Promise.reject(new Error('empty deck'));
@@ -61,7 +54,6 @@ const GameConfigurationSchema = new mongoose.Schema({
           
         // deck is valid
         return Promise.resolve();
-        
       },
       message: 'A deck must be a non-empty array of Card ObjectIds.'
     },
@@ -78,6 +70,10 @@ GameConfigurationSchema.plugin(require('mongoose-autopopulate'));
 
 GameConfigurationSchema.virtual('kind').get(function() {
   return 'GameConfiguration';
+});
+
+GameConfigurationSchema.virtual('displayId').get(function() {
+  return this.name
 });
 GameConfigurationSchema.set('toObject', { virtuals: true });
 GameConfigurationSchema.set('toJSON', { virtuals: true });

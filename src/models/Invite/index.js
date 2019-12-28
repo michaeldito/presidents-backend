@@ -19,6 +19,13 @@ const InviteSchema = new mongoose.Schema({
   }
 });
 
+InviteSchema.virtual('displayId').get(function() {
+  const username = this.sentBy.username;
+  const status = this.status.value;
+  const game = this.game.kind;
+  return `${username} - ${status} - ${game}`;
+});
+
 const Invite = InboxItem.discriminator('Invite', InviteSchema);
 
 module.exports = Invite;

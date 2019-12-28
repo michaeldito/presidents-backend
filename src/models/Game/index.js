@@ -1,9 +1,10 @@
 const mongoose = require('mongoose');
 
 const options = { 
-  discriminatorKey: 'kind'
+  discriminatorKey: 'kind',
+  toObject: { virtuals: true },
+  toJSON: { virtuals: true }
 };
-
 const GameSchema = new mongoose.Schema({
   name: {
     type: String,
@@ -45,6 +46,11 @@ const GameSchema = new mongoose.Schema({
     ref: 'User'
   }
 }, options);
+
+GameSchema.virtual('displayId').get(function() {
+  const { name, kind } = this;
+  return `${kind} - ${name}`;
+});
 
 GameSchema.plugin(require('mongoose-unique-validator'));
 GameSchema.plugin(require('mongoose-autopopulate'));

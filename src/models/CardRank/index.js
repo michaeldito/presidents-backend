@@ -28,6 +28,12 @@ CardRankSchema.statics.findByChar = function(character) {
 CardRankSchema.virtual('kind').get(function() {
   return 'CardRank';
 });
+CardRankSchema.virtual('displayId').get(function() {
+  const name = this.name
+  const character = this.character;
+  const value = this.value;
+  return `${name} - ${character} - ${value}`
+});
 CardRankSchema.set('toObject', { virtuals: true });
 CardRankSchema.set('toJSON', { virtuals: true });
 CardRankSchema.plugin(require('mongoose-unique-validator'));

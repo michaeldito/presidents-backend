@@ -37,7 +37,8 @@ userRouter.get('/:id', Authenticate(['Admin', 'Player']), UserController.getUser
 userRouter.get('/:id/profile', Authenticate(['Admin', 'Player']), UserController.profile);
 
 const presidentsRouter = new Router({ prefix: '/presidents' });
-presidentsRouter.get('/', PresidentsController.briefDetails);
+presidentsRouter.get('/', PresidentsController.getGames);
+presidentsRouter.get('/details', PresidentsController.briefDetails);
 presidentsRouter.post('/create', Authenticate(['Admin', 'Player']), PresidentsController.create);
 presidentsRouter.get('/:id', Authenticate(['Admin', 'Player']), PresidentsController.gameDetails);
 presidentsRouter.put('/:id/join', Authenticate(['Admin', 'Player']), PresidentsController.join);
