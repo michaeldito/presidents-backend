@@ -152,7 +152,9 @@
       }
   },
   "GameStatus": {
-      "extends": "Status",
+      "extends": {
+        "type": "Status"
+      },
       "_id": {
           "type": "ObjectID",
           "required": false
@@ -233,7 +235,9 @@
       }
   },
   "InviteStatus": {
-      "extends": "Status",
+      "extends": {
+        "type": "Status"
+      },
       "_id": {
           "type": "ObjectID",
           "required": false
