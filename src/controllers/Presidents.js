@@ -335,7 +335,6 @@ module.exports.giveDrink = async (ctx) => {
 
     const body = doc.toObject();
 
-
     ctx.request.app.io.emit('drink given', {
       game: body
     });
@@ -364,7 +363,6 @@ module.exports.drinkDrink = async (ctx) => {
     doc = await Presidents.findOne({_id: doc._id});
 
     const body = doc.toObject();
-    
 
     ctx.request.app.io.emit('drink drunk', {
       game: body

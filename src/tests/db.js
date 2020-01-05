@@ -49,7 +49,7 @@ async function dbDrop() {
 };
 
 async function runCommand() {
-  console.log('[Database] running command...');
+  console.log('[Database] running command: initGameStatuses()');
   await db.connect();
   await initGameStatuses();
   await db.close();

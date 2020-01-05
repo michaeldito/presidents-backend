@@ -1,5 +1,9 @@
 const mongoose = require('mongoose');
 
+const options = { 
+  toObject: { virtuals: true },
+  toJSON: { virtuals: true }
+};
 const TurnSchema = new mongoose.Schema({
   user: {
     type: mongoose.Schema.Types.ObjectId,
@@ -35,6 +39,11 @@ const TurnSchema = new mongoose.Schema({
     type: Boolean,
     required: [true, 'A value for rounds[i].turns[i].endedRound is required.']
   }
+}, options);
+
+TurnSchema.virtual('displayId').get(function() {
+  let { user, wasPassed, wasSkipped, cardsPlayed } = this;
+  return `${user} - passed? ${wasPassed} - skipped? ${wasSkipped} - ${cardsPlayed.length} cards `;
 });
 
 TurnSchema.plugin(require('mongoose-autopopulate'));

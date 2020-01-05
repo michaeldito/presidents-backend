@@ -1,7 +1,6 @@
 const mongoose = require('mongoose');
 require('./config')
 
-
 module.exports.connect = async () => {
   const options = { useNewUrlParser: true, useCreateIndex: true, useFindAndModify: false };
   mongoose.Promise = global.Promise;

@@ -24,8 +24,7 @@ const PresidentsSchema = new mongoose.Schema({
   players: {
     type: [PlayerSchema],
     required: true
-  },
-  drinks: []
+  }
 });
 
 
