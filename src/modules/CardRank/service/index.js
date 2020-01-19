@@ -2,8 +2,8 @@ const Router = require('koa-router');
 const Authenticate = require('../../../middleware/Authenticate')
 const { getAll, getOne } = require('../controller');
 
-const cardRankRouter = new Router({ prefix: '/cardRanks' });
-cardRankRouter.get('/', Authenticate(['Admin']), getAll);
-cardRankRouter.get('/:id', Authenticate(['Admin']), getOne);
+const router = new Router({ prefix: '/cardRanks' });
+router.get('/', Authenticate(['Admin']), getAll);
+router.get('/:id', Authenticate(['Admin']), getOne);
 
-module.exports = cardRankRouter;
+module.exports = router;
