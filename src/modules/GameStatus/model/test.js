@@ -1,7 +1,7 @@
 const GameStatus = require('./');
 const { gameStatuses } = require('./data');
 
-const db = require('../../config/db');
+const db = require('../../../config/db');
 const expect = require('expect');
 
 

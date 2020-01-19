@@ -1,4 +1,4 @@
-const { modelSuite, models } = require('../models/tests');
+const { modelSuite, models } = require('../modules/tests');
 
 const model = process.argv[process.argv.length - 1];
 
@@ -43,12 +43,9 @@ const testSuite = async () => {
     case 'user':
       await models.userTests();
       break;
-    case 'war':
-      await models.warTests();
-      break;
     default:
       await modelSuite();
   }
 }
 
-//testSuite();
+testSuite();

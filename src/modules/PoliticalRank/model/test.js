@@ -1,6 +1,6 @@
 const PoliticalRank = require('./');
 const { politicalRanks } = require('./data');
-const db = require('../../config/db');
+const db = require('../../../config/db');
 const expect = require('expect');
 
 

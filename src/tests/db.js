@@ -3,14 +3,14 @@ const db = require('../config/db');
 const ACTION = process.env.DB_ACTION;
 
 // inits
-const { init: initUsers, drop: dropUsers } = require('../services/User/model/test');
-const { init: initSuits, drop: dropSuits } = require('../services/Suit/model/test');
-const { init: initCardRanks, drop: dropCardRanks } = require('../services/CardRank/model/test');
-const { init: initCards, drop: dropCards } = require('../services/Card/model/test');
-const { init: initGameStatuses, drop: dropGameStatuses } = require('../services/GameStatus/model/test');
-const { init: initGameConfigurations, drop: dropGameConfigurations } = require('../services/GameConfiguration/model/test');
-const { init: initPoliticalRanks, drop: dropPoliticalRanks } = require('../services/PoliticalRank/model/test');
-const { drop: dropPresidentsGames } = require('../services/Presidents/model/test');
+const { init: initUsers, drop: dropUsers } = require('../modules/User/model/test');
+const { init: initSuits, drop: dropSuits } = require('../modules/Suit/model/test');
+const { init: initCardRanks, drop: dropCardRanks } = require('../modules/CardRank/model/test');
+const { init: initCards, drop: dropCards } = require('../modules/Card/model/test');
+const { init: initGameStatuses, drop: dropGameStatuses } = require('../modules/GameStatus/model/test');
+const { init: initGameConfigurations, drop: dropGameConfigurations } = require('../modules/GameConfiguration/model/test');
+const { init: initPoliticalRanks, drop: dropPoliticalRanks } = require('../modules/PoliticalRank/model/test');
+const { drop: dropPresidentsGames } = require('../modules/Presidents/model/test');
 
 
 async function dbInit() {
@@ -69,5 +69,6 @@ async function runCommand() {
     }
   } catch (e) {
     console.log('[Database] db init/drop messed up')
+    console.log(e)
   }
 })();

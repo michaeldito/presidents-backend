@@ -1,15 +1,15 @@
-const db = require('../../config/db');
+const db = require('../../../config/db');
 const expect = require('expect');
 const mongoose = require('mongoose');
 
 // inits
-const { init: initUsers, drop: dropUsers } = require('../../modules/User/model/test');
-const { init: initSuits, drop: dropSuits } = require('../Suit/test');
-const { init: initCardRanks, drop: dropCardRanks } = require('../../modules/CardRank/model/test');
-const { init: initCards, drop: dropCards } = require('../../modules/Card/model/test');
-const { init: initGameStatuses, drop: dropGameStatuses } = require('../GameStatus/test');
-const { init: initGameConfigurations, drop: dropGameConfigurations } = require('../GameConfiguration/test');
-const { init: initPoliticalRanks, drop: dropPoliticalRanks } = require('../PoliticalRank/test');
+const { init: initUsers, drop: dropUsers } = require('../../../modules/User/model/test');
+const { init: initSuits, drop: dropSuits } = require('../../../modules/Suit/model/test');
+const { init: initCardRanks, drop: dropCardRanks } = require('../../../modules/CardRank/model/test');
+const { init: initCards, drop: dropCards } = require('../../../modules/Card/model/test');
+const { init: initGameStatuses, drop: dropGameStatuses } = require('../../../modules/GameStatus/model/test');
+const { init: initGameConfigurations, drop: dropGameConfigurations } = require('../../../modules/GameConfiguration/model/test');
+const { init: initPoliticalRanks, drop: dropPoliticalRanks } = require('../../../modules/PoliticalRank/model/test');
 
 // updates
 const initializeTest = require('./updates/initialize.test');
@@ -32,11 +32,11 @@ const getNextPlayerTest = require('./queries/getNextPlayer.test');
 const calculateSkipsTest = require('./utils/calculateSkips.test');
 
 // models
-const Card = require('../../modules/Card/model');
-const GameStatus = require('../GameStatus');
-const GameConfiguration = require('../GameConfiguration');
-const User = require('../../modules/User/model');
-const PoliticalRank = require('../PoliticalRank');
+const Card = require('../../Card/model');
+const GameStatus = require('../../GameStatus/model');
+const GameConfiguration = require('../../GameConfiguration/model');
+const User = require('../../User/model');
+const PoliticalRank = require('../../PoliticalRank/model');
 const Presidents = require('.');
 
 

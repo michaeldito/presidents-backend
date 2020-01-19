@@ -1,13 +1,13 @@
-const { init: initCardRanks, drop: dropCardRanks } = require('../../modules/CardRank/model/test');
-const { init: initSuits, drop: dropSuits } = require('../Suit/test');
-const { init: initCards, drop: dropCards } = require('../../modules/Card/model/test');
+const { init: initCardRanks, drop: dropCardRanks } = require('../../../modules/CardRank/model/test');
+const { init: initSuits, drop: dropSuits } = require('../../../modules/Suit/model/test');
+const { init: initCards, drop: dropCards } = require('../../../modules/Card/model/test');
 const { gameConfigurations } = require('./data');
 
 const GameConfiguration = require('./');
-const Card = require('../../modules/Card/model');
-const CardRank = require('../../modules/CardRank/model');
+const Card = require('../../../modules/Card/model');
+const CardRank = require('../../../modules/CardRank/model');
 
-const db = require('../../config/db');
+const db = require('../../../config/db');
 const expect = require('expect');
 
 

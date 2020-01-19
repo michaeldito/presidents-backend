@@ -1,6 +1,6 @@
-const { init: initUsers, drop: dropUsers } = require('../User/test');
+const { init: initUsers, drop: dropUsers } = require('../../User/model/test')
 const InboxItem = require('.');
-const User = require('../User');
+const User = require('../../User');
 const mongoose = require('mongoose');
 const db = require('../../../config/db');
 const expect = require('expect');

@@ -1,4 +1,4 @@
-const Card = require('../../../modules/Card/model');
+const Card = require('../../');
 const Presidents = require('..');
 const expect = require('expect');
 

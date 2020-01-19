@@ -1,7 +1,8 @@
 const { init: initCardRanks, drop: dropCardRanks } = require('../../CardRank/model/test');
-const { init: initSuits, drop: dropSuits } = require('../../../models/Suit/test');
+const { init: initSuits, drop: dropSuits } = require('../../Suit/model/test');
+
 const CardRank = require('../../CardRank/model');
-const Suit = require('../../../models/Suit');
+const Suit = require('../../Suit/model');
 const Card = require('.');
 const db = require('../../../config/db');
 const expect = require('expect');

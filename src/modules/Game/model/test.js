@@ -1,16 +1,16 @@
-const { init: initUsers, drop: dropUsers } = require('../User/test');
-const { init: initCardRanks, drop: dropCardRanks } = require('../CardRank/test');
-const { init: initSuits, drop: dropSuits } = require('../Suit/test');
-const { init: initCards, drop: dropCards } = require('../Card/test');
-const { init: initGameStatuses, drop: dropGameStatuses } = require('../GameStatus/test');
-const { init: initGameConfigurations, drop: dropGameConfigurations } = require('../GameConfiguration/test');
+const { init: initUsers, drop: dropUsers } = require('../../User/model/test'); 
+const { init: initCardRanks, drop: dropCardRanks } = require('../../CardRank/model/test');
+const { init: initSuits, drop: dropSuits } = require('../../Suit/model/test');
+const { init: initCards, drop: dropCards } = require('../../Card/model/test');
+const { init: initGameStatuses, drop: dropGameStatuses } = require('../../GameStatus/model/test');
+const { init: initGameConfigurations, drop: dropGameConfigurations } = require('../../GameConfiguration/model/test');
 
-const GameStatus = require('../GameStatus');
-const GameConfiguration = require('../GameConfiguration');
-const User = require('../User');
+const GameStatus = require('../../GameStatus');
+const GameConfiguration = require('../../GameConfiguration');
+const User = require('../../User');
 const Game = require('./');
 
-const db = require('../../config/db');
+const db = require('../../../config/db');
 const expect = require('expect');
 
 

@@ -7,11 +7,10 @@ const { test: inboxItemTests } = require('./InboxItem/model/test');
 const { test: inviteTests } = require('./Invite/model/test');
 const { test: inviteStatusTests } = require('./InviteStatus/model/test');
 const { test: politicalRankTests } = require('./PoliticalRank/model/test');
-const { test: presidentsTests } = require('./PresidentsGame/model/test');
+const { test: presidentsTests } = require('./Presidents/model/test');
 const { test: statusTests } = require('./Status/model/test');
 const { test: suitTests } = require('./Suit/model/test');
 const { test: userTests } = require('./User/model/test');
-const { test: warTests } = require('./WarGame/model/test');
 
 
 module.exports.modelSuite = async () => {
@@ -28,7 +27,6 @@ module.exports.modelSuite = async () => {
   await userTests();
   await gameTests();
   await presidentsTests();
-  await warTests();
 }
 
 module.exports.models = {
@@ -45,5 +43,5 @@ module.exports.models = {
   userTests,
   gameTests,
   presidentsTests,
-  warTests
+  
 }

@@ -23,14 +23,14 @@ module.exports.getAll = async ctx => {
 };
 
 module.exports.getOne = async ctx => {
-  console.log(`[koa@GET('/presidents/gameDetails')]`);
+  console.log(`[koa@GET('/presidents/getOne')]`);
 
   const { id } = ctx.params;
 
   try {
 
     const doc = await Presidents.findById(id);
-    console.log(`[koa@GET('/presidents/gameDetails')] game: ${doc}`);
+    console.log(`[koa@GET('/presidents/getOne')] game: ${doc}`);
     const body = doc.toObject();
 
     ctx.status = 200;
@@ -46,7 +46,17 @@ module.exports.details = async ctx => {
 
   try {
 
-    let docs = await Presidents.details();
+    let docs = await Presidents.find({});
+    console.log(docs.length)
+    docs = docs.map(doc => {
+      let { id, name, createdAt, startedAt, finishedAt, status, createdBy, winner } = doc.toJSON();
+      let type = doc.config.name;
+      if (! winner) {
+        winner = '-';
+      }
+      return { id, name, type, createdAt, startedAt, finishedAt, status, createdBy, winner };
+    }).sort((a,b) => new Date(b.createdAt) - new Date(a.createdAt));
+      
     console.log(`[koa@GET('/presidents/details')] found ${docs.length} docs`);
     let body = docs;
 
