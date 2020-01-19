@@ -68,6 +68,10 @@ const GameConfigurationSchema = new mongoose.Schema({
 GameConfigurationSchema.plugin(require('mongoose-unique-validator'));
 GameConfigurationSchema.plugin(require('mongoose-autopopulate'));
 
+GameConfigurationSchema.statics.findByName = function(name) {
+  return this.findOne({name})
+};
+
 GameConfigurationSchema.virtual('kind').get(function() {
   return 'GameConfiguration';
 });

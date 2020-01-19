@@ -74,7 +74,7 @@ module.exports.create = async ctx => {
   try {
     console.log(`[koa@POST('/presidents')] 1`);
 
-    let config = await GameConfiguration.findOne({ name: gameType });
+    let config = await GameConfiguration.findByName(gameType);
     config = config._id;
     console.log(`[koa@POST('/presidents')] 2`);
 
@@ -96,7 +96,7 @@ module.exports.create = async ctx => {
 
     console.log(`[koa@POST('/presidents')] adding game to creators gamesPlayed`);
     user = await User.findOne(user);
-    user.gamesPlayed = user.gamesPlayed.concat([doc._id]);
+    user.gamesPlayed.push(doc._id);
     await user.save();
 
     doc = await Presidents.findOne({_id: doc._id});
@@ -209,7 +209,7 @@ module.exports.processTurn = async ctx => {
     let body;
 
     let doc = await Presidents.findById(id);
-    cardsPlayed = await Card.find({ _id :{$in: cardsPlayed} });
+    cardsPlayed = await Card.findManyByIds(cardsPlayed);
     
     let { turnToBeat } = doc;
     let turnToBeatCards = [];
@@ -217,7 +217,7 @@ module.exports.processTurn = async ctx => {
     // when the round is ended we clear turn to beat -> null
     // this verifies that we do have cards to lookup from the last turn to beat
     if (turnToBeat !== undefined && turnToBeat !== null) {
-      turnToBeatCards = await Card.find({_id: {$in: turnToBeat.cardsPlayed}});
+      turnToBeatCards = await Card.findManyByIds(turnToBeat.cardsPlayed);
     }
 
     if (doc.status.value !== 'IN_PROGRESS') {

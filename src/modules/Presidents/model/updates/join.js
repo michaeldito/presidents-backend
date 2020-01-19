@@ -57,7 +57,7 @@ module.exports = async function(user) {
    }
   
   console.log(`[Presidents@join()] adding player ${player}`);
-  this.players = this.players.concat([player]);
+  this.players.push(player);
 
   return this.save();
 }

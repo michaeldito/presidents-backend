@@ -46,8 +46,8 @@ module.exports = async function(fromUser, toUser) {
   }
   
 
-  fromPlayer.drinksSent = fromPlayer.drinksSent.concat([{sentTo: toUser}]);
-  toPlayer.drinksReceived = toPlayer.drinksReceived.concat([{sentBy: fromUser}]);
+  fromPlayer.drinksSent.push({ sentTo: toUser });
+  toPlayer.drinksReceived.push({ sentBy: fromUser });
 
   this.drinks.push({
     type: 'drink given',

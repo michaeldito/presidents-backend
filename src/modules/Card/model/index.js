@@ -22,8 +22,11 @@ const CardSchema = new mongoose.Schema({
 
 CardSchema.statics.getDeck = function() {
   return this.find({});
-}
+};
 
+CardSchema.statics.findManyByIds = function(ids) {
+  return this.find({ _id :{$in: ids} });
+}
 CardSchema.virtual('kind').get(function() {
   return 'Card';
 });
@@ -35,6 +38,7 @@ CardSchema.virtual('displayId').get(function() {
   const color = this.suit.color;
   return `${rankName} - ${suitName} - ${character} - ${color}`
 });
+
 
 CardSchema.set('toObject', { virtuals: true });
 CardSchema.set('toJSON', { virtuals: true });
