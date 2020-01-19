@@ -19,25 +19,13 @@ module.exports.getGames = async ctx => {
   }  
 };
 
-module.exports.briefDetails = async ctx => {
-  console.log(`[koa@GET('/presidents/briefDetails')]`);
+module.exports.details = async ctx => {
+  console.log(`[koa@GET('/presidents/details')]`);
 
   try {
 
-    let docs = await Presidents.find({});
-
-    docs = docs.map(doc => {
-      let { id, name, createdAt, startedAt, finishedAt, status, createdBy, winner } = doc;
-      let type = doc.config.name;
-      if (! winner) {
-        winner = '-';
-      }
-      return { id, name, type, createdAt, startedAt, finishedAt, status, createdBy, winner };
-    }).sort((a,b) => new Date(b.createdAt) - new Date(a.createdAt));
-    
-
-    console.log(`[koa@GET('/presidents/briefDetails')] found ${docs.length} docs`);
-
+    let docs = await Presidents.details();
+    console.log(`[koa@GET('/presidents/details')] found ${docs.length} docs`);
     let body = docs;
 
     ctx.status = 200;

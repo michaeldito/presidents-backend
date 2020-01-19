@@ -37,6 +37,7 @@ PresidentsSchema.methods.didCurrentPlayersLastTurnEndTheRound = require('./condi
 
 // queries
 PresidentsSchema.methods.getNextPlayer = require('./queries/getNextPlayer');
+PresidentsSchema.statics.details = require('./queries/details');
 
 // updates
 PresidentsSchema.methods.join = require('./updates/join');
