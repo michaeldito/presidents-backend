@@ -1,9 +1,9 @@
 const Router = require('koa-router');
 const Authenticate = require('../../../middleware/Authenticate')
-const { getSuits, getSuit } = require('../controller');
+const { getAll, getOne } = require('../controller');
 
 const suitRouter = new Router({ prefix: '/suits' });
-suitRouter.get('/', Authenticate(['Admin']), getSuits);
-suitRouter.get('/:id', Authenticate(['Admin']), getSuit);
+suitRouter.get('/', Authenticate(['Admin']), getAll);
+suitRouter.get('/:id', Authenticate(['Admin']), getOne);
 
 module.exports = suitRouter;

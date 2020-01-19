@@ -1,6 +1,6 @@
 const PoliticalRank = require('../model');
 
-module.exports.getPoliticalRanks = async ctx => {
+module.exports.getAll = async ctx => {
   console.log(`[koa@GET('politicalRanks/')]`);
 
   try {
@@ -13,7 +13,7 @@ module.exports.getPoliticalRanks = async ctx => {
   }  
 }
 
-module.exports.getPoliticalRank = async ctx => {
+module.exports.getOne = async ctx => {
   console.log(`[koa@GET('politicalRanks/:id')]`);
   const { id } = ctx.params;
 

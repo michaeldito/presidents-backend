@@ -1,6 +1,6 @@
 const Game = require('../model');
 
-module.exports.getGames = async ctx => {
+module.exports.getAll = async ctx => {
   console.log(`[koa@GET('games/')]`);
 
   try {
@@ -13,7 +13,7 @@ module.exports.getGames = async ctx => {
   }  
 }
 
-module.exports.getGame = async ctx => {
+module.exports.getOne = async ctx => {
   console.log(`[koa@GET('games/:id')]`);
   const { id } = ctx.params;
 

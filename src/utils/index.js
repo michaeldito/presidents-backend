@@ -143,6 +143,14 @@ async function areCardsBetter(handToBeat, cards) {
   return Promise.reject(new Error(`The selected cards contain fewer cards than the previous turn, and does not contain a two.`));
 }
 
+function pick(obj, feilds) {
+  let newObj = {};
+  feilds.forEach(feild => {
+    newObj[feild] = obj[feild]
+  });
+  return newObj;
+}
+
 module.exports = {
   create2DArray,
   shiftRight,
@@ -153,5 +161,6 @@ module.exports = {
   calculateSkips,
   areCardsOfSameRank,
   areCardsValid,
-  areCardsBetter
+  areCardsBetter,
+  pick
 }

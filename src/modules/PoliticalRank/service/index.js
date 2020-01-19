@@ -1,9 +1,9 @@
 const Router = require('koa-router');
 const Authenticate = require('../../../middleware/Authenticate')
-const { getPoliticalRanks, getPoliticalRank } = require('../controller');
+const { getAll, getOne } = require('../controller');
 
 const politicalRankRouter = new Router({ prefix: '/politicalRanks' });
-politicalRankRouter.get('/', Authenticate(['Admin']), getPoliticalRanks);
-politicalRankRouter.get('/:id', Authenticate(['Admin']), getPoliticalRank);
+politicalRankRouter.get('/', Authenticate(['Admin']), getAll);
+politicalRankRouter.get('/:id', Authenticate(['Admin']), getOne);
 
 module.exports = politicalRankRouter;

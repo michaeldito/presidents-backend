@@ -1,6 +1,6 @@
 const InviteStatus = require('../model');
 
-module.exports.getInviteStatuses = async ctx => {
+module.exports.getAll = async ctx => {
   console.log(`[koa@GET('inviteStatuses/')]`);
 
   try {
@@ -13,7 +13,7 @@ module.exports.getInviteStatuses = async ctx => {
   }  
 }
 
-module.exports.getInviteStatus = async ctx => {
+module.exports.getOne = async ctx => {
   console.log(`[koa@GET('inviteStatuses/:id')]`);
   const { id } = ctx.params;
 

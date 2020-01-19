@@ -1,6 +1,6 @@
 const Suit = require('../model');
 
-module.exports.getSuits = async ctx => {
+module.exports.getAll = async ctx => {
   console.log(`[koa@GET('suits/')]`);
 
   try {
@@ -13,7 +13,7 @@ module.exports.getSuits = async ctx => {
   }  
 }
 
-module.exports.getSuit = async ctx => {
+module.exports.getOne = async ctx => {
   console.log(`[koa@GET('suit/:id')]`);
   const { id } = ctx.params;
 

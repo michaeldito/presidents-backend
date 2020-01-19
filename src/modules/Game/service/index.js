@@ -1,9 +1,9 @@
 const Router = require('koa-router');
 const Authenticate = require('../../../middleware/Authenticate')
-const { getGames, getGame } = require('../controller');
+const { getAll, getOne } = require('../controller');
 
 const gameRouter = new Router({ prefix: '/games' });
-gameRouter.get('/', Authenticate(['Admin']), getGames);
-gameRouter.get('/:id', Authenticate(['Admin']), getGame);
+gameRouter.get('/', Authenticate(['Admin']), getAll);
+gameRouter.get('/:id', Authenticate(['Admin']), getOne);
 
 module.exports = gameRouter;

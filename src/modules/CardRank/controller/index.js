@@ -1,6 +1,6 @@
 const CardRank = require('../model');
 
-module.exports.getCardRanks = async ctx => {
+module.exports.getAll = async ctx => {
   console.log(`[koa@GET('cardRanks/')]`);
 
   try {
@@ -13,7 +13,7 @@ module.exports.getCardRanks = async ctx => {
   }  
 }
 
-module.exports.getCardRank = async ctx => {
+module.exports.getOne = async ctx => {
   console.log(`[koa@PUT('cardRank/:id')]`);
   const { id } = ctx.params;
 

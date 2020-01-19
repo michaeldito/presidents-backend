@@ -1,7 +1,7 @@
 const User = require('../model');
 const Presidents = require('../../Presidents/model');
 
-module.exports.getUsers = async ctx => {
+module.exports.getAll = async ctx => {
   console.log(`[koa@GET('users/')]`);
   try {
     const docs = await User.find({});
@@ -14,7 +14,7 @@ module.exports.getUsers = async ctx => {
   }  
 }
 
-module.exports.getUser = async ctx => {
+module.exports.getOne = async ctx => {
   console.log(`[koa@GET('users/:id')]`);
   const { id } = ctx.params;
   try {

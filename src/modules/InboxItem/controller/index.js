@@ -1,6 +1,6 @@
 const InboxItem = require('../model');
 
-module.exports.getInboxItems = async ctx => {
+module.exports.getAll = async ctx => {
   console.log(`[koa@GET('inboxItems/')]`);
 
   try {
@@ -13,7 +13,7 @@ module.exports.getInboxItems = async ctx => {
   }  
 }
 
-module.exports.getInboxItem = async ctx => {
+module.exports.getOne = async ctx => {
   console.log(`[koa@GET('inboxItems/:id')]`);
   const { id } = ctx.params;
 

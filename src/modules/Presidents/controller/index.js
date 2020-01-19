@@ -5,15 +5,37 @@ const GameStatus = require('../../GameStatus/model');
 const Card = require('../../Card/model');
 const { Types } = require('mongoose');
 
-module.exports.getGames = async ctx => {
-  console.log(`[koa@GET('/presidents/getGames')]`);
+module.exports.getAll = async ctx => {
+  console.log(`[koa@GET('/presidents/getAll')]`);
 
   try {
+
     let docs = await Presidents.find({});
-    console.log(`[koa@GET('/presidents/getGames')] found ${docs.length} docs`);
+    console.log(`[koa@GET('/presidents/getAll')] found ${docs.length} docs`);
     const body = { total: docs.length, data: docs };
+
     ctx.body = body;
     ctx.status = 200;
+
+  } catch (err) {
+    ctx.throw(400, err);
+  }  
+};
+
+module.exports.getOne = async ctx => {
+  console.log(`[koa@GET('/presidents/gameDetails')]`);
+
+  const { id } = ctx.params;
+
+  try {
+
+    const doc = await Presidents.findById(id);
+    console.log(`[koa@GET('/presidents/gameDetails')] game: ${doc}`);
+    const body = doc.toObject();
+
+    ctx.status = 200;
+    ctx.body = body;
+
   } catch (err) {
     ctx.throw(400, err);
   }  
@@ -87,28 +109,7 @@ module.exports.create = async ctx => {
     user.gamesPlayed.push(doc._id);
     await user.save();
 
-    doc = await Presidents.findOne({_id: doc._id});
-
-    const body = doc.toObject();
-
-    ctx.status = 200;
-    ctx.body = body;
-
-  } catch (err) {
-    ctx.throw(400, err);
-  }  
-};
-
-
-module.exports.gameDetails = async ctx => {
-  console.log(`[koa@GET('/presidents/gameDetails')]`);
-
-  const { id } = ctx.params;
-
-  try {
-
-    const doc = await Presidents.findById(id);
-    console.log(`[koa@GET('/presidents/gameDetails')] game: ${doc}`);
+    doc = await Presidents.findById(doc._id);
     const body = doc.toObject();
 
     ctx.status = 200;
@@ -139,8 +140,7 @@ module.exports.join = async ctx => {
     user.gamesPlayed.push(doc._id);
     user = await user.save();
 
-    doc = await Presidents.findOne({_id: doc._id});
-
+    doc = await Presidents.findById(doc._id);
     const body = doc.toObject();
 
     ctx.request.app.io.emit('game join', {
@@ -167,7 +167,7 @@ module.exports.initialize = async ctx => {
     await doc.initialize();
     await doc.initializeNextRound();
 
-    doc = await Presidents.findOne({_id: doc._id});
+    doc = await Presidents.findById(doc._id);
 
     const body = doc.toObject();
 
@@ -198,7 +198,7 @@ module.exports.processTurn = async ctx => {
 
     let doc = await Presidents.findById(id);
     cardsPlayed = await Card.findManyByIds(cardsPlayed);
-    
+
     let { turnToBeat } = doc;
     let turnToBeatCards = [];
     // we don't have tturn to beat when we start -> undefined
@@ -207,15 +207,12 @@ module.exports.processTurn = async ctx => {
     if (turnToBeat !== undefined && turnToBeat !== null) {
       turnToBeatCards = await Card.findManyByIds(turnToBeat.cardsPlayed);
     }
-
     if (doc.status.value !== 'IN_PROGRESS') {
       ctx.throw(400, 'cannot process turn - game is not in progress');
     }
-
     // user is passing
     if (wasPassed && user._id === doc.currentPlayer.toString()) {
       console.log(`[koa@PUT('presidents/processTurn')] turn was a pass`);
-
       if (cardsPlayed.length > 0) {
         ctx.throw(400, 'cannot pass and submit cards');
       }
@@ -281,20 +278,13 @@ module.exports.processTurn = async ctx => {
       console.log(`[koa@PUT('presidents/processTurn')] didCurrentPlayersLastTurnEndTheRound ${didCurrentPlayersLastTurnEndTheRound}`);
 
       if (didCurrentPlayersLastTurnEndTheRound) {
-  
-        // mark as round ender
-        // init next round
-        // reset hand to beat for next round
         console.log(`[koa@PUT('presidents/processTurn')] let's initialize the next round & reset the hand to beat`);
         doc = await doc.initializeNextRound();
-        doc.turnToBeat.remove();
-        doc = await doc.save();
       }
 
     }
 
-    doc = await Presidents.findOne({_id: doc._id});
-
+    doc = await Presidents.findById(doc._id);
     body = doc.toObject();
 
     ctx.request.app.io.emit('game refresh', {
@@ -323,7 +313,7 @@ module.exports.giveDrink = async ctx => {
     toUser = await User.findById(toUser);
     doc = await doc.giveDrink(fromUser, toUser);
 
-    doc = await Presidents.findOne({_id: doc._id});
+    doc = await Presidents.findById(doc._id);
 
     const body = doc.toObject();
 
@@ -352,7 +342,7 @@ module.exports.drinkDrink = async ctx => {
     let user = await User.findById(userId);
 
     doc = await doc.drinkDrink(user);
-    doc = await Presidents.findOne({_id: doc._id});
+    doc = await Presidents.findById(doc._id);
 
     const body = doc.toObject();
 
@@ -406,9 +396,7 @@ module.exports.rematch = async ctx => {
     console.log(`[koa@POST('/presidents/rematch')] initializing the game`);
     doc = await doc.initialize();
     doc = await doc.initializeNextRound();
-
-    doc = await Presidents.findOne({_id: doc._id});
-
+    doc = await Presidents.findById(doc._id);
     const body = doc.toObject();
 
     ctx.request.app.io.emit('rematch started', {
