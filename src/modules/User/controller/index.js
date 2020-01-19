@@ -1,5 +1,6 @@
 const User = require('../model');
 const Presidents = require('../../Presidents/model');
+const Transaction = require('../../../utils/Transaction');
 
 module.exports.getAll = async ctx => {
   console.log(`[koa@GET('users/')]`);
@@ -43,21 +44,27 @@ module.exports.register = async ctx => {
 
   try {
 
-    user = await User.register(user);
+    console.log(`[koa@POST('users/register')] beginning transaction`);
 
-    const cookieExpiration = Date.now() + (20 * 60 * 1000);
-    let options = {
-      type: 'web',
-      exp: Math.floor(cookieExpiration / 1000 + (60 * 1)), // expire the access_token 1m after the cookie
-      _id: user._id.toHexString(),
-    };
-    const token = await user.generateAuthToken(options)
-  
-    ctx.cookies.set('access_token', token, {
-      httpOnly: true,
-      expires: new Date(cookieExpiration),
+    await Transaction(async () => {
+
+      user = await User.register(user);
+
+      const cookieExpiration = Date.now() + (20 * 60 * 1000);
+      let options = {
+        type: 'web',
+        exp: Math.floor(cookieExpiration / 1000 + (60 * 1)), // expire the access_token 1m after the cookie
+        _id: user._id.toHexString(),
+      };
+      const token = await user.generateAuthToken(options)
+    
+      ctx.cookies.set('access_token', token, {
+        httpOnly: true,
+        expires: new Date(cookieExpiration),
+      });
+
     });
-  
+
     const body = { ...user.toObject(), loggedIn: true, registered: true };
     
     ctx.status = 200;
@@ -75,6 +82,8 @@ module.exports.login = async ctx => {
   const credentials = { username, password };
 
   try {
+
+    
     const user = await User.findByCredentials(credentials);
 
     const cookieExpiration = Date.now() + (20 * 60 * 1000);

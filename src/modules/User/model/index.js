@@ -45,6 +45,7 @@ UserSchema.statics.findRandoms = function(howMany) {
 }
 
 UserSchema.statics.register = async function(user) {
+  console.log(`[User@register()] registering ${user.username}`)
   const salt = await bcrypt.genSalt(10);
   const hash = await bcrypt.hash(user.password, salt);
   user.password = hash;
@@ -54,6 +55,7 @@ UserSchema.statics.register = async function(user) {
 }
 
 UserSchema.methods.generateAuthToken = async function (options) {
+  console.log(`[User@generateAuthToken()] creating auth token`)
   const token = jwt.sign(options, process.env.JWT_SECRET).toString();
   this.token = token;
   await this.save();
@@ -61,6 +63,7 @@ UserSchema.methods.generateAuthToken = async function (options) {
 }
 
 UserSchema.statics.findByCredentials = async function ({username, password}) {
+  console.log(`[User@findByCredentials()] searching for ${username}`)
   const user = await this.findOne({username});
 
   if (! user)
@@ -77,7 +80,6 @@ UserSchema.statics.findByCredentials = async function ({username, password}) {
 }
 
 UserSchema.statics.findByToken = function (token) {
-  console.log(`token passed to userschema ${token}`)
   let decoded;
 
   try {
