@@ -1,31 +1,14 @@
-const { Service: card } = require('./Card');
-const { Service: cardRank } = require('./CardRank');
-const { Service: game } = require('./Game');
-const { Service: gameConfiguration } = require('./GameConfiguration');
-const { Service: gameStatus } = require('./GameStatus');
-const { Service: inboxItem } = require('./InboxItem');
-const { Service: invite } = require('./Invite');
-const { Service: inviteStatus } = require('./InviteStatus');
-const { Service: politicalRank } = require('./PoliticalRank');
-const { Service: presidents } = require('./Presidents');
-const service = require('./Service');
-const { Service: status } = require('./Status');
-const { Service: suit } = require('./Suit');
-const { Service: user } = require('./User');
-
-module.exports = { 
-  card,
-  cardRank,
-  game,
-  gameConfiguration,
-  gameStatus,
-  inboxItem,
-  invite,
-  inviteStatus,
-  politicalRank,
-  presidents,
-  service,
-  status,
-  suit,
-  user
-}
+export { default as Card }  from './Card';
+export { default as CardRank }  from './CardRank';
+export { default as Game }  from './Game';
+export { default as GameConfiguration }  from './GameConfiguration';
+export { default as GameStatus }  from './GameStatus';
+export { default as InboxItem }  from './InboxItem';
+export { default as Invite }  from './Invite';
+export { default as InviteStatus } from './InviteStatus';
+export { default as PoliticalRank }  from './PoliticalRank';
+export { default as Presidents }  from './Presidents';
+export { default as Service }  from './Service';
+export { default as Status }  from './Status';
+export { default as Suit }  from './Suit';
+export { default as User }  from './User';

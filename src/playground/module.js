@@ -10,7 +10,6 @@ const path = `${cwd}/src/${moduleName}`;
 // In path/service/index.js, rename '/model' to /{moduleName} -- 1st char lowercase
 // In path/model/index.js, rename 'modelRouter' to {moduleName}Router -- 1st char lowercase
 
-
 // NOTE
 // will still need to import/export module in module/index.js
 // will still need to import and add service in api

@@ -1,0 +1,51 @@
+{
+  "parser": "babel-eslint",
+  "parserOptions": {
+    "sourceType": "module",
+    "ecmaVersion": 2018
+  },
+  "extends": [
+    "eslint:recommended", 
+    "plugin:mocha/recommended",
+    "plugin:import/errors",
+    "plugin:import/warnings"
+  ],
+  "plugins": [
+    "mocha", 
+    "simple-import-sort",
+    "import"
+  ],
+  "env": {
+    "browser": true,
+    "jest": true,
+    "es2017": true
+  },
+  "rules": {
+    "no-return-assign": ["off"],
+    "no-console": "off",
+    "no-undef": "off",
+    "no-unused-vars":"off",
+    "no-empty": "off",
+    "no-prototype-builtins": "off",
+    "no-dupe-keys": "off",
+
+    "simple-import-sort/sort": "error",
+    "func-names":"off",
+    "semi": "error",
+    "max-len": ["off", {"code": 100}],
+    "prefer-promise-reject-errors": ["off"],
+
+    "import/no-unresolved": "error",
+    "import/named": "error",
+    "import/namespace": "error",
+    "import/default": "off",
+    "import/export": "error",
+    "import/no-named-as-default": "warn",
+    "import/no-named-as-default-member": "off",
+    "import/no-duplicates": "warn",
+
+    "mocha/no-nested-tests": "off",
+    "mocha/no-hooks-for-single-case": "off",
+    "mocha/no-setup-in-describe": "off"
+  }
+}

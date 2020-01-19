@@ -1,4 +1,9 @@
-const Model = require('./model');
-const Service = require('./service');
+import Model from './model';
+import Service from './service';
 
-module.exports = { Model, Service };
+const Module = { 
+  Model, 
+  Service 
+};
+
+export default Module;

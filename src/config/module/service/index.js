@@ -1,7 +1,10 @@
-const Router = require('koa-router');
-const { defaultGetNonsingular } = require('../controller');
+import Router from 'koa-router';
 
-const modelRouter = new Router({ prefix: '/model' });
-modelRouter.get('/', defaultGetNonsingular);
+import Controller from '../controller';
+const { getAll, getOne } = Controller;
 
-module.exports = modelRouter;
+const router = new Router({ prefix: '/model' });
+router.get('/', getAll);
+router.get('/:id', getOne);
+
+export default router;

@@ -1,8 +1,9 @@
-const mongoose = require('mongoose');
-const Status = require('../../Status/model');
+import mongoose from 'mongoose';
+
+import Status from '../../Status/model';
 
 const GameStatusSchema = new mongoose.Schema({});
 
 const GameStatus = Status.discriminator('GameStatus', GameStatusSchema);
 
-module.exports = GameStatus;
+export default GameStatus;

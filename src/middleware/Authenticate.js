@@ -1,25 +1,29 @@
-const User = require('../modules/User/model');
+import User from '../modules/User/model';
 
 const Authenticate = allowedRoles => {
-  return async (ctx, next) => {
-    const token  = ctx.cookies.get('access_token');
-    const doc = await User.findByToken(token);
+	return async (ctx, next) => {
+		const token = ctx.cookies.get('access_token');
+		const doc = await User.findByToken(token);
 
-    if (! doc)  {
-      console.log(`[Authentication] no user found for token`);
-      ctx.body = `[Authentication] no user found for token`;
-      return false;
-    }
-    if (! allowedRoles.find(role => role === doc.role)) {
-      console.log(`[Authentication] DENIED - user does not have security clearance of ${allowedRoles}`);
-      ctx.body = `[Authentication] DENIED - user does not have security clearance of ${allowedRoles}`;
-      return false;
-    }
-    
-    console.log(`[Authentication] APPROVED - user has security clearance of ${allowedRoles}`);
-    ctx.body = `[Authentication] APPROVED - user has security clearance of ${allowedRoles}`;
-    return next();
-  };
-}
+		if (!doc) {
+			console.log(`[Authentication] no user found for token`);
+			ctx.body = `[Authentication] no user found for token`;
+			return false;
+		}
+		if (!allowedRoles.find(role => role === doc.role)) {
+			console.log(
+				`[Authentication] DENIED - not in security groups ${allowedRoles}`,
+			);
+			ctx.body = `[Authentication] DENIED - not in security groups ${allowedRoles}`;
+			return false;
+		}
 
-module.exports = Authenticate;
+		console.log(
+			`[Authentication] APPROVED - user is in 1 of secury groups ${allowedRoles}`,
+		);
+		ctx.body = `[Authentication] APPROVED - user is in 1 of secury groups ${allowedRoles}`;
+		return next();
+	};
+};
+
+export default Authenticate;

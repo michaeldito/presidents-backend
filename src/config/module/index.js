@@ -1,4 +1,4 @@
 const Model = require('./model');
 const Service = require('./service');
 
-module.exports = { Model, Service };
+export default { Model, Service };

@@ -1,11 +1,11 @@
-module.exports.inviteStatuses = [
-  {
-    value: 'PENDING'
-  },
-  {
-    value: 'ACCEPTED'
-  },
-  {
-    value: 'DECLINED'
-  }
+export default [
+	{
+		value: 'PENDING',
+	},
+	{
+		value: 'ACCEPTED',
+	},
+	{
+		value: 'DECLINED',
+	},
 ];

@@ -12,36 +12,34 @@ const { test: statusTests } = require('./Status/model/test');
 const { test: suitTests } = require('./Suit/model/test');
 const { test: userTests } = require('./User/model/test');
 
-
 module.exports.modelSuite = async () => {
-  await suitTests();
-  await cardRankTests();
-  await cardTests();
-  await gameConfigTests();
-  await politicalRankTests();
-  await statusTests();
-  await gameStatusTests();
-  await inboxItemTests();
-  await inviteStatusTests();
-  await inviteTests();
-  await userTests();
-  await gameTests();
-  await presidentsTests();
-}
+	await suitTests();
+	await cardRankTests();
+	await cardTests();
+	await gameConfigTests();
+	await politicalRankTests();
+	await statusTests();
+	await gameStatusTests();
+	await inboxItemTests();
+	await inviteStatusTests();
+	await inviteTests();
+	await userTests();
+	await gameTests();
+	await presidentsTests();
+};
 
 module.exports.models = {
-  suitTests,
-  cardRankTests,
-  cardTests,
-  gameConfigTests,
-  politicalRankTests,
-  statusTests,
-  gameStatusTests,
-  inboxItemTests,
-  inviteStatusTests,
-  inviteTests,
-  userTests,
-  gameTests,
-  presidentsTests,
-  
-}
+	suitTests,
+	cardRankTests,
+	cardTests,
+	gameConfigTests,
+	politicalRankTests,
+	statusTests,
+	gameStatusTests,
+	inboxItemTests,
+	inviteStatusTests,
+	inviteTests,
+	userTests,
+	gameTests,
+	presidentsTests,
+};

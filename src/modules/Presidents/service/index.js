@@ -1,9 +1,20 @@
-const Router = require('koa-router');
-const Authenticate = require('../../../middleware/Authenticate')
-const GameMembership = require('../../../middleware/GameMembership')
-const VerifyJWT = require('../../../middleware/VerifyJWT');
-const { getAll, getOne, details, create, join, initialize, 
-  processTurn, giveDrink, drinkDrink, rematch } = require('../controller');
+import Router from 'koa-router';
+
+import Authenticate from '../../../middleware/Authenticate';
+import GameMembership from '../../../middleware/GameMembership';
+import VerifyJWT from '../../../middleware/VerifyJWT';
+import {
+	create,
+	details,
+	drinkDrink,
+	getAll,
+	getOne,
+	giveDrink,
+	initialize,
+	join,
+	processTurn,
+	rematch,
+} from '../controller';
 
 const router = new Router({ prefix: '/presidents' });
 router.use(VerifyJWT);
@@ -18,4 +29,4 @@ router.put('/:id/giveDrink', GameMembership, giveDrink);
 router.put('/:id/drinkDrink', GameMembership, drinkDrink);
 router.post('/:id/rematch', GameMembership, rematch);
 
-module.exports = router;
+export default router;

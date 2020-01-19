@@ -1,25 +1,27 @@
-const mongoose = require('mongoose');
-const TurnSchema = require('./Turn');
+import mongoose from 'mongoose';
 
-const options = { 
-  toObject: { virtuals: true },
-  toJSON: { virtuals: true }
+import TurnSchema from './Turn';
+
+const options = {
+	toObject: { virtuals: true },
+	toJSON: { virtuals: true },
 };
-const RoundSchema = new mongoose.Schema({
-  startedAt: {
-    type: Date,
-    default: Date.now
-  },
-  turns: {
-    type: [TurnSchema],
-  }
-}, options);
-
+const RoundSchema = new mongoose.Schema(
+	{
+		startedAt: {
+			type: Date,
+			default: Date.now,
+		},
+		turns: {
+			type: [TurnSchema],
+		},
+	},
+	options,
+);
 
 RoundSchema.virtual('displayId').get(function() {
-  let { startedAt, turns, _id } = this;
-  return `${startedAt} - ${turns.length} turns - ${_id} `;
+	const { startedAt, turns, _id } = this;
+	return `${startedAt} - ${turns.length} turns - ${_id} `;
 });
 
-
-module.exports = RoundSchema;
+export default RoundSchema;

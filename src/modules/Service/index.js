@@ -1,3 +1,7 @@
 const Controller = require('./controller');
 
-module.exports = Controller;
+const Module = {
+  Controller
+};
+
+export default Module;

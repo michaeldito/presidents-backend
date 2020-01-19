@@ -1,8 +1,12 @@
-const jwt = require('koa-jwt');
+import jwt from 'koa-jwt';
 
-module.exports = jwt({
-  secret: process.env.JWT_SECRET,
-  cookie: 'access_token',
-  key: 'jwtdata',
-  debug: true
+import config from '../config/config';
+config();
+
+console.log(`JWT SECRET: ${process.env.JWT_SECRET}`);
+export default jwt({
+	secret: process.env.JWT_SECRET,
+	cookie: 'access_token',
+	key: 'jwtdata',
+	debug: true,
 });

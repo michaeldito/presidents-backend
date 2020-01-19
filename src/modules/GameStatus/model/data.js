@@ -1,11 +1,11 @@
-module.exports.gameStatuses = [
-  {
-    value: 'NOT_STARTED'
-  },
-  {
-    value: 'IN_PROGRESS'
-  },
-  {
-    value: 'FINALIZED'
-  }
+export default [
+	{
+		value: 'NOT_STARTED',
+	},
+	{
+		value: 'IN_PROGRESS',
+	},
+	{
+		value: 'FINALIZED',
+	},
 ];

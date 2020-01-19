@@ -1,6 +1,8 @@
-module.exports = function(handToBeat, cards) {
+export default function(handToBeat, cards) {
 	console.log('[Presidents@calculateSkips()]');
-	console.log(`[Presidents@calculateSkips()] handToBeat: ${JSON.stringify(handToBeat)}`);
+	console.log(
+		`[Presidents@calculateSkips()] handToBeat: ${JSON.stringify(handToBeat)}`,
+	);
 	console.log(`[Presidents@calculateSkips()] cards: ${JSON.stringify(cards)}`);
 
 	// first hand of the game there will be no handToBeat
@@ -16,12 +18,10 @@ module.exports = function(handToBeat, cards) {
 			console.log('[Presidents@calculateSkips()] 1');
 			return 1;
 		}
-		else {
-			let result = 1 + cards.length - handToBeat.length;
-			console.log(`[Presidents@calculateSkips()] ${result}`);
-			return result;
-		}
+		const result = 1 + cards.length - handToBeat.length;
+		console.log(`[Presidents@calculateSkips()] ${result}`);
+		return result;
 	}
 	console.log(`[Presidents@calculateSkips()] 0`);
 	return 0;
-};
+}

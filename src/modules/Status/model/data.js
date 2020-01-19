@@ -1,11 +1,11 @@
-module.exports.statuses = [
-  {
-    value: 'A'
-  },
-  {
-    value: 'B'
-  },
-  {
-    value: 'C'
-  }
+export default [
+	{
+		value: 'A',
+	},
+	{
+		value: 'B',
+	},
+	{
+		value: 'C',
+	},
 ];

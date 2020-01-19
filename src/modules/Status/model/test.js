@@ -1,90 +1,82 @@
-const Status = require('.');
-const { statuses } = require('./data');
+import expect from 'expect';
 
-const db = require('../../../config/db');
-const expect = require('expect');
+import { 
+	close, 
+	connect} from '../../../config/db';
+import Status from '.';
+import statuses from './data';
 
+export const init = async () => {
+	const count = await Status.countDocuments({ kind: 'Status' });
+	if (count === 3) return Promise.resolve();
 
-const init = async () => {
-  const count = await Status.countDocuments({kind: 'Status'});
-  if (count === 3) 
-    return Promise.resolve();
+	const instances = statuses.map(status => new Status(status));
+	const promises = instances.map(instance => instance.save());
+	await Promise.all(promises);
+};
 
-  let instances = statuses.map(status => new Status(status));
-  let promises = instances.map(instance => instance.save());
-  await Promise.all(promises);
-}
+export const drop = async () => {
+	await Status.deleteMany({});
+};
 
-const drop = async () => {
-  await Status.deleteMany({});
-}
+export const test = async () =>
+	describe('Status', function() {
+		before(async function() {
+			await db.connect();
+		});
 
-const test = async () => describe('Status', async function() {
-    
-  before(async function() {
-    await db.connect();
-  });
+		after(async function() {
+			await db.close();
+		});
 
-  after(async function() {
-    await db.close();
-  });
+		describe('#init()', function() {
+			it('verify it initializes 3 status documents', async function() {
+				await init();
+				const docs = await Status.find({});
+				expect(docs.length).toBe(3);
+			});
 
-  describe('#init()', async function() {    
+			describe('validations', function() {
+				it('value is required', async function() {
+					const status = {};
+					const instance = new Status(status);
+					const error = instance.validateSync();
+					const message = 'A Status must have a value to be created.';
+					expect(error.errors.value.message).toBe(message);
+				});
 
-    it('verify it initializes 3 status documents', async function() {    
-      await init();
-      const docs = await Status.find({});
-      expect(docs.length).toBe(3);
-    });
+				it('value must be unique', async function() {
+					const status = { value: 'A' };
+					const instance = new Status(status);
+					const message = 'Error, expected `value` to be unique. Value: `A`';
 
+					instance.save(error => {
+						expect(error.errors.value.message).toBe(message);
+					});
+				});
+			});
+		});
 
-    describe('validations', async function() {    
+		describe('findByValue(value)', function() {
+			it('Verify it returns correct status document', async function() {
+				let doc = await Status.findByValue('A');
+				expect(doc.value).toBe('A');
+				doc = await Status.findByValue('B');
+				expect(doc.value).toBe('B');
+				doc = await Status.findByValue('C');
+				expect(doc.value).toBe('C');
+			});
+		});
 
-      it('value is required', async function() {
-        const status = {};
-        const instance = new Status(status);
-        const error = instance.validateSync();
-        const message = 'A Status must have a value to be created.';
-        expect(error.errors['value'].message).toBe(message);
-      });
+		describe('#drop()', function() {
+			it('Verify it deletes all game status documents', async function() {
+				await drop();
+				const docs = await Status.find({});
+				expect(docs.length).toBe(0);
+			});
+		});
+	});
 
-      it('value must be unique', async function() {
-        const status = {value: 'A'};
-        const instance = new Status(status);
-        const message = 'Error, expected `value` to be unique. Value: `A`';
-        
-        instance.save(error => {
-          expect(error.errors['value'].message).toBe(message);
-        });
-      });
-      
-    });
+const Test = { init, drop, test };
 
-  });
-    
-  describe('findByValue(value)', async function() {    
-
-    it('Verify it returns correct status document', async function() {    
-      let doc = await Status.findByValue('A');
-      expect(doc.value).toBe('A');
-      doc = await Status.findByValue('B');
-      expect(doc.value).toBe('B');
-      doc = await Status.findByValue('C');
-      expect(doc.value).toBe('C');
-    });
-
-  });
-
-  describe('#drop()', async function() {    
-
-    it('Verify it deletes all game status documents', async function() {    
-      await drop();
-      const docs = await Status.find({});
-      expect(docs.length).toBe(0);
-    });
-
-  });
-
-});
-
-module.exports = { init, drop, test};
+export default Test;

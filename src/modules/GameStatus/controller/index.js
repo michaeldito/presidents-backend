@@ -1,28 +1,28 @@
-const GameStatus = require('../model');
+import GameStatus from '../model';
 
-module.exports.getAll = async ctx => {
-  console.log(`[koa@GET('gameStatuses/')]`);
+export const getAll = async ctx => {
+	console.log(`[koa@GET('gameStatuses/')]`);
 
-  try {
-    const docs = await GameStatus.find({});
-    const body = { total: docs.length, data: docs };
-    ctx.status = 200;
-    ctx.body = body;
-  } catch (err) {
-    ctx.throw(400, err);
-  }  
-}
+	try {
+		const docs = await GameStatus.find({});
+		const body = { total: docs.length, data: docs };
+		ctx.status = 200;
+		ctx.body = body;
+	} catch (err) {
+		ctx.throw(400, err);
+	}
+};
 
-module.exports.getOne = async ctx => {
-  console.log(`[koa@GET('gameStatuses/:id')]`);
-  const { id } = ctx.params;
+export const getOne = async ctx => {
+	console.log(`[koa@GET('gameStatuses/:id')]`);
+	const { id } = ctx.params;
 
-  try {
-    const doc = await GameStatus.findById(id);
-    const body = doc.toObject();
-    ctx.status = 200;
-    ctx.body = body;
-  } catch (err) {
-    ctx.throw(400, err);
-  }  
-}
+	try {
+		const doc = await GameStatus.findById(id);
+		const body = doc.toObject();
+		ctx.status = 200;
+		ctx.body = body;
+	} catch (err) {
+		ctx.throw(400, err);
+	}
+};

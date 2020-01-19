@@ -1,133 +1,137 @@
-const User = require('../model');
-const Presidents = require('../../Presidents/model');
-const Transaction = require('../../../utils/Transaction');
+import Transaction from '../../../utils/Transaction';
+import Presidents from '../../Presidents/model';
+import User from '../model';
 
-module.exports.getAll = async ctx => {
-  console.log(`[koa@GET('users/')]`);
-  try {
-    const docs = await User.find({});
-    const body = { total: docs.length, data: docs };
-    ctx.status = 200;
-    ctx.body = body;
+export const getAll = async ctx => {
+	console.log(`[koa@GET('users/')]`);
+	try {
+		const docs = await User.find({});
+		const body = { total: docs.length, data: docs };
+		ctx.status = 200;
+		ctx.body = body;
+	} catch (err) {
+		ctx.throw(400, err);
+	}
+};
 
-  } catch (err) {
-    ctx.throw(400, err);
-  }  
-}
+export const getOne = async ctx => {
+	console.log(`[koa@GET('users/:id')]`);
+	const { id } = ctx.params;
+	try {
+		const doc = await User.findById(id);
+		const body = doc.toObject();
+		ctx.status = 200;
+		ctx.body = body;
+	} catch (err) {
+		ctx.throw(400, err);
+	}
+};
 
-module.exports.getOne = async ctx => {
-  console.log(`[koa@GET('users/:id')]`);
-  const { id } = ctx.params;
-  try {
-    const doc = await User.findById(id);
-    const body = doc.toObject();
-    ctx.status = 200;
-    ctx.body = body;
+export const register = async ctx => {
+	console.log(`[koa@POST('users/register')]`);
+	const { username, email, password } = ctx.request.body;
+	console.log(`username: ${username}`);
+	const role = username === 'jack' ? 'Admin' : 'Player';
+	let user = {
+		username,
+		email,
+		password,
+		gamesPlayed: [],
+		role,
+	};
 
-  } catch (err) {
-    ctx.throw(400, err);
-  }  
-}
+	try {
+		await Transaction(async () => {
+			user = await User.register(user);
 
-module.exports.register = async ctx => {
-  console.log(`[koa@POST('users/register')]`);
-  const { username, email, password } = ctx.request.body;
-  console.log(`username: ${username}`)
-  const role = username === 'jack' ? 'Admin' : 'Player';
-  let user = { 
-    username, 
-    email, 
-    password, 
-    gamesPlayed: [],
-    role
-  };
+			const cookieExpiration = Date.now() + 20 * 60 * 1000;
+			const options = {
+				type: 'web',
+				exp: Math.floor(cookieExpiration / 1000 + 60 * 1), // expire the access_token 1m after the cookie
+				_id: user._id.toHexString(),
+			};
+			const token = await user.generateAuthToken(options);
 
-  try {
+			ctx.cookies.set('access_token', token, {
+				httpOnly: true,
+				expires: new Date(cookieExpiration),
+			});
+		});
 
-    console.log(`[koa@POST('users/register')] beginning transaction`);
+		const body = { ...user.toObject(), loggedIn: true, registered: true };
 
-    await Transaction(async () => {
+		ctx.status = 200;
+		ctx.body = body;
+	} catch (err) {
+		ctx.throw(400, err);
+	}
+};
 
-      user = await User.register(user);
+export const login = async ctx => {
+	console.log(`[koa@PUT('users/login')]`);
+	const { username, password } = ctx.request.body;
+	const credentials = { username, password };
 
-      const cookieExpiration = Date.now() + (20 * 60 * 1000);
-      let options = {
-        type: 'web',
-        exp: Math.floor(cookieExpiration / 1000 + (60 * 1)), // expire the access_token 1m after the cookie
-        _id: user._id.toHexString(),
-      };
-      const token = await user.generateAuthToken(options)
-    
-      ctx.cookies.set('access_token', token, {
-        httpOnly: true,
-        expires: new Date(cookieExpiration),
-      });
+	ctx.app.emit(
+		'log',
+		JSON.stringify({
+			service: {
+				name: 'User',
+				operation: {
+					path: '/login',
+					methodType: 'PUT',
+					controller: {
+						params: [],
+						body: { username, password },
+					},
+				},
+			},
+		}),
+		ctx,
+	);
 
-    });
+	try {
+		const user = await User.findByCredentials(credentials);
 
-    const body = { ...user.toObject(), loggedIn: true, registered: true };
-    
-    ctx.status = 200;
-    ctx.body = body;
+		const cookieExpiration = Date.now() + 20 * 60 * 1000;
+		const options = {
+			type: 'web',
+			exp: Math.floor(cookieExpiration / 1000 + 60 * 1), // expire the access_token 1m after the cookie
+			_id: user._id.toHexString(),
+			access: 'user',
+		};
+		const token = await user.generateAuthToken(options);
 
-  } catch (err) {
-    ctx.throw(400, err);
-  }  
-}
+		ctx.cookies.set('access_token', token, {
+			httpOnly: true,
+			expires: new Date(cookieExpiration),
+		});
 
+		const body = { ...user.toObject(), loggedIn: true };
 
-module.exports.login = async ctx => {
-  console.log(`[koa@PUT('users/login')]`);
-  const { username, password } = ctx.request.body;
-  const credentials = { username, password };
+		ctx.status = 200;
+		ctx.body = body;
+	} catch (err) {
+		ctx.throw(400, err);
+	}
+};
 
-  try {
+export const profile = async ctx => {
+	const { id } = ctx.params;
 
-    
-    const user = await User.findByCredentials(credentials);
+	try {
+		const { username, email, gamesPlayed } = await User.findById(id);
 
-    const cookieExpiration = Date.now() + (20 * 60 * 1000);
-    let options = {
-      type: 'web',
-      exp: Math.floor(cookieExpiration / 1000 + (60 * 1)), // expire the access_token 1m after the cookie
-      _id: user._id.toHexString(),
-      access: 'user'
-    };
-    const token = await user.generateAuthToken(options)
-  
-    ctx.cookies.set('access_token', token, {
-      httpOnly: true,
-      expires: new Date(cookieExpiration),
-    });
-  
-    const body = { ...user.toObject(), loggedIn: true };
-    
-    console.log(body)
-    ctx.status = 200;
-    ctx.body = body;
+		let results = await Presidents.find({ gamesPlayed: { $in: gamesPlayed } });
+		results = results.map(result => {
+			const { politicalRank, nextGameRank } = result;
+			return { politicalRank, nextGameRank };
+		});
+		const body = { username, email, results };
 
-  } catch (err) {
-    ctx.throw(400, err);
-  }  
-}
-
-module.exports.profile = async ctx => {
-  const { id } = ctx.params;
-
-  try {
-    const { username, email, gamesPlayed } = await User.findById(id);
-  
-    let results = await Presidents.find({gamesPlayed: {$in: gamesPlayed}});
-    results = results.map(result => {
-      let {politicalRank, nextGameRank} = result;
-      return {politicalRank, nextGameRank};
-    })
-    const body = { username, email, results };
-    
-    ctx.status = 200;
-    ctx.body = body;
-
-  } catch (err) {
-    ctx.throw(400, err);
-  }  
-}
+		ctx.status = 200;
+		ctx.body = body;
+	} catch (err) {
+		ctx.throw(400, err);
+	}
+};

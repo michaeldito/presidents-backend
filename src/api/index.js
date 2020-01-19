@@ -1,31 +1,55 @@
-const Router = require('koa-router');
-const Authenticate = require('../middleware/Authenticate');
-const { card, cardRank, game, gameConfiguration, gameStatus, inboxItem, 
-  invite, inviteStatus, politicalRank, presidents, service, status, suit, user } = require('../modules');
+import Router from 'koa-router';
+
+import Authenticate from '../middleware/Authenticate';
+import * as Modules from '../modules';
+const {
+	Card,
+	CardRank,
+	Game,
+	GameConfiguration,
+	GameStatus,
+	InboxItem,
+	Invite,
+	InviteStatus,
+	PoliticalRank,
+	Presidents,
+	Service,
+	Status,
+	Suit,
+	User,
+} = Modules;
 
 const router = new Router({ prefix: '/api/v1' });
 
-router.get('/', service.description);
-router.get('/json', service.generateJSON);
-router.post('/chat/token', Authenticate(['Admin', 'Player']), service.chatToken);
-router.post('/video/token', Authenticate(['Admin', 'Player']), service.videoToken);
-router.get('/poop', ctx => { ctx.app.emit('logging', 'poop', ctx) });
-router.get('/logging', ctx => { ctx.body = require('../../debug.log') });
+router.get('/', Service.Controller.description);
+router.get('/json', Service.Controller.generateJSON);
+router.post('/chat/token', Authenticate(['Admin', 'Player']), Service.Controller.chatToken);
+router.post(
+	'/video/token',
+	Authenticate(['Admin', 'Player']),
+	Service.Controller.videoToken,
+);
+router.get('/poop', ctx => {
+	ctx.app.emit('logging', 'poop', ctx);
+});
+router.get('/logging', ctx => {
+	ctx.body = require('../../debug.log');
+});
 
 const api = router.use(
-  user.routes(),
-  presidents.routes(),
-  card.routes(),
-  cardRank.routes(),
-  game.routes(),
-  gameConfiguration.routes(),
-  gameStatus.routes(),
-  inboxItem.routes(),
-  invite.routes(),
-  inviteStatus.routes(),
-  politicalRank.routes(),
-  status.routes(),
-  suit.routes()
+	Card.Service.routes(),
+	CardRank.Service.routes(),
+	Game.Service.routes(),
+	GameConfiguration.Service.routes(),
+	GameStatus.Service.routes(),
+	InboxItem.Service.routes(),
+	Invite.Service.routes(),
+	InviteStatus.Service.routes(),
+	PoliticalRank.Service.routes(),
+	Presidents.Service.routes(),
+	Status.Service.routes(),
+	Suit.Service.routes(),
+	User.Service.routes(),
 );
 
-module.exports = api;
+export default api;

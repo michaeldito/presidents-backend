@@ -1,11 +1,12 @@
-const Router = require('koa-router');
-const Authenticate = require('../../../middleware/Authenticate')
-const VerifyJWT = require('../../../middleware/VerifyJWT');
-const { getAll, getOne } = require('../controller');
+import Router from 'koa-router';
+
+import Authenticate from '../../../middleware/Authenticate';
+import VerifyJWT from '../../../middleware/VerifyJWT';
+import { getAll, getOne } from '../controller';
 
 const router = new Router({ prefix: '/statuses' });
 router.use(VerifyJWT);
 router.get('/', Authenticate(['Admin']), getAll);
 router.get('/:id', Authenticate(['Admin']), getOne);
 
-module.exports = router;
+export default router;
