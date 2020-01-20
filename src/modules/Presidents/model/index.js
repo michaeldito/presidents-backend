@@ -69,6 +69,51 @@ PresidentsSchema.methods.giveDrink = giveDrink;
 
 // utils
 PresidentsSchema.statics.calculateSkips = calculateSkips;
+PresidentsSchema.statics.shuffle = arr => {
+	const a = [...arr];
+	for (let i = a.length - 1; i > 0; i--) {
+		const j = Math.floor(Math.random() * (i + 1));
+		[a[i], a[j]] = [a[j], a[i]];
+	}
+	return a;
+};
+const create2DArray = rows => {
+	const A = [];
+	for (let i = 0; i < rows; i++) A[i] = [];
+	return A;
+};
+PresidentsSchema.statics.deal = (numPlayers, shuffled) => {
+	const dealtCards = create2DArray(numPlayers);
+	let i = 0;
+	while (shuffled.length > 0) {
+		dealtCards[i].push(shuffled.pop());
+		i = (i + 1) % numPlayers;
+	}
+	return dealtCards;
+};
+PresidentsSchema.statics.sortCards = cards => {
+	return cards.sort((a, b) => (a.cardRank.value > b.cardRank.value ? 1 : -1));
+};
+PresidentsSchema.statics.find3Clubs = allPlayerHands => {
+	let p = 0;
+	for (const player of allPlayerHands) {
+		for (const card of player) {
+			if (card.shortHand === '3Clubs') {
+				return p;
+			}
+		}
+		p += 1;
+	}
+
+	// should never reach here
+	throw new Error('3 of Clubs was not in the deck.');
+};
+
+PresidentsSchema.statics.areCardsOfSameRank = cards => {
+	const rank = cards[0].cardRank.value;
+	const badCards = cards.filter(card => card.cardRank.value !== rank);
+	return !badCards;
+};
 
 // plugins
 PresidentsSchema.plugin(autopopulate);

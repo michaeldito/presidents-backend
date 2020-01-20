@@ -1,4 +1,3 @@
-import utils from '../../../../utils';
 import Card from '../../../Card/model';
 import logger from '../../../../config/logger';
 
@@ -25,7 +24,7 @@ export default async function(turn) {
 		);
 
 	// 2 - is the current hand valid (all ranks the same)?
-	const areCardsValid = utils.areCardsValid(turn.cardsPlayed);
+	const areCardsValid = this.model('Presidents').areCardsValid(turn.cardsPlayed);
 	logger(
 		`[Presidents@shouldProcessTurn()] areCardsValid: ${areCardsValid}`,
 	);
@@ -72,10 +71,8 @@ export default async function(turn) {
 				this.turnToBeat.cardsPlayed,
 			)}`,
 		);
-		const cardsToBeat = await Card.find({
-			_id: { $in: this.turnToBeat.cardsPlayed },
-		});
-		areCardsBetter = await utils.areCardsBetter(cardsToBeat, turn.cardsPlayed);
+		const cardsToBeat = await Card.findManyByIds(this.turnToBeat.cardsPlayed);
+		areCardsBetter = this.model('Presidents').areCardsBetter(cardsToBeat, turn.cardsPlayed);
 		logger(
 			`[Presidents@shouldProcessTurn()] areCardsBetter: ${areCardsBetter}`,
 		);

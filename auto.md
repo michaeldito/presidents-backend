@@ -69,3 +69,15 @@ work => what are we doing? (str)
 ApiLog - user/register
 `[koa@GET('cards/')]`
 `[koa@GET('cards/') found # docs]`
+
+params = (layer, operation, description='', details='')
+- details is a stringified obj
+operations
+- Presidents@processTurn()
+- Koa@Put@/presidents/drinkDrink
+layer
+1. Middleware
+1. Controller handlers
+  2. Transaction
+  2. Model
+    3. Model

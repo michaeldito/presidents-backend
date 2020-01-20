@@ -1,6 +1,6 @@
 import logger from '../../../../config/logger';
 
-export default async function(handToBeat, cards) {
+export default function(handToBeat, cards) {
 	logger('[PresidentsGame@areCardsBetter()]');
 	const toBeat = handToBeat.map(c => {
 		c.shortHand;

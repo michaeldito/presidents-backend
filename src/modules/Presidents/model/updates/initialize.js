@@ -1,9 +1,4 @@
-import { 
-	deal, 
-	find3Clubs,
-	shuffle, 
-	sortCards 
-} from '../../../../utils';
+
 import logger from '../../../../config/logger';
 
 /**
@@ -21,6 +16,8 @@ import logger from '../../../../config/logger';
  */
 export default async function() {
 	logger('[Presidents@initialize()]');
+
+	const { deal, find3Clubs, shuffle, sortCards } = this.model('Presidents');
 
 	if (this.status.value === 'IN_PROGRESS') {
 		logger(
@@ -56,7 +53,7 @@ export default async function() {
 	const numPlayers = this.players.length;
 	const dealtCards = deal(numPlayers, shuffledDeck);
 	this.players.forEach(
-		player => (player.hand = sortCards(dealtCards[player.seatPosition])),
+		player => (player.hand = dealtCards[player.seatPosition]),
 	);
 	const seatPositionWith3Clubs = find3Clubs(dealtCards);
 	const playerWith3Clubs = this.players.find(
