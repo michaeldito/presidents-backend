@@ -1,4 +1,6 @@
 import GameStatus from '../../../GameStatus/model';
+import logger from '../../../../config/logger';
+
 /**
  * This method will initialize the next round of Presidents.
  * If the game hasn't started yet, it updates the status.
@@ -11,10 +13,10 @@ import GameStatus from '../../../GameStatus/model';
  * 
  */
 export default async function() {
-	console.log('[Presidents@initializeNextRound()]');
+	logger('[Presidents@initializeNextRound()]');
 
 	if (this.status.value === 'FINALIZED') {
-		console.log(
+		logger(
 			'[Presidents@initializeNextRound()] unable to init next round bc game is FINALIZED',
 		);
 		return Promise.reject(
@@ -22,7 +24,7 @@ export default async function() {
 		);
 	}
 	if (this.status.value === 'IN_PROGRESS') {
-		console.log(
+		logger(
 			'[Presidents@initializeNextRound()] game in progress - adding a round',
 		);
 		this.rounds.push({ turns: [] });
@@ -31,15 +33,15 @@ export default async function() {
 		}
 	}
 	if (this.status.value === 'NOT_STARTED') {
-		console.log(
+		logger(
 			`[Presidents@initializeNextRound()] this is the first round of the game`,
 		);
-		console.log(
+		logger(
 			`[Presidents@initializeNextRound()] setting startedAt and updating status to IN_PROGRESS`,
 		);
 		this.startedAt = new Date();
 		this.status = await GameStatus.findOne({ value: 'IN_PROGRESS' });
-		console.log('[Presidents@initializeNextRound()] adding a round');
+		logger('[Presidents@initializeNextRound()] adding a round');
 		this.rounds.push({ turns: [] });
 	}
 

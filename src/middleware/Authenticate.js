@@ -1,3 +1,4 @@
+import logger from '../config/logger';
 import User from '../modules/User/model';
 
 const Authenticate = allowedRoles => {
@@ -6,19 +7,19 @@ const Authenticate = allowedRoles => {
 		const doc = await User.findByToken(token);
 
 		if (!doc) {
-			console.log(`[Authentication] no user found for token`);
+			logger(`[Authentication] no user found for token`);
 			ctx.body = `[Authentication] no user found for token`;
 			return false;
 		}
 		if (!allowedRoles.find(role => role === doc.role)) {
-			console.log(
+			logger(
 				`[Authentication] DENIED - not in security groups ${allowedRoles}`,
 			);
 			ctx.body = `[Authentication] DENIED - not in security groups ${allowedRoles}`;
 			return false;
 		}
 
-		console.log(
+		logger(
 			`[Authentication] APPROVED - user is in 1 of secury groups ${allowedRoles}`,
 		);
 		ctx.body = `[Authentication] APPROVED - user is in 1 of secury groups ${allowedRoles}`;

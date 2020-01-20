@@ -1,4 +1,5 @@
 import Utils from '../../../../utils';
+import logger from '../../../../config/logger';
 
 /**
  * Algorithm:
@@ -18,17 +19,17 @@ import Utils from '../../../../utils';
  *     and therefore the current player's turn ended the round, so return true.
  */
 export default function() {
-	console.log('[Presidents@didCurrentPlayersLastTurnEndTheRound()]');
+	logger('[Presidents@didCurrentPlayersLastTurnEndTheRound()]');
 	const latestRound = this.rounds[this.rounds.length - 1];
-	console.log(`latestRound ${latestRound}`);
+	logger(`latestRound ${latestRound}`);
 	let playersLastTurnIdx;
 	let searchingForLastTurn = true;
 	let foundLastTurn = false;
 	let i = latestRound.turns.length;
-	console.log(`i ${i}`);
+	logger(`i ${i}`);
 
 	if (i < this.players.length) {
-		console.log(
+		logger(
 			`[Presidents@didCurrentPlayersLastTurnEndTheRound()] not all players have played a turn yet so no`,
 		);
 		return false;
@@ -43,7 +44,7 @@ export default function() {
 			foundLastTurn = true;
 		}
 	}
-	console.log(
+	logger(
 		`[Presidents@didCurrentPlayersLastTurnEndTheRound()] playersLastTurnIdx: ${playersLastTurnIdx}`,
 	);
 
@@ -51,7 +52,7 @@ export default function() {
 	// if it was a two then yes it did, regardless of if all players have played
 
 	if (!foundLastTurn) {
-		console.log(
+		logger(
 			`[Presidents@didCurrentPlayersLastTurnEndTheRound()] foundLastTurn: ${foundLastTurn}`,
 		);
 		return false;
@@ -60,7 +61,7 @@ export default function() {
 	const turns = latestRound.turns.slice(playersLastTurnIdx);
 	const playersLastTurn = turns[0];
 	if (playersLastTurn.wasSkipped) {
-		console.log(
+		logger(
 			`[Presidents@didCurrentPlayersLastTurnEndTheRound()] did they skip themself and it's still there turn?`,
 		);
 		const searchingForWhoCausedSkip = true;
@@ -69,10 +70,10 @@ export default function() {
 			const turn = latestRound.turns[i];
 			if (turn.didCauseSkips) {
 				if (this.currentPlayer.equals(turn.user)) {
-					console.log(`[Presidents@didCurrentPlayersLastTurnEndTheRound()] yes`);
+					logger(`[Presidents@didCurrentPlayersLastTurnEndTheRound()] yes`);
 					return true;
 				}
-				console.log(`[Presidents@didCurrentPlayersLastTurnEndTheRound()] no`);
+				logger(`[Presidents@didCurrentPlayersLastTurnEndTheRound()] no`);
 				return false;
 			}
 		}
@@ -80,7 +81,7 @@ export default function() {
 		return false;
 	}
 	if (playersLastTurn.wasPassed) {
-		console.log(
+		logger(
 			`[Presidents@didCurrentPlayersLastTurnEndTheRound()] wasPassed ${playersLastTurn.wasPassed}`,
 		);
 		return false;
@@ -88,19 +89,19 @@ export default function() {
 
 	i = 1;
 	let checkingForSkips = true;
-	console.log(
+	logger(
 		`[Presidents@didCurrentPlayersLastTurnEndTheRound()] checkingForSkips`,
 	);
 
 	while (checkingForSkips && i < turns.length) {
 		const turn = turns[i];
-		console.log(
+		logger(
 			`[Presidents@didCurrentPlayersLastTurnEndTheRound()] turn: ${turn.user} ${turn.wasSkipped}`,
 		);
 		if (!turn.wasSkipped) {
 			checkingForSkips = false;
 		} else {
-			console.log(
+			logger(
 				`[Presidents@didCurrentPlayersLastTurnEndTheRound()] skip found by: ${turn.user}`,
 			);
 			i++;
@@ -108,26 +109,26 @@ export default function() {
 	}
 
 	const checkingForPasses = true;
-	console.log(
+	logger(
 		`[Presidents@didCurrentPlayersLastTurnEndTheRound()] checkingForPasses`,
 	);
 	while (checkingForPasses && i < turns.length) {
 		const turn = turns[i];
 		if (!turn.wasPassed) {
-			console.log(
+			logger(
 				`[Presidents@didCurrentPlayersLastTurnEndTheRound()] user ${
 					turn.user
 				} played a better hand: ${turn.cardsPlayed.map(c => c.shortHand)}`,
 			);
 			return false;
 		}
-		console.log(
+		logger(
 			`[Presidents@didCurrentPlayersLastTurnEndTheRound()] turn for user: ${turn.user} was passed`,
 		);
 		i++;
 	}
 
-	console.log(
+	logger(
 		'[Presidents@didCurrentPlayersLastTurnEndTheRound()] yes it ended the round',
 	);
 	return true;

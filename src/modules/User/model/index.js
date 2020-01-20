@@ -2,6 +2,7 @@ import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import mongoose from 'mongoose';
 import unique from 'mongoose-unique-validator';
+import logger from '../../../config/logger';
 
 const UserSchema = new mongoose.Schema({
 	username: {
@@ -44,7 +45,7 @@ UserSchema.statics.findRandoms = function(howMany) {
 };
 
 UserSchema.statics.register = async function(user) {
-	console.log(`[User@register()] registering ${user.username}`);
+	logger(`[User@register()] registering ${user.username}`);
 	const salt = await bcrypt.genSalt(10);
 	const hash = await bcrypt.hash(user.password, salt);
 	user.password = hash;
@@ -54,7 +55,7 @@ UserSchema.statics.register = async function(user) {
 };
 
 UserSchema.methods.generateAuthToken = async function(options) {
-	console.log(`[User@generateAuthToken()] creating auth token`);
+	logger(`[User@generateAuthToken()] creating auth token`);
 	const token = jwt.sign(options, process.env.JWT_SECRET).toString();
 	this.token = token;
 	await this.save();
@@ -62,7 +63,7 @@ UserSchema.methods.generateAuthToken = async function(options) {
 };
 
 UserSchema.statics.findByCredentials = async function({ username, password }) {
-	console.log(`[User@findByCredentials()] searching for ${username}`);
+	logger(`[User@findByCredentials()] searching for ${username}`);
 	const user = await this.findOne({ username });
 
 	if (!user) return Promise.reject(new Error("username doesn't exist."));

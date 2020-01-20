@@ -1,3 +1,5 @@
+import logger from '../../../../config/logger';
+
 export default async function() {
 	console.log('[Presidents@getNextPlayer()]');
 

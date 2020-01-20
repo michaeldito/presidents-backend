@@ -1,5 +1,7 @@
+import logger from '../../../../config/logger';
+
 export default function(cards) {
-	console.log('[Presidents@areCardsValid()]');
+	logger('[Presidents@areCardsValid()]');
 
 	// is the current hand valid (all ranks the same)?
 	const currentHandCardRankValues = cards.map(card => card.cardRank.value);
@@ -9,7 +11,7 @@ export default function(cards) {
 	);
 
 	const result = !!areCardsValid;
-	console.log(`[Presidents@areCardsValid()] ${result}`);
+	logger(`[Presidents@areCardsValid()] ${result}`);
 
 	return result;
 }

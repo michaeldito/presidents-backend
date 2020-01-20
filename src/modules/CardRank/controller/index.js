@@ -1,7 +1,8 @@
+import logger from '../../../config/logger';
 import CardRank from '../model';
 
 export const getAll = async ctx => {
-	console.log(`[koa@GET('cardRanks/')]`);
+	logger(`[koa@GET('cardRanks/')]`);
 
 	try {
 		const docs = await CardRank.find({});
@@ -14,7 +15,7 @@ export const getAll = async ctx => {
 };
 
 export const getOne = async ctx => {
-	console.log(`[koa@PUT('cardRank/:id')]`);
+	logger(`[koa@PUT('cardRank/:id')]`);
 	const { id } = ctx.params;
 
 	try {

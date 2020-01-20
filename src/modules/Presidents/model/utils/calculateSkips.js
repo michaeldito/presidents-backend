@@ -1,13 +1,15 @@
+import logger from '../../../../config/logger';
+
 export default function(handToBeat, cards) {
-	console.log('[Presidents@calculateSkips()]');
-	console.log(
+	logger('[Presidents@calculateSkips()]');
+	logger(
 		`[Presidents@calculateSkips()] handToBeat: ${JSON.stringify(handToBeat)}`,
 	);
-	console.log(`[Presidents@calculateSkips()] cards: ${JSON.stringify(cards)}`);
+	logger(`[Presidents@calculateSkips()] cards: ${JSON.stringify(cards)}`);
 
 	// first hand of the game there will be no handToBeat
 	if (handToBeat.length === 0) {
-		console.log(`[Presidents@calculateSkips()] 0`);
+		logger(`[Presidents@calculateSkips()] 0`);
 		return 0;
 	}
 	// assume cards are valid and cards are better
@@ -15,13 +17,13 @@ export default function(handToBeat, cards) {
 	const cardRankValue = cards[0].cardRank.value;
 	if (handToBeatCardRankValue === cardRankValue) {
 		if (handToBeat.length === cards.length) {
-			console.log('[Presidents@calculateSkips()] 1');
+			logger('[Presidents@calculateSkips()] 1');
 			return 1;
 		}
 		const result = 1 + cards.length - handToBeat.length;
-		console.log(`[Presidents@calculateSkips()] ${result}`);
+		logger(`[Presidents@calculateSkips()] ${result}`);
 		return result;
 	}
-	console.log(`[Presidents@calculateSkips()] 0`);
+	logger(`[Presidents@calculateSkips()] 0`);
 	return 0;
 }

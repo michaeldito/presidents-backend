@@ -1,3 +1,5 @@
+import logger from '../../../../config/logger';
+
 /**
  * This method will add a user to a Presidents game.
  * It assigns a seatPosition to the player based on how many players
@@ -15,26 +17,26 @@
  *
  */
 export default async function(user) {
-	console.log('[Presidents@join()]');
-	console.log(`[Presidents@join()] user: ${user}`);
+	logger('[Presidents@join()]');
+	logger(`[Presidents@join()] user: ${user}`);
 
 	if (!user) {
-		console.log(`[Presidents@join()] missing arg user is required`);
+		logger(`[Presidents@join()] missing arg user is required`);
 		return Promise.reject(new Error('Missing argument, user is required.'));
 	}
 
 	if (this.status.value === 'IN_PROGRESS') {
-		console.log(`[Presidents@join()] cannot join game in progress`);
+		logger(`[Presidents@join()] cannot join game in progress`);
 		return Promise.reject(new Error('Cannot join game. It`s in progress.'));
 	}
 
 	if (this.status.value === 'FINALIZED') {
-		console.log(`[Presidents@join()] cannot join a finalized game`);
+		logger(`[Presidents@join()] cannot join a finalized game`);
 		return Promise.reject(new Error('Cannot join game. It`s finished.'));
 	}
 
 	if (this.players.length === this.config.maxPlayers) {
-		console.log(`[Presidents@join()] cannot join a full game`);
+		logger(`[Presidents@join()] cannot join a full game`);
 		return Promise.reject(new Error('Cannot join game. It is already full.'));
 	}
 
@@ -42,7 +44,7 @@ export default async function(user) {
 		player.user._id.equals(user._id),
 	);
 	if (hasUserJoined) {
-		console.log(`[Presidents@join()] user already joined`);
+		logger(`[Presidents@join()] user already joined`);
 		return Promise.reject(new Error('User has already joined game.'));
 	}
 
@@ -58,7 +60,7 @@ export default async function(user) {
 		player.politicalRank = user.nextGameRank;
 	}
 
-	console.log(`[Presidents@join()] adding player ${player}`);
+	logger(`[Presidents@join()] adding player ${player}`);
 	this.players.push(player);
 
 	return this.save();

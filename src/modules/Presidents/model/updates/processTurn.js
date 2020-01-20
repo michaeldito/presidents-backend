@@ -1,5 +1,6 @@
 import GameStatus from '../../../GameStatus/model';
 import PoliticalRank from '../../../PoliticalRank/model';
+import logger from '../../../../config/logger';
 
 /**
  * Preconditions:
@@ -23,8 +24,8 @@ import PoliticalRank from '../../../PoliticalRank/model';
  *     so good that it ended the round. If so mark it as a round ender.
  */
 export default async function(turn) {
-	console.log('[Presidents@processTurn()]');
-	console.log(
+	logger('[Presidents@processTurn()]');
+	logger(
 		`[Presidents@processTurn()] turn: ${JSON.stringify(turn, null, 2)}`,
 	);
 
@@ -38,18 +39,18 @@ export default async function(turn) {
 	});
 	console.table(userMap);
 
-	console.log('[Presidents@processTurn()] turn.cardsPlayed');
-	console.log(turn.cardsPlayed.map(card => card.shortHand));
+	logger('[Presidents@processTurn()] turn.cardsPlayed');
+	logger(turn.cardsPlayed.map(card => card.shortHand));
 
 	// Add the turn to the current round
 	const latestRound = this.rounds[this.rounds.length - 1];
 	latestRound.turns.push(turn);
-	console.log(`[Presidents@processTurn()] skipTurn: ${turn.wasSkipped}`);
+	logger(`[Presidents@processTurn()] skipTurn: ${turn.wasSkipped}`);
 
 	// If turn.endedRound than initialize the next round.
 	try {
 		if (turn.endedRound) {
-			console.log(
+			logger(
 				'[Presidents@processTurn()] Player played a round ending turn!',
 			);
 			await this.initializeNextRound();
@@ -60,15 +61,15 @@ export default async function(turn) {
 
 	// If the turn has cardsPlayed then remove them from the player's hand
 	const didPlayerPlayCards = turn.cardsPlayed.length > 0;
-	console.log(
+	logger(
 		`[Presidents@processTurn()] didPlayerPlayCards: ${didPlayerPlayCards}`,
 	);
 	const currentPlayer = this.players.find(player => {
 		const res = player.user._id.equals(turn.user);
-		console.log(`${player.user._id.toString()} === ${turn.user}: ${res}`);
+		logger(`${player.user._id.toString()} === ${turn.user}: ${res}`);
 		return res;
 	});
-	console.log(`[Presidents@processTurn()] currentPlayer: ${currentPlayer}`);
+	logger(`[Presidents@processTurn()] currentPlayer: ${currentPlayer}`);
 
 	if (didPlayerPlayCards) {
 		this.turnToBeat = latestRound.turns[latestRound.turns.length - 1];
@@ -81,7 +82,7 @@ export default async function(turn) {
 		});
 
 		currentPlayer.hand = cardsToKeep;
-		console.log(
+		logger(
 			`[Presidents@processTurn()] cardsToKeep: ${currentPlayer.hand.map(
 				card => card.shortHand,
 			)}`,
@@ -90,16 +91,16 @@ export default async function(turn) {
 
 	// If the currentPlayer has no more cards then assign them a rank for the next game
 	const isPlayerOutOfCards = currentPlayer.hand.length === 0;
-	console.log(
+	logger(
 		`[Presidents@processTurn()] isPlayerOutOfCards: ${isPlayerOutOfCards}`,
 	);
 	if (isPlayerOutOfCards) {
 		const finishedPlayers = this.players.filter(player => player.nextGameRank);
-		console.log(
+		logger(
 			`[Presidents@processTurn()] finishedPlayers: ${finishedPlayers}`,
 		);
 		const nextGameRankValue = finishedPlayers.length + 1;
-		console.log(
+		logger(
 			`[Presidents@processTurn()] nextGameRankValue: ${nextGameRankValue}`,
 		);
 		currentPlayer.nextGameRank = await PoliticalRank.findByValue(
@@ -110,7 +111,7 @@ export default async function(turn) {
 	// If only one other player has cards then finalize the game and set the rank for the last player
 	const playersWithCards = this.players.filter(player => player.hand.length > 0);
 	const isGameOver = playersWithCards.length === 1;
-	console.log(`[Presidents@processTurn()] isGameOver: ${isGameOver}`);
+	logger(`[Presidents@processTurn()] isGameOver: ${isGameOver}`);
 	if (isGameOver) {
 		this.status = await GameStatus.findOne({ value: 'FINALIZED' });
 		playersWithCards[0].nextGameRank = await PoliticalRank.findByName('Asshole');
@@ -123,7 +124,7 @@ export default async function(turn) {
 		turn.cardsPlayed[0].cardRank.value === 2 &&
 		currentPlayer.hand.length > 0
 	) {
-		console.log(`[Presidents@processTurn()] played a 2 and has more`);
+		logger(`[Presidents@processTurn()] played a 2 and has more`);
 		this.turnToBeat.remove();
 		return this.initializeNextRound();
 	}
@@ -134,7 +135,7 @@ export default async function(turn) {
 		turn.cardsPlayed[0].cardRank.value !== 2 &&
 		currentPlayer.hand.length === 0
 	) {
-		console.log(`[Presidents@processTurn()] played a 2 and is now out!`);
+		logger(`[Presidents@processTurn()] played a 2 and is now out!`);
 		this.currentPlayer = await this.getNextPlayer();
 		this.turnToBeat.remove();
 		return this.initializeNextRound();

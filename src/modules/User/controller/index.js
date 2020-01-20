@@ -1,9 +1,10 @@
+import logger from '../../../config/logger';
 import Transaction from '../../../utils/Transaction';
 import Presidents from '../../Presidents/model';
 import User from '../model';
 
 export const getAll = async ctx => {
-	console.log(`[koa@GET('users/')]`);
+	logger(`[koa@GET('users/')]`);
 	try {
 		const docs = await User.find({});
 		const body = { total: docs.length, data: docs };
@@ -15,7 +16,7 @@ export const getAll = async ctx => {
 };
 
 export const getOne = async ctx => {
-	console.log(`[koa@GET('users/:id')]`);
+	logger(`[koa@GET('users/:id')]`);
 	const { id } = ctx.params;
 	try {
 		const doc = await User.findById(id);
@@ -28,9 +29,9 @@ export const getOne = async ctx => {
 };
 
 export const register = async ctx => {
-	console.log(`[koa@POST('users/register')]`);
+	logger(`[koa@POST('users/register')]`);
 	const { username, email, password } = ctx.request.body;
-	console.log(`username: ${username}`);
+	logger(`username: ${username}`);
 	const role = username === 'jack' ? 'Admin' : 'Player';
 	let user = {
 		username,
@@ -68,7 +69,7 @@ export const register = async ctx => {
 };
 
 export const login = async ctx => {
-	console.log(`[koa@PUT('users/login')]`);
+	logger(`[koa@PUT('users/login')]`);
 	const { username, password } = ctx.request.body;
 	const credentials = { username, password };
 

@@ -1,10 +1,12 @@
+import logger from '../../../config/logger';
 import Card from '../model';
 
 export const getAll = async ctx => {
-	console.log(`[koa@GET('cards/')]`);
+	logger(`[koa@GET('cards/')]`);
 
 	try {
 		const docs = await Card.find({});
+		logger(`[koa@GET('cards/')] found ${docs.length} docs`);
 		const body = { total: docs.length, data: docs };
 		ctx.status = 200;
 		ctx.body = body;
@@ -14,7 +16,7 @@ export const getAll = async ctx => {
 };
 
 export const getOne = async ctx => {
-	console.log(`[koa@PUT('cards/:id')]`);
+	logger(`[koa@PUT('cards/:id')]`);
 	const { id } = ctx.params;
 
 	try {

@@ -18,8 +18,6 @@
     "db:command": "export DB_ACTION=command && export NODE_ENV=dev && node src/tests/db.js",
     "create-module": "node src/playground/module.js -- $*",
     "clean": "rm -r node_modules; rm -r log",
-    "pretty": "prettier --write \"src/**/*.js\"",
-    "pretty:check": "prettier --check \"src/**/*.js\"",
     "lint": "eslint --fix \"src/**/*.js\""
   },
   "author": "",

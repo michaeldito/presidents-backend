@@ -35,7 +35,13 @@ const logger = createLogger({
 	],
 });
 
-export default logger;
+const enabled = false;
+
+export default (msg, err) => 
+	enabled && err ? 
+		logger.error(msg) :
+			enabled && logger.info(msg);
+				
 // logger.info('Hello world');
 // logger.warn('Warning message');
 // logger.debug('Debugging info');

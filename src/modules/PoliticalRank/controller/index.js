@@ -1,7 +1,7 @@
 import PoliticalRank from '../model';
 
 export const getAll = async ctx => {
-	console.log(`[koa@GET('politicalRanks/')]`);
+	logger(`[koa@GET('politicalRanks/')]`);
 
 	try {
 		const docs = await PoliticalRank.find({});
@@ -14,7 +14,7 @@ export const getAll = async ctx => {
 };
 
 export const getOne = async ctx => {
-	console.log(`[koa@GET('politicalRanks/:id')]`);
+	logger(`[koa@GET('politicalRanks/:id')]`);
 	const { id } = ctx.params;
 
 	try {

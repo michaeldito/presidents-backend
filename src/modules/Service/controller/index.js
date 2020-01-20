@@ -1,5 +1,6 @@
 import mongoose from 'mongoose';
 
+import logger from '../../../config/logger';
 import { 
 	chatToken as createChatToken, 
 	videoToken as createVideoToken 
@@ -26,7 +27,7 @@ export const generateJSON = ctx => {
 	const schemas = {};
 	const embedded = {};
 	// let schema = mongoose.model('Card').schema.paths;
-	// console.log(schema)
+	// logger(schema)
 	for (const model of models) {
 		schemas[model] = {};
 		const { schema } = mongoose.model(model);
@@ -118,21 +119,21 @@ export const generateJSON = ctx => {
 };
 
 export const chatToken = ctx => {
-	console.log(`POST@[api/v1/chat/token] ctx.body`);
-	console.log(ctx.request.body);
+	logger(`POST@[api/v1/chat/token] ctx.body`);
+	logger(ctx.request.body);
 	const { identity } = ctx.request.body;
 	const token = createChatToken(identity);
 	ctx.body = JSON.stringify(token);
-	console.log(`POST@[api/v1/chat/token] body: ${ctx.body}`);
+	logger(`POST@[api/v1/chat/token] body: ${ctx.body}`);
 };
 
 export const videoToken = ctx => {
-	console.log(`POST@[api/v1/video/token] ctx.body`);
-	console.log(ctx.request.body);
+	logger(`POST@[api/v1/video/token] ctx.body`);
+	logger(ctx.request.body);
 	const { identity } = ctx.request.body;
 	const token = createVideoToken(identity);
 	ctx.body = JSON.stringify(token);
-	console.log(`POST@[api/v1/chat/token] body: ${ctx.body}`);
+	logger(`POST@[api/v1/chat/token] body: ${ctx.body}`);
 };
 
 const Controller = {

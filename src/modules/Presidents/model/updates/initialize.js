@@ -4,6 +4,7 @@ import {
 	shuffle, 
 	sortCards 
 } from '../../../../utils';
+import logger from '../../../../config/logger';
 
 /**
  * This method will initialize a Presidents game.
@@ -19,10 +20,10 @@ import {
  * 
  */
 export default async function() {
-	console.log('[Presidents@initialize()]');
+	logger('[Presidents@initialize()]');
 
 	if (this.status.value === 'IN_PROGRESS') {
-		console.log(
+		logger(
 			'[Presidents@initialize()] cannot initialize an in progress game',
 		);
 		return Promise.reject(
@@ -31,14 +32,14 @@ export default async function() {
 	}
 
 	if (this.status.value === 'FINALIZED') {
-		console.log('[Presidents@initialize()] cannot initialize a finalized game');
+		logger('[Presidents@initialize()] cannot initialize a finalized game');
 		return Promise.reject(
 			new Error('Unable to start game. It has already finished.'),
 		);
 	}
 
 	if (this.players.length < 2) {
-		console.log(
+		logger(
 			'[Presidents@initialize()] cannot initialize a game with less than 2 players',
 		);
 		return Promise.reject(
@@ -46,7 +47,7 @@ export default async function() {
 		);
 	}
 
-	console.log(
+	logger(
 		'[Presidents@initialize()] shuffling, dealing, and assigning current player',
 	);
 

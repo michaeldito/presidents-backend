@@ -1,4 +1,5 @@
 import Utils from '../../../../utils';
+import logger from '../../../../config/logger';
 
 /**
  * Preconditions: The userIds for fromUser and toUser are associated with players in the game.
@@ -14,7 +15,7 @@ import Utils from '../../../../utils';
  *  7. Save and return.
  */
 export default async function(fromUser, toUser) {
-	console.log('[Presidents@giveDrink()]');
+	logger('[Presidents@giveDrink()]');
 
 	const fromPlayer = this.players.find(player =>
 		player.user._id.equals(fromUser._id),
@@ -35,7 +36,7 @@ export default async function(fromUser, toUser) {
 	// President is #1, Vice President #2, etc. so rank is actually reversed
 	const doesGiverOutRankReceiver =
 		fromPlayer.politicalRank.value < toPlayer.politicalRank.value;
-	console.log(
+	logger(
 		`[Presidents@giveDrink()] doesGiverOutRankReceiver ${doesGiverOutRankReceiver}`,
 	);
 
@@ -48,17 +49,17 @@ export default async function(fromUser, toUser) {
 	const { drinksDrunk } = toPlayer;
 	const doesReceiverHaveDrinksToDrink =
 		toPlayer.drinksReceived.length - drinksDrunk;
-	console.log(
+	logger(
 		`[Presidents@giveDrink()] doesReceiverHaveDrinksToDrink ${doesReceiverHaveDrinksToDrink}`,
 	);
 	if (doesReceiverHaveDrinksToDrink) {
 		const drinksToDrink = toPlayer.drinksReceived.slice(drinksDrunk);
-		console.log(drinksToDrink);
-		console.log(fromUser);
+		logger(drinksToDrink);
+		logger(fromUser);
 		const doesReceiverAlreadyHaveADrinkFromGiver = drinksToDrink.find(
 			drink => drink.sentBy.toString() === fromUser._id.toString(),
 		);
-		console.log(
+		logger(
 			`[Presidents@giveDrink()] doesReceiverAlreadyHaveADrinkFromGiver ${doesReceiverAlreadyHaveADrinkFromGiver}`,
 		);
 		if (doesReceiverAlreadyHaveADrinkFromGiver) {

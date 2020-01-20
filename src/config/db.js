@@ -1,6 +1,7 @@
 import mongoose from 'mongoose';
 
 import config from '../config/config';
+import logger from './logger';
 config();
 
 export const connect = async () => {
@@ -14,8 +15,8 @@ export const connect = async () => {
 		await mongoose.connect(process.env.MONGODB_URI, options);
 		console.log('[Database] connected to mongodb');
 	} catch (err) {
-		console.log('[Database] failed to connect to mongodb');
-		console.log(`[Database] error: ${err}`);
+		logger('[Database] failed to connect to mongodb');
+		logger(`[Database] error: ${err}`);
 	}
 };
 
@@ -24,8 +25,8 @@ export const close = async () => {
 		await mongoose.connection.close();
 		console.log('[Database] disconnected from mongodb');
 	} catch (err) {
-		console.log('[Database] failed to disconnect from mongodb');
-		console.log(`[Database] error: ${err}`);
+		logger('[Database] failed to disconnect from mongodb');
+		logger(`[Database] error: ${err}`);
 	}
 };
 

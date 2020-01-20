@@ -1,3 +1,4 @@
+import logger from '../config/logger';
 import User from '../modules/User/model';
 
 const GameMembership = async (ctx, next) => {
@@ -6,18 +7,18 @@ const GameMembership = async (ctx, next) => {
 	const doc = await User.findByToken(token);
 
 	if (!doc) {
-		console.log(`[GameMembership] DENIED - no user found for token`);
+		logger(`[GameMembership] DENIED - no user found for token`);
 		ctx.body = `[GameMembership] DENIED - no user found for token`;
 		return false;
 	}
 	const isMember = doc.gamesPlayed.find(game => game._id === id);
 	if (isMember) {
-		console.log(`[GameMembership] DENIED - user is not a member of the game`);
+		logger(`[GameMembership] DENIED - user is not a member of the game`);
 		ctx.body = `[GameMembership] DENIED - user is not a member of the game`;
 		return false;
 	}
 
-	console.log(`[GameMembership] APPROVED - user is a member of the game`);
+	logger(`[GameMembership] APPROVED - user is a member of the game`);
 	ctx.body = `[GameMembership] APPROVED - user is a member of the game`;
 	return next();
 };

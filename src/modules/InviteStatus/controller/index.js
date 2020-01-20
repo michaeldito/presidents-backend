@@ -1,7 +1,8 @@
+import logger from '../../../config/logger';
 import InviteStatus from '../model';
 
 export const getAll = async ctx => {
-	console.log(`[koa@GET('inviteStatuses/')]`);
+	logger(`[koa@GET('inviteStatuses/')]`);
 
 	try {
 		const docs = await InviteStatus.find({});
@@ -14,7 +15,7 @@ export const getAll = async ctx => {
 };
 
 export const getOne = async ctx => {
-	console.log(`[koa@GET('inviteStatuses/:id')]`);
+	logger(`[koa@GET('inviteStatuses/:id')]`);
 	const { id } = ctx.params;
 
 	try {

@@ -57,3 +57,15 @@
   }
 }
 
+
+
+ApiLog - cards/
+`[koa@GET('cards/')]`
+`[koa@GET('cards/') found # docs]`
+
+on enter => route url (str)
+work => what are we doing? (str)
+
+ApiLog - user/register
+`[koa@GET('cards/')]`
+`[koa@GET('cards/') found # docs]`

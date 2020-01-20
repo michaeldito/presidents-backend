@@ -1,3 +1,5 @@
+import logger from '../config/logger';
+
 export const create2DArray = rows => {
 	const A = [];
 	for (let i = 0; i < rows; i++) A[i] = [];
@@ -45,7 +47,7 @@ export const find3Clubs = allPlayerHands => {
 };
 
 export const areCardsValid = cards => {
-	console.log('[PresidentsGame@areCardsValid()]');
+	logger('[PresidentsGame@areCardsValid()]');
 
 	// is the current hand valid (all ranks the same)?
 	const currentHandCardRankValues = cards.map(card => card.cardRank.value);
@@ -55,7 +57,7 @@ export const areCardsValid = cards => {
 	);
 
 	const result = !!areCardsValid;
-	console.log(`[PresidentsGame@areCardsValid()] ${result}`);
+	logger(`[PresidentsGame@areCardsValid()] ${result}`);
 
 	return result;
 };
@@ -82,9 +84,9 @@ export const areCardsOfSameRank = cards => {
 };
 
 export const areCardsBetter = async (handToBeat, cards) => {
-	console.log('[PresidentsGame@areCardsBetter()]');
-	console.log(`[PresidentsGame@areCardsBetter()] handToBeat: ${handToBeat}`);
-	console.log(`[PresidentsGame@areCardsBetter()] cards: ${cards}`);
+	logger('[PresidentsGame@areCardsBetter()]');
+	logger(`[PresidentsGame@areCardsBetter()] handToBeat: ${handToBeat}`);
+	logger(`[PresidentsGame@areCardsBetter()] cards: ${cards}`);
 
 	const handToBeatCardRankValues = handToBeat.map(card => card.cardRank.value);
 	const currentHandCardRankValues = cards.map(card => card.cardRank.value);
@@ -92,7 +94,7 @@ export const areCardsBetter = async (handToBeat, cards) => {
 	// case 3: current hand has fewer cards than previous hand
 	// case 3a: if it contains a 2 it's a valid turn
 	const doesContainTwo = !!currentHandCardRankValues.find(value => value === 2);
-	console.log(
+	logger(
 		`[PresidentsGame@areCardsBetter()] doesContainTwo: ${doesContainTwo}`,
 	);
 	if (doesContainTwo) {
@@ -102,7 +104,7 @@ export const areCardsBetter = async (handToBeat, cards) => {
 	// case 1: current hand has more cards
 	const doesCurrentHandHaveMoreCards =
 		currentHandCardRankValues.length > handToBeatCardRankValues.length;
-	console.log(
+	logger(
 		`[PresidentsGame@areCardsBetter()] doesCurrentHandHaveMoreCards: ${doesCurrentHandHaveMoreCards}`,
 	);
 	if (doesCurrentHandHaveMoreCards) {
@@ -112,14 +114,14 @@ export const areCardsBetter = async (handToBeat, cards) => {
 	// case 2: current and previous hand have equal number of cards
 	const areNumberOfCardsEqual =
 		currentHandCardRankValues.length === handToBeatCardRankValues.length;
-	console.log(
+	logger(
 		`[PresidentsGame@areCardsBetter()] areNumberOfCardsEqual: ${areNumberOfCardsEqual}`,
 	);
 	if (areNumberOfCardsEqual) {
 		// case2a: cards are of same rank
 		const areCardsSameRank =
 			currentHandCardRankValues[0] === handToBeatCardRankValues[0];
-		console.log(
+		logger(
 			`[PresidentsGame@areCardsBetter()] areCardsSameRank: ${areCardsSameRank}`,
 		);
 		if (areCardsSameRank) {
@@ -129,7 +131,7 @@ export const areCardsBetter = async (handToBeat, cards) => {
 		// case2b: current hand's card rank beats previous turns card rank
 		const doesCurrentHandRankBeatPrevious =
 			currentHandCardRankValues[0] > handToBeatCardRankValues[0];
-		console.log(
+		logger(
 			`[PresidentsGame@areCardsBetter()] doesCurrentHandRankBeatPrevious: ${doesCurrentHandRankBeatPrevious}`,
 		);
 		if (doesCurrentHandRankBeatPrevious) {

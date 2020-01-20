@@ -1,7 +1,8 @@
+import logger from '../../../config/logger';
 import GameConfiguration from '../model';
 
 export const getAll = async ctx => {
-	console.log(`[koa@GET('gameConfigurations/')]`);
+	logger(`[koa@GET('gameConfigurations/')]`);
 
 	try {
 		const docs = await GameConfiguration.find({});
@@ -14,7 +15,7 @@ export const getAll = async ctx => {
 };
 
 export const getOne = async ctx => {
-	console.log(`[koa@GET('gameConfigurations/:id')]`);
+	logger(`[koa@GET('gameConfigurations/:id')]`);
 	const { id } = ctx.params;
 
 	try {

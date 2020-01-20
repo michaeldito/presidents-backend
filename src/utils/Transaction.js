@@ -1,25 +1,27 @@
 import mongoose from 'mongoose';
 
+import logger from '../config/logger';
+
 export default async function(fn) {
-	console.log('[Transaction] beginning session');
+	logger('[Transaction] beginning session');
 	const session = await mongoose.startSession();
 
 	try {
-		console.log('[Transaction] beginning transaction');
+		logger('[Transaction] beginning transaction');
 		session.startTransaction();
-
 		await fn();
-
-		console.log('[Transaction] committing transaction');
+		logger('[Transaction] committing transaction');
 		await session.commitTransaction();
-		console.log('[Transaction] transaction complete');
-	} catch (err) {
+		logger('[Transaction] transaction complete');
+	} 
+	catch (err) {
 		await session.abortTransaction();
-		console.log('[Transaction] transaction aborted');
-		console.log(err);
+		logger('[Transaction] transaction aborted');
+		logger(err);
 		throw err;
-	} finally {
-		console.log('[Transaction] ending session');
+	} 
+	finally {
+		logger('[Transaction] ending session');
 		session.endSession();
 	}
 }

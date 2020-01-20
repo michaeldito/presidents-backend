@@ -1,5 +1,6 @@
 import { Types } from 'mongoose';
 
+import logger from '../../../config/logger';
 import Transaction from '../../../utils/Transaction';
 import Card from '../../Card/model';
 import GameConfiguration from '../../GameConfiguration/model';
@@ -8,11 +9,11 @@ import User from '../../User/model';
 import Presidents from '../model';
 
 export const getAll = async ctx => {
-	console.log(`[koa@GET('/presidents/getAll')]`);
+	logger(`[koa@GET('/presidents/getAll')]`);
 
 	try {
 		const docs = await Presidents.find({});
-		console.log(`[koa@GET('/presidents/getAll')] found ${docs.length} docs`);
+		logger(`[koa@GET('/presidents/getAll')] found ${docs.length} docs`);
 		const body = { total: docs.length, data: docs };
 
 		ctx.body = body;
@@ -23,13 +24,13 @@ export const getAll = async ctx => {
 };
 
 export const getOne = async ctx => {
-	console.log(`[koa@GET('/presidents/getOne')]`);
+	logger(`[koa@GET('/presidents/getOne')]`);
 
 	const { id } = ctx.params;
 
 	try {
 		const doc = await Presidents.findById(id);
-		console.log(`[koa@GET('/presidents/getOne')] found: ${!!doc}`);
+		logger(`[koa@GET('/presidents/getOne')] found: ${!!doc}`);
 		const body = doc.toObject();
 
 		ctx.status = 200;
@@ -40,7 +41,7 @@ export const getOne = async ctx => {
 };
 
 export const details = async ctx => {
-	console.log(`[koa@GET('/presidents/details')]`);
+	logger(`[koa@GET('/presidents/details')]`);
 
 	try {
 		let docs = await Presidents.find({});
@@ -74,7 +75,7 @@ export const details = async ctx => {
 			})
 			.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
 
-		console.log(`[koa@GET('/presidents/details')] found ${docs.length} docs`);
+		logger(`[koa@GET('/presidents/details')] found ${docs.length} docs`);
 		const body = docs;
 
 		ctx.status = 200;
@@ -85,10 +86,10 @@ export const details = async ctx => {
 };
 
 export const create = async ctx => {
-	console.log(`[koa@POST('/presidents/create')]`);
-	console.log(ctx.request.body);
+	logger(`[koa@POST('/presidents/create')]`);
+	logger(ctx.request.body);
 	const { name, createdBy, gameType } = ctx.request.body;
-	console.log({ name, createdBy, gameType });
+	logger({ name, createdBy, gameType });
 
 	const rules = {
 		doubleSkips: false,
@@ -110,28 +111,28 @@ export const create = async ctx => {
 		let doc;
 
 		await Transaction(async () => {
-			console.log(`[koa@POST('/presidents')] finding config`);
+			logger(`[koa@POST('/presidents')] finding config`);
 			let config = await GameConfiguration.findByName(gameType);
 			config = config._id;
 
-			console.log(`[koa@POST('/presidents')] finding not started status`);
+			logger(`[koa@POST('/presidents')] finding not started status`);
 			let status = await GameStatus.findByValue('NOT_STARTED');
 			status = status._id;
 
-			console.log(`[koa@POST('/presidents')] finding user`);
+			logger(`[koa@POST('/presidents')] finding user`);
 			let user = await User.findById(createdBy);
-			console.log(`user: ${user}`);
+			logger(`user: ${user}`);
 			user = user._id;
 			const game = { name, status, createdBy: user, rules, config };
 
-			console.log(`[koa@POST('/presidents')] creating the game`);
-			console.log(`[koa@POST('/presidents')] ${game}`);
+			logger(`[koa@POST('/presidents')] creating the game`);
+			logger(`[koa@POST('/presidents')] ${game}`);
 			doc = await Presidents.create(game);
 
-			console.log(`[koa@POST('/presidents')] adding creator to the game`);
+			logger(`[koa@POST('/presidents')] adding creator to the game`);
 			doc = await doc.join(user);
 
-			console.log(
+			logger(
 				`[koa@POST('/presidents')] adding game to creators gamesPlayed`,
 			);
 			user = await User.findOne(user);
@@ -150,23 +151,23 @@ export const create = async ctx => {
 };
 
 export const join = async ctx => {
-	console.log(`[koa@PUT('/presidents/join')]`);
+	logger(`[koa@PUT('/presidents/join')]`);
 
 	const { id } = ctx.params;
 	const { userId } = ctx.request.body;
-	console.log(`[koa@PUT('/presidents/join')] user: ${userId}`);
+	logger(`[koa@PUT('/presidents/join')] user: ${userId}`);
 
 	try {
 		let doc;
 
 		await Transaction(async () => {
-			console.log(`[koa@POST('/presidents/join')] adding user to game`);
+			logger(`[koa@POST('/presidents/join')] adding user to game`);
 			let user = await User.findById(userId);
-			console.log(`[koa@PUT('/presidents/join')] ${user}`);
+			logger(`[koa@PUT('/presidents/join')] ${user}`);
 			doc = await Presidents.findById(id);
 			doc = await doc.join(user);
 
-			console.log(
+			logger(
 				`[koa@POST('/presidents/join')] adding game to creators gamesPlayed`,
 			);
 			user.gamesPlayed.push(doc._id);
@@ -188,7 +189,7 @@ export const join = async ctx => {
 };
 
 export const initialize = async ctx => {
-	console.log(`[koa@PUT('/presidents/initialize')]`);
+	logger(`[koa@PUT('/presidents/initialize')]`);
 
 	const { id } = ctx.params;
 
@@ -216,12 +217,12 @@ export const initialize = async ctx => {
 };
 
 export const processTurn = async ctx => {
-	console.log(`[koa@PUT('/presidents/processTurn')]`);
+	logger(`[koa@PUT('/presidents/processTurn')]`);
 
 	const { id } = ctx.params;
 	let { user, cardsPlayed, wasPassed } = ctx.request.body;
 	let turn;
-	console.log(
+	logger(
 		`[koa@PUT('/presidents/processTurn')] cardsPlayed: ${JSON.stringify(
 			cardsPlayed,
 		)}`,
@@ -248,7 +249,7 @@ export const processTurn = async ctx => {
 			}
 			// user is passing
 			if (wasPassed && user._id === doc.currentPlayer.toString()) {
-				console.log(`[koa@PUT('presidents/processTurn')] turn was a pass`);
+				logger(`[koa@PUT('presidents/processTurn')] turn was a pass`);
 				if (cardsPlayed.length > 0) {
 					ctx.throw(400, 'cannot pass and submit cards');
 				}
@@ -267,20 +268,20 @@ export const processTurn = async ctx => {
 				body = doc.toObject();
 			} else {
 				// user is not passing
-				console.log(`[koa@PUT('presidents/processTurn')] turn is not a pass`);
+				logger(`[koa@PUT('presidents/processTurn')] turn is not a pass`);
 				turn = { user: user._id, cardsPlayed, wasPassed };
 
-				console.log(
+				logger(
 					`[koa@PUT('presidents/processTurn')] should we process this turn?`,
 				);
 				const shouldProcessTurn = await doc.shouldProcessTurn(turn);
 
 				// is the turn valid and better, or a special card?
 				if (shouldProcessTurn) {
-					console.log(
+					logger(
 						`[koa@PUT('presidents/processTurn')] we need to process this turn`,
 					);
-					console.log(
+					logger(
 						`[koa@PUT('presidents/processTurn')] will it cause any skips?`,
 					);
 					turn.skipsRemaining = Presidents.calculateSkips(
@@ -295,7 +296,7 @@ export const processTurn = async ctx => {
 
 					// process any skips
 					if (turn.didCauseSkips) {
-						console.log(
+						logger(
 							`[koa@PUT('presidents/processTurn')] we also need to process ${turn.skipsRemaining} skips`,
 						);
 						while (turn.skipsRemaining) {
@@ -309,7 +310,7 @@ export const processTurn = async ctx => {
 								skipsRemaining: turn.skipsRemaining,
 								endedRound: false,
 							};
-							console.log(
+							logger(
 								`[koa@PUT('presidents/processTurn')] time to process a skip`,
 							);
 							doc = await doc.processTurn(skipTurn);
@@ -319,16 +320,16 @@ export const processTurn = async ctx => {
 			}
 
 			if (doc.status.value === 'IN_PROGRESS') {
-				console.log(
+				logger(
 					`[koa@PUT('presidents/processTurn')] did the next player's last turn end the round?`,
 				);
 				const didCurrentPlayersLastTurnEndTheRound = doc.didCurrentPlayersLastTurnEndTheRound();
-				console.log(
+				logger(
 					`[koa@PUT('presidents/processTurn')] didCurrentPlayersLastTurnEndTheRound ${didCurrentPlayersLastTurnEndTheRound}`,
 				);
 
 				if (didCurrentPlayersLastTurnEndTheRound) {
-					console.log(
+					logger(
 						`[koa@PUT('presidents/processTurn')] let's initialize the next round & reset the hand to beat`,
 					);
 					doc = await doc.initializeNextRound();
@@ -351,7 +352,7 @@ export const processTurn = async ctx => {
 };
 
 export const giveDrink = async ctx => {
-	console.log(`[koa@PUT('/presidents/giveDrink')]`);
+	logger(`[koa@PUT('/presidents/giveDrink')]`);
 
 	const { id } = ctx.params;
 	let { toUser, fromUser } = ctx.request.body;
@@ -382,7 +383,7 @@ export const giveDrink = async ctx => {
 };
 
 export const drinkDrink = async ctx => {
-	console.log(`[koa@PUT('/presidents/drinkDrink')]`);
+	logger(`[koa@PUT('/presidents/drinkDrink')]`);
 
 	const { id } = ctx.params;
 	const { userId } = ctx.request.body;
@@ -412,7 +413,7 @@ export const drinkDrink = async ctx => {
 };
 
 export const rematch = async ctx => {
-	console.log(`[koa@POST('/presidents/rematch')]`);
+	logger(`[koa@POST('/presidents/rematch')]`);
 
 	const { id } = ctx.params;
 
@@ -423,7 +424,7 @@ export const rematch = async ctx => {
 		await Transaction(async () => {
 			doc = await Presidents.findById(id);
 
-			console.log(
+			logger(
 				`[koa@POST('/presidents/rematch')] sorting players by seat position`,
 			);
 			const players = doc.players.sort((a, b) =>
@@ -431,7 +432,7 @@ export const rematch = async ctx => {
 			);
 
 			const usersToAdd = [];
-			console.log(
+			logger(
 				`[koa@POST('/presidents/rematch')] grabbing their userId and nextGameRanks`,
 			);
 			for (const player of players) {
@@ -443,20 +444,20 @@ export const rematch = async ctx => {
 			const name = `${doc.name}-rematch-${Types.ObjectId()}`;
 			const status = await GameStatus.findByValue('NOT_STARTED');
 
-			console.log(
+			logger(
 				`[koa@POST('/presidents/rematch')] creating a rematch game with same configs`,
 			);
 			doc = await Presidents.create({ name, status, rules, createdBy, config });
 
 			for (const user of usersToAdd) {
-				console.log(`[koa@POST('/presidents/rematch')] adding user ${user._id}`);
+				logger(`[koa@POST('/presidents/rematch')] adding user ${user._id}`);
 				doc = await doc.join(user);
 				const userDoc = await User.findById(user._id);
 				userDoc.gamesPlayed.push(doc._id);
 				await userDoc.save();
 			}
 
-			console.log(`[koa@POST('/presidents/rematch')] initializing the game`);
+			logger(`[koa@POST('/presidents/rematch')] initializing the game`);
 			doc = await doc.initialize();
 			doc = await doc.initializeNextRound();
 		});

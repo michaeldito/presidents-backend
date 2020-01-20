@@ -7,18 +7,21 @@ import SocketIO from 'socket.io';
 
 import api from '../api';
 import { connect } from '../config/db';
+import logger from '../config/logger';
 import middleware from '../middleware';
 
-console.log(`JWT: ${JSON.stringify(process.env.JWT_SECRET)}`);
 const app = new Koa();
 const server = http.createServer(app.callback());
 app.io = new SocketIO(server);
-
 app.use(middleware);
 app.use(api.routes(), api.allowedMethods());
 app.on('ui log', (msg, ctx) => {
-	logger.info(msg);
+ logger(msg);
 });
+app.on('error', (err, ctx) => {
+	logger(err.message, true);
+});
+
 
 app.io.on('connection', client => {
 	console.log(`[Socket] new client connected: ${client.id}`);

@@ -1,21 +1,22 @@
 import utils from '../../../../utils';
 import Card from '../../../Card/model';
+import logger from '../../../../config/logger';
 
 export default async function(turn) {
-	console.log('[Presidents@shouldProcessTurn()]');
-	console.log(
+	logger('[Presidents@shouldProcessTurn()]');
+	logger(
 		`[Presidents@shouldProcessTurn()] currentPlayer: ${this.currentPlayer}`,
 	);
-	console.log(
+	logger(
 		`[Presidents@shouldProcessTurn()] turnToBeat: ${JSON.stringify(
 			this.turnToBeat,
 		)}`,
 	);
-	console.log(`[Presidents@shouldProcessTurn()] turn: ${JSON.stringify(turn)}`);
+	logger(`[Presidents@shouldProcessTurn()] turn: ${JSON.stringify(turn)}`);
 
 	// 1 - is it this players turn?
 	const isPlayersTurn = turn.user === this.currentPlayer.toString();
-	console.log(
+	logger(
 		`[Presidents@shouldProcessTurn()] isPlayersTurn: ${isPlayersTurn}`,
 	);
 	if (!isPlayersTurn)
@@ -25,7 +26,7 @@ export default async function(turn) {
 
 	// 2 - is the current hand valid (all ranks the same)?
 	const areCardsValid = utils.areCardsValid(turn.cardsPlayed);
-	console.log(
+	logger(
 		`[Presidents@shouldProcessTurn()] areCardsValid: ${areCardsValid}`,
 	);
 	if (!areCardsValid)
@@ -39,12 +40,12 @@ export default async function(turn) {
 			card => card.shortHand === '3Clubs',
 		);
 		if (contains3Clubs) {
-			console.log(
+			logger(
 				'[Presidents@shouldProcessTurn()] found 3 clubs on first hand of game',
 			);
 			return Promise.resolve(true);
 		}
-		console.log(
+		logger(
 			'[Presidents@shouldProcessTurn()] first turn of game is not 3 clubs',
 		);
 		return Promise.reject(
@@ -54,7 +55,7 @@ export default async function(turn) {
 
 	// first turn of every other round can be anything
 	if (this.rounds[this.rounds.length - 1].length === 0) {
-		console.log(
+		logger(
 			'[Presidents@shouldProcessTurn()] first turn of any round can be whatever',
 		);
 		return Promise.resolve(true);
@@ -66,7 +67,7 @@ export default async function(turn) {
 		if (this.turnToBeat === undefined || this.turnToBeat === null) {
 			return Promise.resolve(true);
 		}
-		console.log(
+		logger(
 			`[Presidents@shouldProcessTurn()] cardsPlayed: ${JSON.stringify(
 				this.turnToBeat.cardsPlayed,
 			)}`,
@@ -75,7 +76,7 @@ export default async function(turn) {
 			_id: { $in: this.turnToBeat.cardsPlayed },
 		});
 		areCardsBetter = await utils.areCardsBetter(cardsToBeat, turn.cardsPlayed);
-		console.log(
+		logger(
 			`[Presidents@shouldProcessTurn()] areCardsBetter: ${areCardsBetter}`,
 		);
 	} catch (err) {
@@ -86,7 +87,7 @@ export default async function(turn) {
 		);
 	}
 
-	console.log(
+	logger(
 		`[Presidents@shouldProcessTurn()] shouldProcessTurn: ${areCardsBetter}`,
 	);
 	if (areCardsBetter) {
