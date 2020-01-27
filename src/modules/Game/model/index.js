@@ -55,6 +55,10 @@ GameSchema.virtual('displayId').get(function() {
 	return `${kind} - ${name}`;
 });
 
+GameSchema.statics.findManyByIds = function(ids) {
+	return this.find({ _id: { $in: ids } });
+};
+
 GameSchema.plugin(require('mongoose-unique-validator'));
 GameSchema.plugin(require('mongoose-autopopulate'));
 
