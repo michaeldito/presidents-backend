@@ -168,10 +168,10 @@ export default async () =>
 				}
 
 				const toPlayer = doc.players.find(
-					player => player.user.toString() === toUser.toString(),
+					player => player.user.equals(toUser),
 				);
 				const fromPlayer = doc.players.find(
-					player => player.user.toString() === fromUser.toString(),
+					player => player.user.equals(fromUser),
 				);
 
 				expect(toPlayer.drinksReceived.length).toBe(1);

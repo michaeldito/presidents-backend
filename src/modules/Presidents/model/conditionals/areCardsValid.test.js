@@ -1,7 +1,7 @@
 import expect from 'expect';
 
 import Presidents from '..';
-import Card from '../../';
+import Card from '../../../Card/model';
 
 export default async () =>
 	describe('#areCardsValid()', function() {

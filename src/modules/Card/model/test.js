@@ -1,8 +1,6 @@
 import expect from 'expect';
 
-import { 
-	close, 
-	connect} from '../../../config/db';
+import db from '../../../config/db';
 import CardRank from '../../CardRank/model';
 import { 
 	drop as dropCardRanks, 
@@ -32,8 +30,8 @@ export const init = async () => {
 
 	const cards = [];
 
-	for (suit of suits) {
-		for (cardRank of cardRanks) {
+	for (let suit of suits) {
+		for (let cardRank of cardRanks) {
 			const shortHand = cardRank.character + suit.name;
 			cards.push({ cardRank, suit, shortHand });
 		}
@@ -136,5 +134,4 @@ export const test = async () =>
 		});
 	});
 
-const Test = { init, drop, test };
-export default Test;
+export default { init, drop, test };

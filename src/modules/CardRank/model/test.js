@@ -1,8 +1,6 @@
 import expect from 'expect';
 
-import { 
-	close, 
-	connect} from '../../../config/db';
+import db from '../../../config/db';
 import CardRank from '.';
 import cardRanks from './data';
 
@@ -134,4 +132,3 @@ export const test = async () =>
 		});
 	});
 
-export default Test;

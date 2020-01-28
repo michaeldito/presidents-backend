@@ -128,7 +128,7 @@ export default async () =>
 					name: 'process turn prez game',
 				});
 				const lastPlayer = doc.players.find(
-					player => player.user.toString() === this.user2._id.toString(),
+					player => player.user.equals(this.user2._id),
 				);
 				expect(lastPlayer.hand.length).toBe(0);
 			});
@@ -145,7 +145,7 @@ export default async () =>
 					name: 'process turn prez game',
 				});
 				const firstPlayerDone = doc.players.find(
-					player => player.user.toString() === this.user2._id.toString(),
+					player => player.user.equals(this.user2._id),
 				);
 				expect(firstPlayerDone.nextGameRank.name).toBe('President');
 			});
@@ -174,7 +174,7 @@ export default async () =>
 				});
 				expect(doc.status.value).toBe('FINALIZED');
 				const lastPlacePlayer = doc.players.find(
-					player => player.user.toString() === this.user1._id.toString(),
+					player => player.user.equals(this.user1._id)
 				);
 				expect(lastPlacePlayer.nextGameRank.name).toBe('Asshole');
 			});

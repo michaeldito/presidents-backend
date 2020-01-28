@@ -1,34 +1,15 @@
-const { test: cardTests } = require('./Card/model/test');
-const { test: cardRankTests } = require('./CardRank/model/test');
-const { test: gameTests } = require('./Game/model/test');
-const { test: gameConfigTests } = require('./GameConfiguration/model/test');
-const { test: gameStatusTests } = require('./GameStatus/model/test');
-const { test: inboxItemTests } = require('./InboxItem/model/test');
-const { test: inviteTests } = require('./Invite/model/test');
-const { test: inviteStatusTests } = require('./InviteStatus/model/test');
-const { test: politicalRankTests } = require('./PoliticalRank/model/test');
-const { test: presidentsTests } = require('./Presidents/model/test');
-const { test: statusTests } = require('./Status/model/test');
-const { test: suitTests } = require('./Suit/model/test');
-const { test: userTests } = require('./User/model/test');
+import { test as cardTests } from './Card/model/test';
+import { test as cardRankTests } from './CardRank/model/test';
+import { test as gameTests } from './Game/model/test';
+import { test as gameConfigTests } from './GameConfiguration/model/test';
+import { test as gameStatusTests } from './GameStatus/model/test';
+import { test as politicalRankTests } from './PoliticalRank/model/test';
+import { test as presidentsTests } from './Presidents/model/test';
+import { test as statusTests } from './Status/model/test';
+import { test as suitTests } from './Suit/model/test';
+import { test as userTests } from './User/model/test';
 
-module.exports.modelSuite = async () => {
-	await suitTests();
-	await cardRankTests();
-	await cardTests();
-	await gameConfigTests();
-	await politicalRankTests();
-	await statusTests();
-	await gameStatusTests();
-	await inboxItemTests();
-	await inviteStatusTests();
-	await inviteTests();
-	await userTests();
-	await gameTests();
-	await presidentsTests();
-};
-
-module.exports.models = {
+export const tests = {
 	suitTests,
 	cardRankTests,
 	cardTests,
@@ -36,9 +17,6 @@ module.exports.models = {
 	politicalRankTests,
 	statusTests,
 	gameStatusTests,
-	inboxItemTests,
-	inviteStatusTests,
-	inviteTests,
 	userTests,
 	gameTests,
 	presidentsTests,

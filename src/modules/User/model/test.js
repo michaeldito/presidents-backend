@@ -1,9 +1,7 @@
 import chai from 'chai';
 import expect from 'expect';
 
-import { 
-	close, 
-	connect} from '../../../config/db';
+import db from '../../../config/db';
 import User from '.';
 import users from './data';
 
@@ -75,35 +73,6 @@ export const test = async () =>
 					const message = 'A password is required to create a user.';
 
 					expect(error.errors.password.message).toBe(message);
-				});
-
-				it('token.access is required', async function() {
-					const user = {
-						username: 'username',
-						password: 'password',
-						token: {
-							value: 'tokenvalue',
-						},
-					};
-					const instance = new User(user);
-					const error = instance.validateSync();
-					const message = "An access is required for every user's token.";
-					expect(error.errors['token.access'].message).toBe(message);
-				});
-
-				it('value is required', async function() {
-					const user = {
-						username: 'username',
-						password: 'password',
-						token: {
-							access: 'access',
-						},
-					};
-					const instance = new User(user);
-					const error = instance.validateSync();
-					const message = "A value is required for every user's token.";
-
-					expect(error.errors['token.value'].message).toBe(message);
 				});
 			});
 		});

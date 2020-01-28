@@ -35,7 +35,7 @@ const logger = createLogger({
 	],
 });
 
-const enabled = false;
+const enabled = 0;
 
 export default (msg, err) => 
 	enabled && err ? 

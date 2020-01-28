@@ -201,8 +201,9 @@ export default async () =>
 				});
 				const { players } = doc;
 				const currentPlayer = players.find(
-					player => player.user.toString() === doc.currentPlayer.toString(),
+					player => player.user._id.equals(doc.currentPlayer),
 				);
+
 				expect(
 					currentPlayer.hand.find(card => card.shortHand === '3Clubs'),
 				).toBeTruthy();

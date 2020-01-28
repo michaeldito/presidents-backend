@@ -1,8 +1,6 @@
 import expect from 'expect';
 
-import { 
-	close, 
-	connect} from '../../../config/db';
+import db from '../../../config/db';
 import GameStatus from './';
 import gameStatuses from './data';
 

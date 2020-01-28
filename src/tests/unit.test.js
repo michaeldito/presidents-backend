@@ -1,51 +1,58 @@
-import { models,modelSuite } from '../modules/tests';
+import { tests } from '../modules/tests';
 
 const model = process.argv[process.argv.length - 1];
 
-const testSuite = async () => {
+const testSuite = async (model) => {
 	switch (model) {
 		case 'card':
-			await models.cardTests();
+			await tests.cardTests();
 			break;
 		case 'cardrank':
-			await models.cardRankTests();
+			await tests.cardRankTests();
 			break;
 		case 'game':
-			await models.gameTests();
+			await tests.gameTests();
 			break;
-		case 'config':
-			await models.gameConfigTests();
+		case 'gameconfiguration':
+			await tests.gameConfigTests();
 			break;
 		case 'gamestatus':
-			await models.gameStatusTests();
-			break;
-		case 'inboxitem':
-			await models.inboxItemTests();
-			break;
-		case 'invite':
-			await models.inviteTests();
-			break;
-		case 'invitestatus':
-			await models.inviteStatusTests();
+			await tests.gameStatusTests();
 			break;
 		case 'politicalrank':
-			await models.politicalRankTests();
+			await tests.politicalRankTests();
 			break;
 		case 'presidents':
-			await models.presidentsTests();
+			await tests.presidentsTests();
 			break;
 		case 'status':
-			await models.statusTests();
+			await tests.statusTests();
 			break;
 		case 'suit':
-			await models.suitTests();
+			await tests.suitTests();
 			break;
 		case 'user':
-			await models.userTests();
+			await tests.userTests();
 			break;
 		default:
-			await modelSuite();
+			await tests.suitTests();
+			await tests.cardRankTests();
+			await tests.cardTests();
+			await tests.gameConfigTests();
+			await tests.politicalRankTests();
+			await tests.statusTests();
+			await tests.gameStatusTests();
+			await tests.userTests();
+			await tests.gameTests();
+			await tests.presidentsTests();
 	}
 };
 
-testSuite();
+(async () => {
+	try {
+		await testSuite(model);
+	} catch (e) {
+		console.log('[Unit:Test] test suite failed');
+		console.log(e);
+	}
+})();

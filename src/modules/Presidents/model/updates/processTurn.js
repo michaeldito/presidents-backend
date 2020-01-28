@@ -1,6 +1,6 @@
+import logger from '../../../../config/logger';
 import GameStatus from '../../../GameStatus/model';
 import PoliticalRank from '../../../PoliticalRank/model';
-import logger from '../../../../config/logger';
 
 /**
  * Preconditions:
@@ -37,7 +37,7 @@ export default async function(turn) {
 		};
 		return p;
 	});
-	console.table(userMap);
+	logger(userMap);
 
 	logger('[Presidents@processTurn()] turn.cardsPlayed');
 	logger(turn.cardsPlayed.map(card => card.shortHand));
@@ -74,6 +74,7 @@ export default async function(turn) {
 	if (didPlayerPlayCards) {
 		this.turnToBeat = latestRound.turns[latestRound.turns.length - 1];
 
+		logger(`[Presidents@processturn()] this: ${JSON.stringify(this, null, 2)}`);
 		const cardsToKeep = currentPlayer.hand.filter(card => {
 			const cardThatDidntGetPlayed = !turn.cardsPlayed.find(
 				cardPlayed => cardPlayed._id.toString() === card._id.toString(),

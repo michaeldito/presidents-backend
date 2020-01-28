@@ -1,9 +1,7 @@
 import expect from 'expect';
 import mongoose from 'mongoose';
 
-import { 
-	close, 
-	connect} from '../../../config/db';
+import db from '../../../config/db';
 import {
 	drop as dropCards,
 	init as initCards,

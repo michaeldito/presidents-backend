@@ -1,6 +1,6 @@
 import expect from 'expect';
 
-import Card from '../../';
+import Card from '../../../Card/model';
 import Presidents from '../../model';
 
 export default async () =>

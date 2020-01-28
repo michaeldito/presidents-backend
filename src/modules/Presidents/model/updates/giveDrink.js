@@ -1,5 +1,5 @@
-import Utils from '../../../../utils';
 import logger from '../../../../config/logger';
+import Utils from '../../../../utils';
 
 /**
  * Preconditions: The userIds for fromUser and toUser are associated with players in the game.

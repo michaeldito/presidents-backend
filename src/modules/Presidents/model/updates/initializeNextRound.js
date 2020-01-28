@@ -1,5 +1,5 @@
-import GameStatus from '../../../GameStatus/model';
 import logger from '../../../../config/logger';
+import GameStatus from '../../../GameStatus/model';
 
 /**
  * This method will initialize the next round of Presidents.

@@ -158,7 +158,7 @@ export default async () =>
 				} catch (err) {}
 
 				const player2 = doc.players.find(
-					player => player.user.toString() === this.user2._id.toString(),
+					player => player.user.equals(this.user2._id),
 				);
 				expect(player2.drinksDrunk).toBe(1);
 			});

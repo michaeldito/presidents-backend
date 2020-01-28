@@ -13,7 +13,7 @@ export default async () =>
 		before(async function() {
 			const status = await GameStatus.findByValue('NOT_STARTED');
 			const config = await GameConfiguration.findOne({ name: 'Presidents' });
-			const user1 = mongoose.Types.ObjectId();
+			const user1 = await User.findByUsername('tommypastrami');
 			const createdBy = user1;
 			const name = 'get next player prez game';
 			const rules = {
@@ -53,13 +53,13 @@ export default async () =>
 
 		describe('successful', function() {
 			before(async function() {
-				const user2 = mongoose.Types.ObjectId();
-				const user3 = mongoose.Types.ObjectId();
-				const user4 = mongoose.Types.ObjectId();
-				const user5 = mongoose.Types.ObjectId();
-				const user6 = mongoose.Types.ObjectId();
-				const user7 = mongoose.Types.ObjectId();
-				const user8 = mongoose.Types.ObjectId();
+				const user2 = await User.findByUsername('jethro');
+				const user3 = await User.findByUsername('johnnyroastbeef');
+				const user4 = await User.findByUsername('bella');
+				const user5 = await User.findByUsername('tony');
+				const user6 = await User.findByUsername('tammy');
+				const user7 = await User.findByUsername('malory');
+				const user8 = await User.findByUsername('bobby');
 				const users = [user2, user3, user4, user5, user6, user7, user8];
 				const doc = await Presidents.findOne({
 					name: 'get next player prez game',
@@ -84,7 +84,7 @@ export default async () =>
 				// console.log(`start ${current}`)
 				while (i > 0) {
 					const next = await doc.getNextPlayer();
-					doc.currentPlayer = next.user;
+					doc.currentPlayer = next;
 					// console.log(`next ${doc.currentPlayer}`)
 					await doc.save();
 					i--;

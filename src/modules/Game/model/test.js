@@ -1,8 +1,6 @@
 import expect from 'expect';
 
-import { 
-	close, 
-	connect} from '../../../config/db';
+import db from '../../../config/db';
 import { 
 	drop as dropCards, 
 	init as initCards} from '../../Card/model/test';
@@ -10,12 +8,12 @@ import {
 	drop as dropCardRanks,
 	init as initCardRanks,
 } from '../../CardRank/model/test';
-import GameConfiguration from '../../GameConfiguration';
+import GameConfiguration from '../../GameConfiguration/model';
 import {
 	drop as dropGameConfigurations,
 	init as initGameConfigurations,
 } from '../../GameConfiguration/model/test';
-import GameStatus from '../../GameStatus';
+import GameStatus from '../../GameStatus/model';
 import {
 	drop as dropGameStatuses,
 	init as initGameStatuses,
@@ -23,9 +21,9 @@ import {
 import { 
 	drop as dropSuits, 
 	init as initSuits	} from '../../Suit/model/test';
-import User from '../../User';
+import User from '../../User/model';
 import { drop as dropUsers,init as initUsers } from '../../User/model/test';
-import Game from './';
+import Game from '.';
 
 export const init = async () => {
 	const count = await Game.countDocuments({});

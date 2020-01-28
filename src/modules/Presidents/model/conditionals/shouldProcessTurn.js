@@ -1,5 +1,5 @@
-import Card from '../../../Card/model';
 import logger from '../../../../config/logger';
+import Card from '../../../Card/model';
 
 export default async function(turn) {
 	logger('[Presidents@shouldProcessTurn()]');
@@ -14,7 +14,7 @@ export default async function(turn) {
 	logger(`[Presidents@shouldProcessTurn()] turn: ${JSON.stringify(turn)}`);
 
 	// 1 - is it this players turn?
-	const isPlayersTurn = turn.user === this.currentPlayer.toString();
+	const isPlayersTurn = this.currentPlayer.equals(turn.user);
 	logger(
 		`[Presidents@shouldProcessTurn()] isPlayersTurn: ${isPlayersTurn}`,
 	);
