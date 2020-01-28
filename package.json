@@ -18,7 +18,9 @@
     "db:command": "export DB_ACTION=command && export NODE_ENV=dev && node src/tests/db.js",
     "create-module": "node src/playground/module.js -- $*",
     "clean": "rm -r node_modules; rm -r log",
-    "lint": "eslint --fix \"src/**/*.js\""
+    "lint": "eslint --fix \"src/**/*.js\"",
+    "docker:build": "docker build . -t prez-docker-api",
+    "docker:run": "docker run -p 8080:8080 prez-docker-api"
   },
   "author": "",
   "license": "ISC",

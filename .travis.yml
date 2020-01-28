@@ -1,9 +1,20 @@
 language: node_js
+
 node_js:
 - 10
+
+services:
+  - docker
+
+install:
+  - docker build . -t prez-docker-api
+  - docker run -p 8080:8080 prez-docker-api
+
 before_script:
 - npm install -g mocha
+
 script:
 - npm run test
+
 notifications:
   slack: larrysquad:UpeUfCs6ty4vrmNJ4tWai01o
