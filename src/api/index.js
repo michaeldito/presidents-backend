@@ -26,12 +26,6 @@ router.post(
 	Authenticate(['Admin', 'Player']),
 	Service.Controller.videoToken,
 );
-router.get('/poop', ctx => {
-	ctx.app.emit('logging', 'poop', ctx);
-});
-router.get('/logging', ctx => {
-	ctx.body = require('../../debug.log');
-});
 
 const api = router.use(
 	Card.Service.routes(),
