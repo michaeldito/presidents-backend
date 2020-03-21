@@ -21,6 +21,8 @@ const config = {
 };
 
 const envConfig = config[env];
+console.log('envConfig');
+console.log(envConfig);
 
 export default () => {
 	Object.keys(envConfig).forEach(key => {
