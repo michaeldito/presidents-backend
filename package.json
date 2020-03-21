@@ -5,9 +5,8 @@
   "main": "index.js",
   "scripts": {
     "build": "babel src -d dist",
-    "start": "npm run build && nodemon dist/index.js",
+    "start": "npm install && npm run build && nodemon dist/index.js",
     "serve": "npm run build && node dist/index.js",
-    "postinstall": "npm run build",
     "start:local": "export NODE_ENV=prod && nodemon --exec babel-node src/server/index.js",
     "test": "export NODE_ENV=dev && mocha --require @babel/register --require babel-polyfill --timeout 15000 --exit src/tests/*",
     "test:unit": "export NODE_ENV=dev && mocha --require @babel/register --require babel-polyfill --timeout 15000 --exit src/tests/unit* -- $*",
@@ -53,7 +52,21 @@
     "should": "^13.2.3",
     "socket.io": "^2.3.0",
     "twilio": "^3.37.1",
-    "winston": "^3.2.1"
+    "winston": "^3.2.1",
+    "@babel/core": "^7.8.3",
+    "@babel/node": "^7.8.7",
+    "@babel/preset-env": "^7.8.3",
+    "@babel/register": "^7.8.3",
+    "babel-eslint": "^10.0.3",
+    "babel-polyfill": "^6.26.0",
+    "eslint": "^6.8.0",
+    "eslint-config-prettier": "^6.9.0",
+    "eslint-plugin-import": "^2.20.0",
+    "eslint-plugin-mocha": "^6.2.2",
+    "eslint-plugin-simple-import-sort": "^5.0.0",
+    "mocha": "^7.0.1",
+    "prettier": "^1.19.1",
+    "pretty-quick": "^2.0.1"
   },
   "engines": {
     "node": ">=10"
