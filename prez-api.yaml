@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: prez-api
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      prez-api: web
+  template:
+    metadata:
+      labels:
+        prez-api: web
+    spec:
+      containers:
+      - name: prez-api
+        image: prez-api:1.0
+---
+apiVersion: v1
+kind: Service
+metadata: 
+  name: prez-api-entry
+  namespace: default
+spec:
+  type: NodePort
+  selector:
+    bb: web
+  ports:
+  - port: 8080
+    targetPort: 8080
+    nodePort: 30001
