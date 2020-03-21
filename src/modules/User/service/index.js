@@ -1,7 +1,6 @@
 import Router from 'koa-router';
 
 import Authenticate from '../../../middleware/Authenticate';
-// const VerifyJWT from '../../../middleware/VerifyJWT');
 import { getAll, getOne, login, profile,register } from '../controller';
 
 const router = new Router({ prefix: '/users' });

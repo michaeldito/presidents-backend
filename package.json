@@ -4,7 +4,6 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "heroku-postbuild": "npm install",
     "start": "babel-node src/index.js",
     "heroku-prebuild": "npm install",
     "build:bad": "babel src -d dist",

@@ -2,7 +2,6 @@ import Router from 'koa-router';
 
 import Authenticate from '../../../middleware/Authenticate';
 import GameMembership from '../../../middleware/GameMembership';
-import VerifyJWT from '../../../middleware/VerifyJWT';
 import {
 	create,
 	details,
@@ -17,7 +16,6 @@ import {
 } from '../controller';
 
 const router = new Router({ prefix: '/presidents' });
-router.use(VerifyJWT);
 router.get('/', getAll);
 router.get('/details', Authenticate(['Admin', 'Player']), details);
 router.post('/create', Authenticate(['Admin', 'Player']), create);
