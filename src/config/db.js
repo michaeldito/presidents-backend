@@ -9,6 +9,7 @@ export const connect = async () => {
 		useNewUrlParser: true,
 		useCreateIndex: true,
 		useFindAndModify: false,
+		useUnifiedTopology: true
 	};
 	mongoose.Promise = global.Promise;
 	try {
