@@ -5,9 +5,9 @@ import {
 	chatToken as createChatToken, 
 	videoToken as createVideoToken 
 } from '../../../config/tokens';
-import models from '../models.json';
-import schemas from '../schemas.json';
-import services from '../services.json';
+import models from '../models';
+import schemas from '../schemas';
+import services from '../services';
 
 export const description = ctx => {
 	const classes = {};

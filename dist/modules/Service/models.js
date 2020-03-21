@@ -1,0 +1,74 @@
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+var _default = {
+  "Card": {
+    "virtuals": ["kind", "id"],
+    "statics": ["getDeck"],
+    "methods": []
+  },
+  "CardRank": {
+    "virtuals": ["kind", "id"],
+    "statics": ["getAll", "findByChar"],
+    "methods": []
+  },
+  "Game": {
+    "virtuals": ["id"],
+    "statics": [],
+    "methods": []
+  },
+  "GameConfiguration": {
+    "virtuals": ["kind", "id"],
+    "statics": [],
+    "methods": []
+  },
+  "Status": {
+    "virtuals": ["id"],
+    "statics": ["findByValue"],
+    "methods": []
+  },
+  "GameStatus": {
+    "virtuals": ["id"],
+    "statics": ["findByValue"],
+    "methods": []
+  },
+  "InboxItem": {
+    "virtuals": ["kind", "id"],
+    "statics": [],
+    "methods": []
+  },
+  "Invite": {
+    "virtuals": ["kind", "id"],
+    "statics": [],
+    "methods": []
+  },
+  "InviteStatus": {
+    "virtuals": ["id"],
+    "statics": ["findByValue"],
+    "methods": []
+  },
+  "PoliticalRank": {
+    "virtuals": ["kind", "id"],
+    "statics": ["findByName", "findByValue", "getRanks"],
+    "methods": []
+  },
+  "Presidents": {
+    "virtuals": ["id"],
+    "statics": ["areCardsValid", "areCardsBetter", "calculateSkips"],
+    "methods": ["shouldProcessTurn", "didCurrentPlayersLastTurnEndTheRound", "getNextPlayer", "join", "initialize", "initializeNextRound", "processTurn", "drinkDrink", "giveDrink"]
+  },
+  "Suit": {
+    "virtuals": ["kind", "id"],
+    "statics": ["findAll", "findByName"],
+    "methods": []
+  },
+  "User": {
+    "virtuals": ["kind", "id"],
+    "statics": ["findByUsername", "findRandoms", "register", "findByCredentials", "findByToken"],
+    "methods": ["generateAuthToken"]
+  }
+};
+exports.default = _default;

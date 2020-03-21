@@ -1,5 +1,5 @@
-{
-  "Card": {
+export default {
+    "Card": {
       "shortHand": {
           "type": "String",
           "required": true,

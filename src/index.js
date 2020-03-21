@@ -1,14 +1,14 @@
-import config from '../config/config';
+import config from './config/config';
 config();
 
 import http from 'http';
 import Koa from 'koa';
 import SocketIO from 'socket.io';
 
-import api from '../api';
-import { connect } from '../config/db';
-import logger from '../config/logger';
-import middleware from '../middleware';
+import api from './api';
+import { connect } from './config/db';
+import logger from './config/logger';
+import middleware from './middleware';
 
 const app = new Koa();
 let server = http.createServer(app.callback());
