@@ -73,24 +73,6 @@ export const login = async ctx => {
 	const { username, password } = ctx.request.body;
 	const credentials = { username, password };
 
-	ctx.app.emit(
-		'log',
-		JSON.stringify({
-			service: {
-				name: 'User',
-				operation: {
-					path: '/login',
-					methodType: 'PUT',
-					controller: {
-						params: [],
-						body: { username, password },
-					},
-				},
-			},
-		}),
-		ctx,
-	);
-
 	try {
 		const user = await User.findByCredentials(credentials);
 
@@ -98,8 +80,7 @@ export const login = async ctx => {
 		const options = {
 			type: 'web',
 			exp: Math.floor(cookieExpiration / 1000 + 60 * 1), // expire the access_token 1m after the cookie
-			_id: user._id.toHexString(),
-			access: 'user',
+			_id: user._id.toHexString()
 		};
 		const token = await user.generateAuthToken(options);
 

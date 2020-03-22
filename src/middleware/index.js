@@ -1,4 +1,4 @@
-import cors from 'kcors';
+import cors from '@koa/cors';
 import bodyParser from 'koa-bodyparser';
 import compose from 'koa-compose';
 import logger from 'koa-logger';
@@ -18,8 +18,10 @@ const middleware = [
 	bodyParser(),
 	logger(),
 	cors({
-		credentials: true
-	}),
+		credentials: true,
+		exposeHeaders: ['Access-Token', 'Cookie'],
+		keepHeadersOnError: true
+	})
 ];
 
 const Middleware = compose(middleware);
