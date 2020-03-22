@@ -18,10 +18,10 @@ const middleware = [
 	bodyParser(),
 	logger(),
 	cors({
+		origin: 'https://larrypresidents.netlify.com',
 		credentials: true,
-		exposeHeaders: ['Access-Token', 'Cookie'],
-		keepHeadersOnError: true
-	})
+		exposeHeaders: ['Access-Token', 'Cookie']
+	}),
 ];
 
 const Middleware = compose(middleware);

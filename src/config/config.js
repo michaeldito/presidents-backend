@@ -20,11 +20,7 @@ const config = {
   }
 };
 
-console.log('process.env.NODE_ENV');
-console.log(process.env.NODE_ENV);
 const envConfig = config[env];
-console.log('envConfig');
-console.log(envConfig);
 
 export default () => {
 	Object.keys(envConfig).forEach(key => {
