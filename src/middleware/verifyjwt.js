@@ -1,7 +1,7 @@
 const jwt = require('koa-jwt');
 
 module.exports = jwt({
-  secret: process.env.JWT_SECRET,
+  secret: "1234",
   cookie: 'access_token',
   key: 'jwtdata',
   debug: true
