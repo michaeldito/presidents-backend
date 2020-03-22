@@ -1,12 +1,10 @@
 const Router = require('koa-router');
 const Authenticate = require('../../../middleware/Authenticate')
 const GameMembership = require('../../../middleware/GameMembership')
-const VerifyJWT = require('../../../middleware/VerifyJWT');
 const { getAll, getOne, details, create, join, initialize, 
   processTurn, giveDrink, drinkDrink, rematch } = require('../controller');
 
 const router = new Router({ prefix: '/presidents' });
-router.use(VerifyJWT);
 router.get('/', getAll);
 router.get('/details', Authenticate(['Admin', 'Player']), details);
 router.post('/create', Authenticate(['Admin', 'Player']), create);

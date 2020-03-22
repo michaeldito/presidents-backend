@@ -51,6 +51,8 @@ module.exports.register = async ctx => {
       exp: Math.floor(cookieExpiration / 1000 + (60 * 1)), // expire the access_token 1m after the cookie
       _id: user._id.toHexString(),
     };
+
+    console.log('creating aut token')
     const token = await user.generateAuthToken(options)
   
     ctx.cookies.set('access_token', token, {
@@ -58,6 +60,7 @@ module.exports.register = async ctx => {
       expires: new Date(cookieExpiration),
     });
   
+    console.log('auth token set')
     const body = { ...user.toObject(), loggedIn: true, registered: true };
     
     ctx.status = 200;

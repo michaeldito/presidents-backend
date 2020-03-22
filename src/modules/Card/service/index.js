@@ -4,7 +4,6 @@ const VerifyJWT = require('../../../middleware/VerifyJWT');
 const { getAll, getOne } = require('../controller');
 
 const router = new Router({ prefix: '/cards' });
-router.use(VerifyJWT);
 router.get('/', Authenticate(['Admin']), getAll);
 router.get('/:id', Authenticate(['Admin']), getOne);
 
