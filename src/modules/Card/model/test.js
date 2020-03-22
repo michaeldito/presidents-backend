@@ -6,7 +6,7 @@ const Suit = require('../../Suit/model');
 const Card = require('.');
 const db = require('../../../config/db');
 const expect = require('expect');
-
+// old state
 
 const init = async () => {
   const count = await Card.countDocuments({});
