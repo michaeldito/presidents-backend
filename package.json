@@ -31,6 +31,7 @@
     "koa": "^2.7.0",
     "koa-bodyparser": "^4.2.0",
     "koa-compose": "^4.1.0",
+    "koa-cookies": "^2.0.5",
     "koa-jwt": "^3.3.2",
     "koa-logger": "^3.2.0",
     "koa-router": "^7.3.0",

@@ -1,5 +1,6 @@
 const User = require('../model');
 const Presidents = require('../../Presidents/model');
+const { clearCookie, setCookie } = require('koa-cookies')
 
 module.exports.getAll = async ctx => {
   console.log(`[koa@GET('users/')]`);
@@ -53,14 +54,11 @@ module.exports.register = async ctx => {
     };
 
     console.log('creating aut token')
-    const token = await user.generateAuthToken(options)
-  
-    ctx.cookies.set('access_token', token, {
-      httpOnly: true,
-      expires: new Date(cookieExpiration),
-    });
-  
-    console.log('auth token set')
+    const token = await user.generateAuthToken(options);
+
+    setCookie('access_token', token)(ctx);
+    console.log('auth token set');
+
     const body = { ...user.toObject(), loggedIn: true, registered: true };
     
     ctx.status = 200;
@@ -88,11 +86,10 @@ module.exports.login = async ctx => {
       access: 'user'
     };
     const token = await user.generateAuthToken(options)
-  
-    ctx.cookies.set('access_token', token, {
-      httpOnly: true,
-      expires: new Date(cookieExpiration),
-    });
+    console.log('user token generated');
+    console.dir(token);
+
+    setCookie('access_token', token)(ctx);
   
     const body = { ...user.toObject(), loggedIn: true };
     
