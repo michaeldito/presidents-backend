@@ -56,9 +56,7 @@ module.exports.register = async ctx => {
     console.log('creating aut token')
     const token = await user.generateAuthToken(options);
 
-    ctx.cookies.set('access_token', token, {
-      httpOnly: true
-    });
+    ctx.cookies.set('access_token', token);
     console.log('auth token set');
 
     const body = { ...user.toObject(), loggedIn: true, registered: true };
@@ -91,9 +89,7 @@ module.exports.login = async ctx => {
     console.log('user token generated');
     console.dir(token);
 
-    ctx.cookies.set('access_token', token, {
-      httpOnly: true
-    });
+    ctx.cookies.set('access_token', token);
   
     const body = { ...user.toObject(), loggedIn: true };
     
