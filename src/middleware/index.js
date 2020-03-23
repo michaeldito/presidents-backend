@@ -23,6 +23,7 @@ const setCorsHeaders = async (ctx, next) => {
     ctx.set('Access-Control-Allow-Headers', 'Content-Type');
     ctx.set('Access-Control-Max-Age', '42');
     ctx.set('Access-Control-Allow-Credentials', 'true');
+    ctx.set('Access-Control-Expose-Headers', ['Access-Token', 'Cookie']);
   }
   await next();
 };
@@ -31,11 +32,7 @@ const middleware = [
   errorHandler,
   bodyParser(), 
   logger(), 
-  setCorsHeaders,
-  cors({
-    credentials: true,
-    exposeHeaders: ['Access-Token', 'Cookie']
-  }),
+  setCorsHeaders
 ];
 
 
