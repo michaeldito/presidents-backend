@@ -20,7 +20,9 @@ module.exports = async function() {
   if (this.status.value === 'IN_PROGRESS') {
     console.log('[Presidents@initializeNextRound()] game in progress - adding a round');
     this.rounds.push({turns: []});
-    this.turnToBeat.remove();
+    if (this.turnToBeat) {
+      this.turnToBeat.remove();
+    }
   }
   if (this.status.value === 'NOT_STARTED') {
     console.log(`[Presidents@initializeNextRound()] this is the first round of the game`);

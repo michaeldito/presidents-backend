@@ -47,23 +47,17 @@ module.exports.register = async ctx => {
     user = await User.register(user);
 
     // Create an expiration date 10 minutes in the future for the user's access_token *cookie*
-    const cookieExpiration = Date.now() + (20 * 60 * 1000);
     let options = {
       type: 'web',
-      exp: Math.floor(cookieExpiration / 1000 + (60 * 1)), // expire the access_token 1m after the cookie
       _id: user._id.toHexString(),
     };
 
     console.log('creating aut token')
     const token = await user.generateAuthToken(options);
 
-  
     ctx.cookies.set('access_token', token, {
       // Prevent the cookie from being read in XSS/injection attack
-      httpOnly: true,
-      // Expire the cookie after a short period, slightly before the
-      // access_token is expired
-      expires: new Date(cookieExpiration),
+      httpOnly: true
     });
   
     console.log('auth token set');
@@ -88,11 +82,8 @@ module.exports.login = async ctx => {
 
     const user = await User.findByCredentials(credentials);
 
-    // Create an expiration date 10 minutes in the future for the user's access_token *cookie*
-    const cookieExpiration = Date.now() + (20 * 60 * 1000);
     let options = {
       type: 'web',
-      exp: Math.floor(cookieExpiration / 1000 + (60 * 1)), // expire the access_token 1m after the cookie
       _id: user._id.toHexString(),
       access: 'user'
     };
@@ -102,10 +93,7 @@ module.exports.login = async ctx => {
 
     ctx.cookies.set('access_token', token, {
       // Prevent the cookie from being read in XSS/injection attack
-      httpOnly: true,
-      // Expire the cookie after a short period, slightly before the
-      // access_token is expired
-      expires: new Date(cookieExpiration),
+      httpOnly: true
     });
   
     const body = { ...user.toObject(), loggedIn: true };
