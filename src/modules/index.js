@@ -13,6 +13,13 @@ const { Service: status } = require('./Status');
 const { Service: suit } = require('./Suit');
 const { Service: user } = require('./User');
 
+/**
+ * ? not sure
+ * ! o no
+ * TODO: shit
+ * @param poop it stinks
+ */
+
 module.exports = { 
   card,
   cardRank,

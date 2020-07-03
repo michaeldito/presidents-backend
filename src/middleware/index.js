@@ -13,26 +13,14 @@ const errorHandler = async (ctx, next) => {
   }
 };
 
-const setCorsHeaders = async (ctx, next) => {
-  const origin = ctx.get('Origin');
-  if (ctx.method !== 'OPTIONS') {
-    ctx.set('Access-Control-Allow-Origin', origin);
-    ctx.set('Access-Control-Allow-Credentials', 'true');
-  } else if (ctx.get('Access-Control-Request-Method')) {
-    ctx.set('Access-Control-Allow-Origin', origin);
-    ctx.set('Access-Control-Allow-Headers', 'Content-Type');
-    ctx.set('Access-Control-Max-Age', '42');
-    ctx.set('Access-Control-Allow-Credentials', 'true');
-    ctx.set('Access-Control-Expose-Headers', ['Access-Token', 'Cookie']);
-  }
-  await next();
-};
-
 const middleware = [
   errorHandler,
   bodyParser(), 
   logger(), 
-  setCorsHeaders
+  cors({
+    credentials: true,
+    exposeHeaders: ['Access-Token', 'Cookie']
+  }),
 ];
 
 
