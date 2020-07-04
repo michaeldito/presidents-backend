@@ -1,11 +1,10 @@
-const { 
-  GameStatus,
-  Presidents,
-  GameConfiguration,
-  User,
-  Card,
-  PoliticalRank
-} = require('../..');
+const GameStatus = require('../../../GameStatus/model');
+const Presidents = require('../');
+const GameConfiguration = require('../../../GameConfiguration/model');
+const User = require('../../../User/model');
+const Card = require('../../../Card/model');
+const PoliticalRank = require('../../../PoliticalRank/model');
+
 const mongoose = require('mongoose');
 const expect = require('expect');
 
@@ -163,14 +162,13 @@ module.exports = async () => describe('#join()', async function() {
         expect(err.message).toBe(message);
       }
     });
-
   });
 
   describe('successful', async function() {    
 
     it('user is added to the game', async function() {
       let doc = await Presidents.findOne({name: 'validation prez game'});
-      const user = mongoose.Types.ObjectId()
+      const user = await User.findOne({username: 'jethro'})
       try {
         await doc.join(user);
         doc = await Presidents.findOne({name: 'validation prez game'});

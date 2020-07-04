@@ -9,7 +9,7 @@ module.exports = async function(turn) {
   console.log(`[Presidents@shouldProcessTurn()] turn: ${JSON.stringify(turn)}`)
 
   // 1 - is it this players turn?
-  const isPlayersTurn = turn.user === this.currentPlayer.toString();
+  const isPlayersTurn = turn.user.toString() === this.currentPlayer.toString();
   console.log(`[Presidents@shouldProcessTurn()] isPlayersTurn: ${isPlayersTurn}`)
   if (! isPlayersTurn)
     return Promise.reject(new Error(`Unable to process turn. It is not your turn.`));
@@ -37,7 +37,7 @@ module.exports = async function(turn) {
     return Promise.resolve(true);
   }
   
-  // it's a turn in the middle of the round, see if it's better than the lastx
+  // it's a turn in the middle of the round, see if it's better than the last
   let areCardsBetter;
   try {
     if (this.turnToBeat == undefined) {

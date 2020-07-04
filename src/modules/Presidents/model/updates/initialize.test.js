@@ -1,12 +1,10 @@
-const { 
-  GameStatus,
-  Presidents,
-  GameConfiguration,
-  User,
-  Card,
-  PoliticalRank
-} = require('../..');
-const mongoose = require('mongoose');
+const GameStatus = require('../../../GameStatus/model');
+const Presidents = require('../');
+const GameConfiguration = require('../../../GameConfiguration/model');
+const User = require('../../../User/model');
+const Card = require('../../../Card/model');
+const PoliticalRank = require('../../../PoliticalRank/model');
+
 const expect = require('expect');
 
 
@@ -198,7 +196,7 @@ module.exports = async () => describe('#initialize()', async function() {
     it('game.currentPlayer should have 3 ♣', async function() {
       let doc = await Presidents.findOne({name: 'successful initialize prez game'});
       let players = doc.players;
-      let currentPlayer = players.find(player => player.user.toString() === doc.currentPlayer.toString());
+      let currentPlayer = players.find(player => player.user._id.toString() === doc.currentPlayer.toString());
       expect(currentPlayer.hand.find(card => card.shortHand === '3Clubs')).toBeTruthy();
     });
 

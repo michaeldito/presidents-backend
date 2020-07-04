@@ -1,5 +1,5 @@
-const Card = require('../../');
-const Presidents = require('..');
+const Card = require('../../../Card/model');
+const Presidents = require('../');
 const expect = require('expect');
 
 module.exports = async () => describe('#calculateSkips()', async function() {   

@@ -1,4 +1,8 @@
-const { Presidents, GameConfiguration, User, Card, GameStatus, PoliticalRank } = require('../..') ;
+const GameStatus = require('../../../GameStatus/model');
+const Presidents = require('../');
+const GameConfiguration = require('../../../GameConfiguration/model');
+const User = require('../../../User/model');
+const Card = require('../../../Card/model');
 const expect = require('expect');
 
 module.exports = async () => describe('#didCurrentPlayersLastTurnEndTheRound()', async function() {   

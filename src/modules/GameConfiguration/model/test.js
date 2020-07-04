@@ -98,12 +98,38 @@ const test = async () => describe('GameConfiguration', async function() {
         expect(error.errors['maxPlayers'].message).toBe(message);
       });
 
-      it.skip('maxPlayers must be >= minPlayers', async function() {    
-        
+      it('maxPlayers must be >= minPlayers', async function() {    
+        const card = await Card.findOne({});
+        const config = {
+          name: 'maxplayersgame',
+          deck: [card],
+          numDecks: 1,
+          maxPlayers: 0,
+          minPlayers: 1
+        };
+        const instance = new GameConfiguration(config);
+        const message = 'max must be greater than or equal to min';
+  
+        instance.validate(error => {
+          expect(error.errors['maxPlayers'].reason.message).toBe(message);
+        });
       });
 
-      it.skip('minPlayers must be <= maxPlayers', async function() {    
-        
+      it('minPlayers must be <= maxPlayers', async function() {    
+        const card = await Card.findOne({});
+        const config = {
+          name: 'name',
+          deck: [card],
+          numDecks: 1,
+          maxPlayers: 1,
+          minPlayers: 2
+        };
+        const instance = new GameConfiguration(config);
+        const message = 'min must be less than or equal to max';
+
+        instance.validate(error => {
+          expect(error.errors['minPlayers'].reason.message).toBe(message);
+        });
       });
   
       it('deck must not be empty', async function() {     

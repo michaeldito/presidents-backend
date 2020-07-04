@@ -1,11 +1,8 @@
-const { 
-  GameStatus,
-  Presidents,
-  GameConfiguration,
-  User,
-  Card,
-  PoliticalRank
-} = require('../..');
+const GameStatus = require('../../../GameStatus/model');
+const Presidents = require('../');
+const GameConfiguration = require('../../../GameConfiguration/model');
+const User = require('../../../User/model');
+const PoliticalRank = require('../../../PoliticalRank/model');
 const expect = require('expect');
 
 
@@ -163,8 +160,8 @@ module.exports = async () => describe('#giveDrink()', async function() {
         console.log(err)
       }
 
-      let toPlayer = doc.players.find(player => player.user.toString() === toUser.toString());
-      let fromPlayer = doc.players.find(player => player.user.toString() === fromUser.toString());
+      let toPlayer = doc.players.find(player => player.user._id.toString() === toUser.toString());
+      let fromPlayer = doc.players.find(player => player.user._id.toString() === fromUser.toString());
 
       expect(toPlayer.drinksReceived.length).toBe(1);
       expect(fromPlayer.drinksSent.length).toBe(1);

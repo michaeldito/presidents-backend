@@ -1,6 +1,6 @@
 const { init: initUsers, drop: dropUsers } = require('../../User/model/test')
 const InboxItem = require('.');
-const User = require('../../User');
+const { Model: User } = require('../../User');
 const mongoose = require('mongoose');
 const db = require('../../../config/db');
 const expect = require('expect');
@@ -35,34 +35,6 @@ const test = async () => describe('InboxItem', async function() {
   });
 
   describe('#init()', async function() {    
-
-    it('verify it initializes 1 inbox item document', async function() {    
-      await init();
-      const docs = await InboxItem.find({});
-      expect(docs.length).toBe(1);
-    });
-
-    describe('validations', async function() {    
-
-      it('forUser is required', async function() {
-        const item = { seenByUser: true };
-        const instance = new InboxItem(item);
-        const error = instance.validateSync();
-        const message = 'A forUser is required to create an inbox item.';
-  
-        expect(error.errors['forUser'].message).toBe(message);
-      });
-
-      it('seenByUser is required', async function() {  
-        const item = { forUser: mongoose.Types.ObjectId() };  
-        const instance = new InboxItem(item);
-        const error = instance.validateSync();
-        const message = 'A seenByUser is required to create an inbox item.';
-  
-        expect(error.errors['seenByUser'].message).toBe(message);
-      });
-      
-    });
 
   });
       

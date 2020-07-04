@@ -25,9 +25,6 @@ const testSuite = async () => {
     case 'invite':
       await models.inviteTests();
       break;
-    case 'invitestatus':
-      await models.inviteStatusTests();
-      break;
     case 'politicalrank':
       await models.politicalRankTests();
       break;

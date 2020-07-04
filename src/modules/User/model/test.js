@@ -74,35 +74,6 @@ const test = async () => describe('User', async function() {
 
         expect(error.errors['password'].message).toBe(message);
       });
-
-      it('token.access is required', async function() {    
-        const user = {
-          username: 'username',
-          password: 'password',
-          token: {
-            value: 'tokenvalue'
-          }
-        };
-        const instance = new User(user);
-        const error = instance.validateSync();
-        const message = 'An access is required for every user\'s token.';
-        expect(error.errors['token.access'].message).toBe(message);
-      });
-      
-      it('value is required', async function() {    
-        const user = {
-          username: 'username',
-          password: 'password',
-          token: {
-            access: 'access'
-          }
-        };
-        const instance = new User(user);
-        const error = instance.validateSync();
-        const message = 'A value is required for every user\'s token.';
-        
-        expect(error.errors['token.value'].message).toBe(message);
-      });
       
     });
 
@@ -163,14 +134,6 @@ const test = async () => describe('User', async function() {
       } catch (err) {
         expect(err.message).toBe('username doesn\'t exist.');
       }
-    });
-
-  });
-
-  describe.skip('#findByToken(token)', async function() {    
-    
-    it('verify it does the right thing', async function() {    
-
     });
 
   });

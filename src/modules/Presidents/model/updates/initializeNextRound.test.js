@@ -1,17 +1,13 @@
-const { 
-  GameStatus,
-  Presidents,
-  GameConfiguration,
-  User,
-  Card,
-  PoliticalRank
-} = require('../..');
-const mongoose = require('mongoose');
+const GameStatus = require('../../../GameStatus/model');
+const Presidents = require('../');
+const GameConfiguration = require('../../../GameConfiguration/model');
+const User = require('../../../User/model');
+const Card = require('../../../Card/model');
+const PoliticalRank = require('../../../PoliticalRank/model');
 const expect = require('expect');
 
 
 module.exports = async () => describe('#initializeNextRound()', async function() {   
-  
   
   before(async function() {
     const status = await GameStatus.findByValue('FINALIZED');

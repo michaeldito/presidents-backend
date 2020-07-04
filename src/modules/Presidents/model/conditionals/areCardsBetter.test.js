@@ -1,4 +1,5 @@
-const { Presidents, Card } = require('../..');
+const Presidents = require('../');
+const Card = require('../../../Card/model');
 const expect = require('expect');
 
 module.exports = async () => describe('#areCardsBetter()', async function() {   

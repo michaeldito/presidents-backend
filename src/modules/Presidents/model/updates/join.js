@@ -38,7 +38,7 @@ module.exports = async function(user) {
     return Promise.reject(new Error('Cannot join game. It is already full.'));
   }
 
-  const hasUserJoined = this.players.find(player => player.user._id.equals(user._id));
+  const hasUserJoined = this.players.find(player => player.user.equals(user._id));
   if (hasUserJoined) {
     console.log(`[Presidents@join()] user already joined`);
     return Promise.reject(new Error('User has already joined game.'));

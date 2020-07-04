@@ -14,7 +14,7 @@ const GameConfigurationSchema = new mongoose.Schema({
     validate: {
       validator: async function(maxPlayers) {
         if(maxPlayers < this.minPlayers)
-          return Promise.reject();
+          return Promise.reject(new Error('max must be greater than or equal to min'));
         return Promise.resolve();
       },
       message: 'A value for maxPlayers must be greater than or equal to minPlayers.'
@@ -26,10 +26,10 @@ const GameConfigurationSchema = new mongoose.Schema({
     validate: {
       validator: async function(minPlayers) {
         if(minPlayers > this.maxPlayers)
-          return Promise.reject();
+          return Promise.reject(new Error('min must be less than or equal to max'));
         return Promise.resolve();
       },
-      message: 'A value for minPlayers must be less than or equal to maxPlayers.'
+      message: 'min must be less than or equal to max'
     }
   },
   deck: {

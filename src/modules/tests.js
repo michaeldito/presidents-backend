@@ -5,7 +5,6 @@ const { test: gameConfigTests } = require('./GameConfiguration/model/test');
 const { test: gameStatusTests } = require('./GameStatus/model/test');
 const { test: inboxItemTests } = require('./InboxItem/model/test');
 const { test: inviteTests } = require('./Invite/model/test');
-const { test: inviteStatusTests } = require('./InviteStatus/model/test');
 const { test: politicalRankTests } = require('./PoliticalRank/model/test');
 const { test: presidentsTests } = require('./Presidents/model/test');
 const { test: statusTests } = require('./Status/model/test');
@@ -22,7 +21,6 @@ module.exports.modelSuite = async () => {
   await statusTests();
   await gameStatusTests();
   await inboxItemTests();
-  await inviteStatusTests();
   await inviteTests();
   await userTests();
   await gameTests();
@@ -38,7 +36,6 @@ module.exports.models = {
   statusTests,
   gameStatusTests,
   inboxItemTests,
-  inviteStatusTests,
   inviteTests,
   userTests,
   gameTests,

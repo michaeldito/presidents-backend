@@ -5,9 +5,9 @@ const { init: initCards, drop: dropCards } = require('../../Card/model/test');
 const { init: initGameStatuses, drop: dropGameStatuses } = require('../../GameStatus/model/test');
 const { init: initGameConfigurations, drop: dropGameConfigurations } = require('../../GameConfiguration/model/test');
 
-const GameStatus = require('../../GameStatus');
-const GameConfiguration = require('../../GameConfiguration');
-const User = require('../../User');
+const {Model: GameStatus} = require('../../GameStatus');
+const {Model: GameConfiguration} = require('../../GameConfiguration');
+const {Model: User} = require('../../User');
 const Game = require('./');
 
 const db = require('../../../config/db');

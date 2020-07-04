@@ -152,8 +152,6 @@ const test = async () => describe('Presidents', async function () {
 		it('verify it creates 1 presidents game document', async function () {
 			await init();
 			const docs = await Presidents.find({});
-			// docs[0].config.deck=[]
-			// console.log(JSON.stringify(docs[0], null, 2))
 			expect(docs.length).toBe(1);
 		});
 

@@ -1,11 +1,8 @@
-const { 
-  GameStatus,
-  Presidents,
-  GameConfiguration,
-  User,
-  Card,
-  PoliticalRank
-} = require('../..');
+const GameStatus = require('../../../GameStatus/model');
+const Presidents = require('../');
+const GameConfiguration = require('../../../GameConfiguration/model');
+const User = require('../../../User/model');
+const Card = require('../../../Card/model');
 const expect = require('expect');
 
 
@@ -155,7 +152,7 @@ module.exports = async () => describe('#drinkDrink()', async function() {
         await doc.drinkDrink(this.user2);
       } catch(err) { }
 
-      const player2 = doc.players.find(player => player.user.toString() === this.user2._id.toString());
+      const player2 = doc.players.find(player => player.user._id.toString() === this.user2._id.toString());
       expect(player2.drinksDrunk).toBe(1);
     });
 

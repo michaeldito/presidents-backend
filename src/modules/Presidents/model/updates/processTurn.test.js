@@ -1,4 +1,8 @@
-const { Presidents, GameConfiguration, User, Card, GameStatus, PoliticalRank } = require('../..') ;
+const GameStatus = require('../../../GameStatus/model');
+const Presidents = require('../');
+const GameConfiguration = require('../../../GameConfiguration/model');
+const User = require('../../../User/model');
+const Card = require('../../../Card/model');
 const expect = require('expect');
 
 module.exports = async () => describe('#processTurn()', async function() {   
@@ -115,7 +119,7 @@ module.exports = async () => describe('#processTurn()', async function() {
     
     it('if turn contained cards they are removed from players hand', async function() {  
       const doc = await Presidents.findOne({name: 'process turn prez game'});
-      const lastPlayer = doc.players.find(player => player.user.toString() === this.user2._id.toString())
+      const lastPlayer = doc.players.find(player => player.user._id.toString() === this.user2._id.toString())
       expect(lastPlayer.hand.length).toBe(0);
     });
   
@@ -126,7 +130,7 @@ module.exports = async () => describe('#processTurn()', async function() {
 
     it('if player has no more cards then it should assign rank for next round', async function() {  
       const doc = await Presidents.findOne({name: 'process turn prez game'});
-      const firstPlayerDone = doc.players.find(player => player.user.toString() === this.user2._id.toString())
+      const firstPlayerDone = doc.players.find(player => player.user._id.toString() === this.user2._id.toString())
       expect(firstPlayerDone.nextGameRank.name).toBe('President');
     });
 
@@ -151,7 +155,7 @@ module.exports = async () => describe('#processTurn()', async function() {
     it('if only 1 other player has cards it finalizes the game and sets asshole', async function() {  
       const doc = await Presidents.findOne({name: 'process turn prez game'});
       expect(doc.status.value).toBe('FINALIZED');
-      const lastPlacePlayer = doc.players.find(player => player.user.toString() === this.user1._id.toString());
+      const lastPlacePlayer = doc.players.find(player => player.user._id.toString() === this.user1._id.toString());
       expect(lastPlacePlayer.nextGameRank.name).toBe('Asshole');
     });
 
